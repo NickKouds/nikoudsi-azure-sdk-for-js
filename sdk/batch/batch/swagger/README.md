@@ -6,21 +6,19 @@
 
 ```yaml
 package-name: "@azure/batch"
-title: BatchServiceClient
-description: Batch Client
-generate-metadata: true
-clear-output-folder: true
+title: GeneratedClient
+description: Generated Batch Client
+generate-metadata: false
 license-header: MICROSOFT_MIT_NO_VERSION
 output-folder: ../
-source-code-folder-path: ./src
+source-code-folder-path: ./src/generated
 input-file: https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/batch/data-plane/Microsoft.Batch/stable/2022-01-01.15.0/BatchService.json
-add-credentials: true
-credential-scopes: https://batch.core.windows.net//.default
+add-credentials: false
 package-version: 11.0.0-beta.1
 v3: true
 use-extension:
   "@autorest/typescript": "latest"
-hide-client: true
+hide-clients: true
 ```
 
 ## Customizations for Track 2 Generator
