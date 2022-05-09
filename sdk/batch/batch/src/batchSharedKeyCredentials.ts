@@ -5,13 +5,14 @@
  */
 
 import {
-  Constants,
-  WebResource,
-  ServiceClientCredentials,
-  HttpHeadersLike,
-  HttpMethods
-} from "@azure/ms-rest-js";
-import { HmacSha256Sign } from "./hmacSha256";
+  HttpMethods,
+  HttpHeaders,
+  PipelinePolicy,
+  PipelineRequest,
+  PipelineResponse,
+  SendRequest,
+} from "@azure/core-rest-pipeline";
+import { createHmac } from "crypto";
 import url from "url-parse";
 import { Buffer } from "buffer";
 
@@ -21,17 +22,15 @@ import { Buffer } from "buffer";
  * @param accountName The batch account name.
  * @param accountKey The batch account key.
  */
-export class BatchSharedKeyCredentials implements ServiceClientCredentials {
+export class BatchSharedKeyCredentials {
   /**
    * The batch account name.
    */
-  accountName: string;
+  _accountName: string;
   /**
    * The batch account key.
    */
-  accountKey: string;
-
-  private _signer: HmacSha256Sign;
+  _accountKey: string;
 
   constructor(accountName: string, accountKey: string) {
     if (!accountName || typeof accountName.valueOf() !== "string") {
@@ -41,21 +40,19 @@ export class BatchSharedKeyCredentials implements ServiceClientCredentials {
     if (!accountKey || typeof accountKey.valueOf() !== "string") {
       throw new Error("accountKey must be a non empty string.");
     }
-    this.accountName = accountName;
-    this.accountKey = accountKey;
-    this._signer = new HmacSha256Sign(accountKey);
+    this._accountName = accountName;
+    this._accountKey = accountKey;
   }
 
   /**
    * Signs a request with the Authentication header.
    *
-   * @param {webResource} The WebResource to be signed.
-   * @param {function(error)}  callback  The callback function.
+   * @param {request} Authorization Pipeline Request.
    * @return {undefined}
    */
-  signRequest(webResource: WebResource): Promise<WebResource> {
+  signRequest(request: PipelineRequest): PipelineRequest {
     // Help function to get header value, if header without value, append a newline
-    function getvalueToAppend(value: HttpHeadersLike, headerName: string): string {
+    function getvalueToAppend(value: HttpHeaders, headerName: string): string {
       if (!value || !value.get(headerName)) {
         return "\n";
       } else {
@@ -65,7 +62,7 @@ export class BatchSharedKeyCredentials implements ServiceClientCredentials {
 
     // Help function to get content length
     function getContentLengthToAppend(
-      value: HttpHeadersLike,
+      value: HttpHeaders,
       method: HttpMethods,
       body: any
     ): string {
@@ -86,41 +83,43 @@ export class BatchSharedKeyCredentials implements ServiceClientCredentials {
     }
 
     // Set Headers
-    if (!webResource.headers.get("ocp-date")) {
-      webResource.headers.set("ocp-date", new Date().toUTCString());
+    if (!request.headers.get("ocp-date")) {
+      request.headers.set("ocp-date", new Date().toUTCString());
     }
 
     // Add verb and standard HTTP header as single line
     let stringToSign =
-      webResource.method +
+      request.method +
       "\n" +
-      getvalueToAppend(webResource.headers, "Content-Encoding") +
-      getvalueToAppend(webResource.headers, "Content-Language") +
-      getContentLengthToAppend(webResource.headers, webResource.method, webResource.body) +
-      getvalueToAppend(webResource.headers, "Content-MD5") +
-      getvalueToAppend(webResource.headers, "Content-Type") +
-      getvalueToAppend(webResource.headers, "Date") +
-      getvalueToAppend(webResource.headers, "If-Modified-Since") +
-      getvalueToAppend(webResource.headers, "If-Match") +
-      getvalueToAppend(webResource.headers, "If-None-Match") +
-      getvalueToAppend(webResource.headers, "If-Unmodified-Since") +
-      getvalueToAppend(webResource.headers, "Range");
+      getvalueToAppend(request.headers, "Content-Encoding") +
+      getvalueToAppend(request.headers, "Content-Language") +
+      getContentLengthToAppend(request.headers, request.method, request.body) +
+      getvalueToAppend(request.headers, "Content-MD5") +
+      getvalueToAppend(request.headers, "Content-Type") +
+      getvalueToAppend(request.headers, "Date") +
+      getvalueToAppend(request.headers, "If-Modified-Since") +
+      getvalueToAppend(request.headers, "If-Match") +
+      getvalueToAppend(request.headers, "If-None-Match") +
+      getvalueToAppend(request.headers, "If-Unmodified-Since") +
+      getvalueToAppend(request.headers, "Range");
 
     // Add customize HTTP header
-    stringToSign += this._getCanonicalizedHeaders(webResource);
+    stringToSign += this._getCanonicalizedHeaders(request);
 
     // Add path/query from uri
-    stringToSign += this._getCanonicalizedResource(webResource);
+    stringToSign += this._getCanonicalizedResource(request);
 
     // Signed with sha256
-    const signature = this._signer.sign(stringToSign);
+    const key = Buffer.from(this._accountKey, "base64");
+    const signature = createHmac("sha256", key).update(stringToSign, "utf8").digest("base64");
 
     // Add authrization header
-    webResource.headers.set(
-      Constants.HeaderConstants.AUTHORIZATION,
-      `SharedKey ${this.accountName}:${signature}`
+    request.headers.set(
+      "authorization",
+      `SharedKey ${this._accountName}:${signature}`
     );
-    return Promise.resolve(webResource);
+
+    return request;
   }
 
   /*
@@ -140,23 +139,23 @@ export class BatchSharedKeyCredentials implements ServiceClientCredentials {
    * @param The WebResource object.
    * @return The canonicalized headers.
    */
-  private _getCanonicalizedHeaders(webResource: WebResource): string {
+  private _getCanonicalizedHeaders(request: PipelineRequest): string {
     // Build canonicalized headers
     let canonicalizedHeaders = "";
-    if (webResource.headers) {
+    if (request.headers) {
       const canonicalizedHeadersArray = [];
 
       // Retrieve all headers for begin with ocp-
-      for (const header of webResource.headers.headerNames()) {
-        if (header.indexOf("ocp-") === 0) {
-          canonicalizedHeadersArray.push(header);
+      for (const header of request.headers) {
+        if (header[0].indexOf("ocp-") === 0) {
+          canonicalizedHeadersArray.push(header[0]);
         }
       }
 
       // Sort the header by header name
       canonicalizedHeadersArray.sort();
       for (const currentHeader of canonicalizedHeadersArray) {
-        const value = webResource.headers.get(currentHeader);
+        const value = request.headers.get(currentHeader);
         if (value) {
           // Make header value lower case and apend a new line for each header
           canonicalizedHeaders += currentHeader.toLowerCase() + ":" + value + "\n";
@@ -172,14 +171,14 @@ export class BatchSharedKeyCredentials implements ServiceClientCredentials {
    * @param webResource The webresource to get the canonicalized resource string from.
    * @return The canonicalized resource string.
    */
-  private _getCanonicalizedResource(webResource: WebResource): string {
+  private _getCanonicalizedResource(request: PipelineRequest): string {
     let path = "/";
-    const urlstring = url(webResource.url, true);
+    const urlstring = url(request.url, true);
     if (urlstring.pathname) {
       path = urlstring.pathname;
     }
 
-    let canonicalizedResource = "/" + this.accountName + path;
+    let canonicalizedResource = "/" + this._accountName + path;
 
     // Get the raw query string values for signing
     const queryStringValues = urlstring.query;
@@ -200,4 +199,25 @@ export class BatchSharedKeyCredentials implements ServiceClientCredentials {
 
     return canonicalizedResource;
   }
+}
+
+
+/**
+ * Creates an HTTP pipeline policy to authenticate a request
+ * using a `BatchSharedKeyCredential`
+ */
+export function createBatchKeyCredentialPolicy(
+  credential: BatchSharedKeyCredentials
+): PipelinePolicy {
+  return {
+    name: "batchKeyCredentialPolicy",
+    sendRequest(request: PipelineRequest, next: SendRequest): Promise<PipelineResponse> {
+      if (!request) {
+        throw new Error("webResource cannot be null or undefined");
+      }
+
+      credential.signRequest(request);
+      return next(request);
+    },
+  };
 }
