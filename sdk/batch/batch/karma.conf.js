@@ -66,11 +66,12 @@ module.exports = function (config) {
 
     envPreprocessor: [
       "TEST_MODE",
-      "ENDPOINT",
-      "AZURE_CLIENT_SECRET",
+      "AZURE_BATCH_ENDPOINT",
       "AZURE_CLIENT_ID",
+      "AZURE_CLIENT_SECRET",
       "AZURE_TENANT_ID",
-      "SUBSCRIPTION_ID"
+      "AZURE_BATCH_ACCOUNT",
+      "AZURE_BATCH_ACCESS_KEY"
     ],
 
     // test results reporter to use
