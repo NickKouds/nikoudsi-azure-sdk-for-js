@@ -10,11 +10,10 @@ import { PagedAsyncIterableIterator } from "@azure/core-paging";
 import {
   PoolUsageMetrics,
   PoolListUsageMetricsOptionalParams,
-  CloudPool,
+  Pool,
   PoolListOptionalParams,
   PoolGetAllLifetimeStatisticsOptionalParams,
   PoolGetAllLifetimeStatisticsResponse,
-  PoolAddParameter,
   PoolAddOptionalParams,
   PoolAddResponse,
   PoolDeleteOptionalParams,
@@ -23,7 +22,7 @@ import {
   PoolExistsResponse,
   PoolGetOptionalParams,
   PoolGetResponse,
-  PoolPatchParameter,
+  PoolUpdate,
   PoolPatchOptionalParams,
   PoolPatchResponse,
   PoolDisableAutoScaleOptionalParams,
@@ -39,7 +38,6 @@ import {
   PoolResizeResponse,
   PoolStopResizeOptionalParams,
   PoolStopResizeResponse,
-  PoolUpdatePropertiesParameter,
   PoolUpdatePropertiesOptionalParams,
   PoolUpdatePropertiesResponse,
   NodeRemoveParameter,
@@ -48,8 +46,8 @@ import {
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Interface representing a Pool. */
-export interface Pool {
+/** Interface representing a PoolOperations. */
+export interface PoolOperations {
   /**
    * If you do not specify a $filter clause including a poolId, the response includes all Pools that
    * existed in the Account in the time range of the returned aggregation intervals. If you do not
@@ -65,7 +63,7 @@ export interface Pool {
    * Lists all of the Pools in the specified Account.
    * @param options The options parameters.
    */
-  list(options?: PoolListOptionalParams): PagedAsyncIterableIterator<CloudPool>;
+  list(options?: PoolListOptionalParams): PagedAsyncIterableIterator<Pool>;
   /**
    * Statistics are aggregated across all Pools that have ever existed in the Account, from Account
    * creation to the last update time of the statistics. The statistics may not be immediately available.
@@ -81,10 +79,7 @@ export interface Pool {
    * @param pool The Pool to be added.
    * @param options The options parameters.
    */
-  add(
-    pool: PoolAddParameter,
-    options?: PoolAddOptionalParams
-  ): Promise<PoolAddResponse>;
+  add(pool: Pool, options?: PoolAddOptionalParams): Promise<PoolAddResponse>;
   /**
    * When you request that a Pool be deleted, the following actions occur: the Pool state is set to
    * deleting; any ongoing resize operation on the Pool are stopped; the Batch service starts resizing
@@ -131,7 +126,7 @@ export interface Pool {
    */
   patch(
     poolId: string,
-    poolPatchParameter: PoolPatchParameter,
+    poolPatchParameter: PoolUpdate,
     options?: PoolPatchOptionalParams
   ): Promise<PoolPatchResponse>;
   /**
@@ -211,7 +206,7 @@ export interface Pool {
    */
   updateProperties(
     poolId: string,
-    poolUpdatePropertiesParameter: PoolUpdatePropertiesParameter,
+    poolUpdatePropertiesParameter: Pool,
     options?: PoolUpdatePropertiesOptionalParams
   ): Promise<PoolUpdatePropertiesResponse>;
   /**

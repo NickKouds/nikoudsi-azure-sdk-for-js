@@ -7,7 +7,7 @@
  */
 
 import { PagedAsyncIterableIterator } from "@azure/core-paging";
-import { Pool } from "../operationsInterfaces";
+import { PoolOperations } from "../operationsInterfaces";
 import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
@@ -16,13 +16,12 @@ import {
   PoolUsageMetrics,
   PoolListUsageMetricsNextOptionalParams,
   PoolListUsageMetricsOptionalParams,
-  CloudPool,
+  Pool,
   PoolListNextOptionalParams,
   PoolListOptionalParams,
   PoolListUsageMetricsResponse,
   PoolGetAllLifetimeStatisticsOptionalParams,
   PoolGetAllLifetimeStatisticsResponse,
-  PoolAddParameter,
   PoolAddOptionalParams,
   PoolAddResponse,
   PoolListResponse,
@@ -32,7 +31,7 @@ import {
   PoolExistsResponse,
   PoolGetOptionalParams,
   PoolGetResponse,
-  PoolPatchParameter,
+  PoolUpdate,
   PoolPatchOptionalParams,
   PoolPatchResponse,
   PoolDisableAutoScaleOptionalParams,
@@ -48,7 +47,6 @@ import {
   PoolResizeResponse,
   PoolStopResizeOptionalParams,
   PoolStopResizeResponse,
-  PoolUpdatePropertiesParameter,
   PoolUpdatePropertiesOptionalParams,
   PoolUpdatePropertiesResponse,
   NodeRemoveParameter,
@@ -59,12 +57,12 @@ import {
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Class containing Pool operations. */
-export class PoolImpl implements Pool {
+/** Class containing PoolOperations operations. */
+export class PoolOperationsImpl implements PoolOperations {
   private readonly client: GeneratedClient;
 
   /**
-   * Initialize a new instance of the class Pool class.
+   * Initialize a new instance of the class PoolOperations class.
    * @param client Reference to the service client
    */
   constructor(client: GeneratedClient) {
@@ -123,7 +121,7 @@ export class PoolImpl implements Pool {
    */
   public list(
     options?: PoolListOptionalParams
-  ): PagedAsyncIterableIterator<CloudPool> {
+  ): PagedAsyncIterableIterator<Pool> {
     const iter = this.listPagingAll(options);
     return {
       next() {
@@ -140,7 +138,7 @@ export class PoolImpl implements Pool {
 
   private async *listPagingPage(
     options?: PoolListOptionalParams
-  ): AsyncIterableIterator<CloudPool[]> {
+  ): AsyncIterableIterator<Pool[]> {
     let result = await this._list(options);
     yield result.value || [];
     let continuationToken = result.odataNextLink;
@@ -153,7 +151,7 @@ export class PoolImpl implements Pool {
 
   private async *listPagingAll(
     options?: PoolListOptionalParams
-  ): AsyncIterableIterator<CloudPool> {
+  ): AsyncIterableIterator<Pool> {
     for await (const page of this.listPagingPage(options)) {
       yield* page;
     }
@@ -197,10 +195,7 @@ export class PoolImpl implements Pool {
    * @param pool The Pool to be added.
    * @param options The options parameters.
    */
-  add(
-    pool: PoolAddParameter,
-    options?: PoolAddOptionalParams
-  ): Promise<PoolAddResponse> {
+  add(pool: Pool, options?: PoolAddOptionalParams): Promise<PoolAddResponse> {
     return this.client.sendOperationRequest(
       { pool, options },
       addOperationSpec
@@ -279,7 +274,7 @@ export class PoolImpl implements Pool {
    */
   patch(
     poolId: string,
-    poolPatchParameter: PoolPatchParameter,
+    poolPatchParameter: PoolUpdate,
     options?: PoolPatchOptionalParams
   ): Promise<PoolPatchResponse> {
     return this.client.sendOperationRequest(
@@ -395,7 +390,7 @@ export class PoolImpl implements Pool {
    */
   updateProperties(
     poolId: string,
-    poolUpdatePropertiesParameter: PoolUpdatePropertiesParameter,
+    poolUpdatePropertiesParameter: Pool,
     options?: PoolUpdatePropertiesOptionalParams
   ): Promise<PoolUpdatePropertiesResponse> {
     return this.client.sendOperationRequest(
@@ -535,7 +530,7 @@ const listOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.CloudPoolListResult,
+      bodyMapper: Mappers.PoolListResult,
       headersMapper: Mappers.PoolListHeaders
     },
     default: {
@@ -615,7 +610,7 @@ const getOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.CloudPool,
+      bodyMapper: Mappers.Pool,
       headersMapper: Mappers.PoolGetHeaders
     },
     default: {
@@ -882,7 +877,7 @@ const listNextOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.CloudPoolListResult,
+      bodyMapper: Mappers.PoolListResult,
       headersMapper: Mappers.PoolListNextHeaders
     },
     default: {

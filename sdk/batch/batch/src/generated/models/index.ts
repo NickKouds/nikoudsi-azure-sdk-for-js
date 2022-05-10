@@ -11,13 +11,13 @@ import * as coreClient from "@azure/core-client";
 /** The result of listing the applications available in an Account. */
 export interface ApplicationListResult {
   /** The list of applications available in the Account. */
-  value?: ApplicationSummary[];
+  value?: Application[];
   /** The URL to get the next set of results. */
   odataNextLink?: string;
 }
 
 /** Contains information about an application in an Azure Batch Account. */
-export interface ApplicationSummary {
+export interface Application {
   /** A string that uniquely identifies the application within the Account. */
   id: string;
   /** The display name for the application. */
@@ -350,37 +350,67 @@ export interface FileProperties {
 }
 
 /** A Job Schedule that allows recurring Jobs by specifying when to run Jobs and a specification used to create each Job. */
-export interface CloudJobSchedule {
+export interface JobSchedule {
   /** A string that uniquely identifies the schedule within the Account. */
   id?: string;
   /** The display name for the schedule. */
   displayName?: string;
-  /** The URL of the Job Schedule. */
-  url?: string;
-  /** This is an opaque string. You can use it to detect whether the Job Schedule has changed between requests. In particular, you can be pass the ETag with an Update Job Schedule request to specify that your changes should take effect only if nobody else has modified the schedule in the meantime. */
-  eTag?: string;
-  /** This is the last time at which the schedule level data, such as the Job specification or recurrence information, changed. It does not factor in job-level changes such as new Jobs being created or Jobs changing state. */
-  lastModified?: Date;
-  /** The creation time of the Job Schedule. */
-  creationTime?: Date;
-  /** The state of the Job Schedule. */
-  state?: JobScheduleState;
-  /** The time at which the Job Schedule entered the current state. */
-  stateTransitionTime?: Date;
-  /** This property is not present if the Job Schedule is in its initial active state. */
-  previousState?: JobScheduleState;
-  /** This property is not present if the Job Schedule is in its initial active state. */
-  previousStateTransitionTime?: Date;
+  /**
+   * The URL of the Job Schedule.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly url?: string;
+  /**
+   * This is an opaque string. You can use it to detect whether the Job Schedule has changed between requests. In particular, you can be pass the ETag with an Update Job Schedule request to specify that your changes should take effect only if nobody else has modified the schedule in the meantime.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly eTag?: string;
+  /**
+   * This is the last time at which the schedule level data, such as the Job specification or recurrence information, changed. It does not factor in job-level changes such as new Jobs being created or Jobs changing state.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly lastModified?: Date;
+  /**
+   * The creation time of the Job Schedule.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly creationTime?: Date;
+  /**
+   * The state of the Job Schedule.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly state?: JobScheduleState;
+  /**
+   * The time at which the Job Schedule entered the current state.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly stateTransitionTime?: Date;
+  /**
+   * This property is not present if the Job Schedule is in its initial active state.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly previousState?: JobScheduleState;
+  /**
+   * This property is not present if the Job Schedule is in its initial active state.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly previousStateTransitionTime?: Date;
   /** All times are fixed respective to UTC and are not impacted by daylight saving time. */
   schedule?: Schedule;
   /** Specifies details of the Jobs to be created on a schedule. */
   jobSpecification?: JobSpecification;
-  /** Contains information about Jobs that have been and will be run under a Job Schedule. */
-  executionInfo?: JobScheduleExecutionInformation;
+  /**
+   * Contains information about Jobs that have been and will be run under a Job Schedule.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly executionInfo?: JobScheduleExecutionInformation;
   /** The Batch service does not assign any meaning to metadata; it is solely for the use of user code. */
   metadata?: MetadataItem[];
-  /** Resource usage statistics for a Job Schedule. */
-  stats?: JobScheduleStatistics;
+  /**
+   * Resource usage statistics for a Job Schedule.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly stats?: JobScheduleStatistics;
 }
 
 /** The schedule according to which Jobs will be created. All times are fixed respective to UTC and are not impacted by daylight saving time. */
@@ -1089,7 +1119,7 @@ export interface JobScheduleStatistics {
 }
 
 /** The set of changes to be made to a Job Schedule. */
-export interface JobSchedulePatchParameter {
+export interface JobScheduleUpdate {
   /** All times are fixed respective to UTC and are not impacted by daylight saving time. If you do not specify this element, the existing schedule is left unchanged. */
   schedule?: Schedule;
   /** Updates affect only Jobs that are started after the update has taken place. Any currently active Job continues with the older specification. */
@@ -1098,62 +1128,62 @@ export interface JobSchedulePatchParameter {
   metadata?: MetadataItem[];
 }
 
-/** The set of changes to be made to a Job Schedule. */
-export interface JobScheduleUpdateParameter {
-  /** All times are fixed respective to UTC and are not impacted by daylight saving time. If you do not specify this element, it is equivalent to passing the default schedule: that is, a single Job scheduled to run immediately. */
-  schedule: Schedule;
-  /** Updates affect only Jobs that are started after the update has taken place. Any currently active Job continues with the older specification. */
-  jobSpecification: JobSpecification;
-  /** If you do not specify this element, it takes the default value of an empty list; in effect, any existing metadata is deleted. */
-  metadata?: MetadataItem[];
-}
-
-/** A Job Schedule that allows recurring Jobs by specifying when to run Jobs and a specification used to create each Job. */
-export interface JobScheduleAddParameter {
-  /** The ID can contain any combination of alphanumeric characters including hyphens and underscores, and cannot contain more than 64 characters. The ID is case-preserving and case-insensitive (that is, you may not have two IDs within an Account that differ only by case). */
-  id: string;
-  /** The display name need not be unique and can contain any Unicode characters up to a maximum length of 1024. */
-  displayName?: string;
-  /** All times are fixed respective to UTC and are not impacted by daylight saving time. */
-  schedule: Schedule;
-  /** Specifies details of the Jobs to be created on a schedule. */
-  jobSpecification: JobSpecification;
-  /** The Batch service does not assign any meaning to metadata; it is solely for the use of user code. */
-  metadata?: MetadataItem[];
-}
-
 /** The result of listing the Job Schedules in an Account. */
-export interface CloudJobScheduleListResult {
+export interface JobScheduleListResult {
   /** The list of Job Schedules. */
-  value?: CloudJobSchedule[];
+  value?: JobSchedule[];
   /** The URL to get the next set of results. */
   odataNextLink?: string;
 }
 
 /** An Azure Batch Job. */
-export interface CloudJob {
+export interface Job {
   /** The ID is case-preserving and case-insensitive (that is, you may not have two IDs within an Account that differ only by case). */
   id?: string;
   /** The display name for the Job. */
   displayName?: string;
   /** Whether Tasks in the Job can define dependencies on each other. The default is false. */
   usesTaskDependencies?: boolean;
-  /** The URL of the Job. */
-  url?: string;
-  /** This is an opaque string. You can use it to detect whether the Job has changed between requests. In particular, you can be pass the ETag when updating a Job to specify that your changes should take effect only if nobody else has modified the Job in the meantime. */
-  eTag?: string;
-  /** This is the last time at which the Job level data, such as the Job state or priority, changed. It does not factor in task-level changes such as adding new Tasks or Tasks changing state. */
-  lastModified?: Date;
-  /** The creation time of the Job. */
-  creationTime?: Date;
-  /** The state of the Job. */
-  state?: JobState;
-  /** The time at which the Job entered its current state. */
-  stateTransitionTime?: Date;
-  /** This property is not set if the Job is in its initial Active state. */
-  previousState?: JobState;
-  /** This property is not set if the Job is in its initial Active state. */
-  previousStateTransitionTime?: Date;
+  /**
+   * The URL of the Job.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly url?: string;
+  /**
+   * This is an opaque string. You can use it to detect whether the Job has changed between requests. In particular, you can be pass the ETag when updating a Job to specify that your changes should take effect only if nobody else has modified the Job in the meantime.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly eTag?: string;
+  /**
+   * This is the last time at which the Job level data, such as the Job state or priority, changed. It does not factor in task-level changes such as adding new Tasks or Tasks changing state.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly lastModified?: Date;
+  /**
+   * The creation time of the Job.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly creationTime?: Date;
+  /**
+   * The state of the Job.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly state?: JobState;
+  /**
+   * The time at which the Job entered its current state.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly stateTransitionTime?: Date;
+  /**
+   * This property is not set if the Job is in its initial Active state.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly previousState?: JobState;
+  /**
+   * This property is not set if the Job is in its initial Active state.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly previousStateTransitionTime?: Date;
   /** Priority values can range from -1000 to 1000, with -1000 being the lowest priority and 1000 being the highest priority. The default value is 0. */
   priority?: number;
   /** If the value is set to True, other high priority jobs submitted to the system will take precedence and will be able requeue tasks from this job. You can update a job's allowTaskPreemption after it has been created using the update job API. */
@@ -1180,10 +1210,16 @@ export interface CloudJob {
   networkConfiguration?: JobNetworkConfiguration;
   /** The Batch service does not assign any meaning to metadata; it is solely for the use of user code. */
   metadata?: MetadataItem[];
-  /** Contains information about the execution of a Job in the Azure Batch service. */
-  executionInfo?: JobExecutionInformation;
-  /** This property is populated only if the CloudJob was retrieved with an expand clause including the 'stats' attribute; otherwise it is null. The statistics may not be immediately available. The Batch service performs periodic roll-up of statistics. The typical delay is about 30 minutes. */
-  stats?: JobStatistics;
+  /**
+   * Contains information about the execution of a Job in the Azure Batch service.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly executionInfo?: JobExecutionInformation;
+  /**
+   * This property is populated only if the CloudJob was retrieved with an expand clause including the 'stats' attribute; otherwise it is null. The statistics may not be immediately available. The Batch service performs periodic roll-up of statistics. The typical delay is about 30 minutes.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly stats?: JobStatistics;
 }
 
 /** Contains information about the execution of a Job in the Azure Batch service. */
@@ -1213,7 +1249,7 @@ export interface JobSchedulingError {
 }
 
 /** The set of changes to be made to a Job. */
-export interface JobPatchParameter {
+export interface JobUpdate {
   /** Priority values can range from -1000 to 1000, with -1000 being the lowest priority and 1000 being the highest priority. If omitted, the priority of the Job is left unchanged. */
   priority?: number;
   /** The value of maxParallelTasks must be -1 or greater than 0 if specified. If not specified, the default value is -1, which means there's no limit to the number of tasks that can be run at once. You can update a job's maxParallelTasks after it has been created using the update job API. */
@@ -1230,24 +1266,6 @@ export interface JobPatchParameter {
   metadata?: MetadataItem[];
 }
 
-/** The set of changes to be made to a Job. */
-export interface JobUpdateParameter {
-  /** Priority values can range from -1000 to 1000, with -1000 being the lowest priority and 1000 being the highest priority. If omitted, it is set to the default value 0. */
-  priority?: number;
-  /** The value of maxParallelTasks must be -1 or greater than 0 if specified. If not specified, the default value is -1, which means there's no limit to the number of tasks that can be run at once. You can update a job's maxParallelTasks after it has been created using the update job API. */
-  maxParallelTasks?: number;
-  /** If the value is set to True, other high priority jobs submitted to the system will take precedence and will be able requeue tasks from this job. You can update a job's allowTaskPreemption after it has been created using the update job API. */
-  allowTaskPreemption?: boolean;
-  /** If omitted, the constraints are cleared. */
-  constraints?: JobConstraints;
-  /** You may change the Pool for a Job only when the Job is disabled. The Update Job call will fail if you include the poolInfo element and the Job is not disabled. If you specify an autoPoolSpecification in the poolInfo, only the keepAlive property of the autoPoolSpecification can be updated, and then only if the autoPoolSpecification has a poolLifetimeOption of Job (other job properties can be updated as normal). */
-  poolInfo: PoolInformation;
-  /** If omitted, it takes the default value of an empty list; in effect, any existing metadata is deleted. */
-  metadata?: MetadataItem[];
-  /** If omitted, the completion behavior is set to noaction. If the current value is terminatejob, this is an error because a Job's completion behavior may not be changed from terminatejob to noaction. You may not change the value from terminatejob to noaction - that is, once you have engaged automatic Job termination, you cannot turn it off again. If you try to do this, the request fails and Batch returns status code 400 (Bad Request) and an 'invalid property value' error response. If you do not specify this element in a PUT request, it is equivalent to passing noaction. This is an error if the current value is terminatejob. */
-  onAllTasksComplete?: OnAllTasksComplete;
-}
-
 /** Options when disabling a Job. */
 export interface JobDisableParameter {
   /** What to do with active Tasks associated with the Job. */
@@ -1260,52 +1278,16 @@ export interface JobTerminateParameter {
   terminateReason?: string;
 }
 
-/** An Azure Batch Job to add. */
-export interface JobAddParameter {
-  /** The ID can contain any combination of alphanumeric characters including hyphens and underscores, and cannot contain more than 64 characters. The ID is case-preserving and case-insensitive (that is, you may not have two IDs within an Account that differ only by case). */
-  id: string;
-  /** The display name need not be unique and can contain any Unicode characters up to a maximum length of 1024. */
-  displayName?: string;
-  /** Priority values can range from -1000 to 1000, with -1000 being the lowest priority and 1000 being the highest priority. The default value is 0. */
-  priority?: number;
-  /** The value of maxParallelTasks must be -1 or greater than 0 if specified. If not specified, the default value is -1, which means there's no limit to the number of tasks that can be run at once. You can update a job's maxParallelTasks after it has been created using the update job API. */
-  maxParallelTasks?: number;
-  /** If the value is set to True, other high priority jobs submitted to the system will take precedence and will be able requeue tasks from this job. You can update a job's allowTaskPreemption after it has been created using the update job API. */
-  allowTaskPreemption?: boolean;
-  /** The execution constraints for the Job. */
-  constraints?: JobConstraints;
-  /** If the Job does not specify a Job Manager Task, the user must explicitly add Tasks to the Job. If the Job does specify a Job Manager Task, the Batch service creates the Job Manager Task when the Job is created, and will try to schedule the Job Manager Task before scheduling other Tasks in the Job. The Job Manager Task's typical purpose is to control and/or monitor Job execution, for example by deciding what additional Tasks to run, determining when the work is complete, etc. (However, a Job Manager Task is not restricted to these activities - it is a fully-fledged Task in the system and perform whatever actions are required for the Job.) For example, a Job Manager Task might download a file specified as a parameter, analyze the contents of that file and submit additional Tasks based on those contents. */
-  jobManagerTask?: JobManagerTask;
-  /** If a Job has a Job Preparation Task, the Batch service will run the Job Preparation Task on a Node before starting any Tasks of that Job on that Compute Node. */
-  jobPreparationTask?: JobPreparationTask;
-  /** A Job Release Task cannot be specified without also specifying a Job Preparation Task for the Job. The Batch service runs the Job Release Task on the Nodes that have run the Job Preparation Task. The primary purpose of the Job Release Task is to undo changes to Compute Nodes made by the Job Preparation Task. Example activities include deleting local files, or shutting down services that were started as part of Job preparation. */
-  jobReleaseTask?: JobReleaseTask;
-  /** Individual Tasks can override an environment setting specified here by specifying the same setting name with a different value. */
-  commonEnvironmentSettings?: EnvironmentSetting[];
-  /** Specifies how a Job should be assigned to a Pool. */
-  poolInfo: PoolInformation;
-  /** Note that if a Job contains no Tasks, then all Tasks are considered complete. This option is therefore most commonly used with a Job Manager task; if you want to use automatic Job termination without a Job Manager, you should initially set onAllTasksComplete to noaction and update the Job properties to set onAllTasksComplete to terminatejob once you have finished adding Tasks. The default is noaction. */
-  onAllTasksComplete?: OnAllTasksComplete;
-  /** A Task is considered to have failed if has a failureInfo. A failureInfo is set if the Task completes with a non-zero exit code after exhausting its retry count, or if there was an error starting the Task, for example due to a resource file download error. The default is noaction. */
-  onTaskFailure?: OnTaskFailure;
-  /** The Batch service does not assign any meaning to metadata; it is solely for the use of user code. */
-  metadata?: MetadataItem[];
-  /** Whether Tasks in the Job can define dependencies on each other. The default is false. */
-  usesTaskDependencies?: boolean;
-  /** The network configuration for the Job. */
-  networkConfiguration?: JobNetworkConfiguration;
-}
-
 /** The result of listing the Jobs in an Account. */
-export interface CloudJobListResult {
+export interface JobListResult {
   /** The list of Jobs. */
-  value?: CloudJob[];
+  value?: Job[];
   /** The URL to get the next set of results. */
   odataNextLink?: string;
 }
 
 /** The result of listing the status of the Job Preparation and Job Release Tasks for a Job. */
-export interface CloudJobListPreparationAndReleaseTaskStatusResult {
+export interface JobListPreparationAndReleaseTaskStatusResult {
   /** A list of Job Preparation and Job Release Task execution information. */
   value?: JobPreparationAndReleaseTaskExecutionInformation[];
   /** The URL to get the next set of results. */
@@ -1432,84 +1414,52 @@ export interface TaskSlotCounts {
   failed: number;
 }
 
-/** A Pool in the Azure Batch service to add. */
-export interface PoolAddParameter {
-  /** The ID can contain any combination of alphanumeric characters including hyphens and underscores, and cannot contain more than 64 characters. The ID is case-preserving and case-insensitive (that is, you may not have two Pool IDs within an Account that differ only by case). */
-  id: string;
-  /** The display name need not be unique and can contain any Unicode characters up to a maximum length of 1024. */
-  displayName?: string;
-  /** For information about available sizes of virtual machines for Cloud Services Pools (pools created with cloudServiceConfiguration), see Sizes for Cloud Services (https://azure.microsoft.com/documentation/articles/cloud-services-sizes-specs/). Batch supports all Cloud Services VM sizes except ExtraSmall, A1V2 and A2V2. For information about available VM sizes for Pools using Images from the Virtual Machines Marketplace (pools created with virtualMachineConfiguration) see Sizes for Virtual Machines (Linux) (https://azure.microsoft.com/documentation/articles/virtual-machines-linux-sizes/) or Sizes for Virtual Machines (Windows) (https://azure.microsoft.com/documentation/articles/virtual-machines-windows-sizes/). Batch supports all Azure VM sizes except STANDARD_A0 and those with premium storage (STANDARD_GS, STANDARD_DS, and STANDARD_DSV2 series). */
-  vmSize: string;
-  /** This property and virtualMachineConfiguration are mutually exclusive and one of the properties must be specified. This property cannot be specified if the Batch Account was created with its poolAllocationMode property set to 'UserSubscription'. */
-  cloudServiceConfiguration?: CloudServiceConfiguration;
-  /** This property and cloudServiceConfiguration are mutually exclusive and one of the properties must be specified. */
-  virtualMachineConfiguration?: VirtualMachineConfiguration;
-  /** This timeout applies only to manual scaling; it has no effect when enableAutoScale is set to true. The default value is 15 minutes. The minimum value is 5 minutes. If you specify a value less than 5 minutes, the Batch service returns an error; if you are calling the REST API directly, the HTTP status code is 400 (Bad Request). */
-  resizeTimeout?: string;
-  /** This property must not be specified if enableAutoScale is set to true. If enableAutoScale is set to false, then you must set either targetDedicatedNodes, targetLowPriorityNodes, or both. */
-  targetDedicatedNodes?: number;
-  /** This property must not be specified if enableAutoScale is set to true. If enableAutoScale is set to false, then you must set either targetDedicatedNodes, targetLowPriorityNodes, or both. */
-  targetLowPriorityNodes?: number;
-  /** If false, at least one of targetDedicatedNodes and targetLowPriorityNodes must be specified. If true, the autoScaleFormula property is required and the Pool automatically resizes according to the formula. The default value is false. */
-  enableAutoScale?: boolean;
-  /** This property must not be specified if enableAutoScale is set to false. It is required if enableAutoScale is set to true. The formula is checked for validity before the Pool is created. If the formula is not valid, the Batch service rejects the request with detailed error information. For more information about specifying this formula, see 'Automatically scale Compute Nodes in an Azure Batch Pool' (https://azure.microsoft.com/documentation/articles/batch-automatic-scaling/). */
-  autoScaleFormula?: string;
-  /** The default value is 15 minutes. The minimum and maximum value are 5 minutes and 168 hours respectively. If you specify a value less than 5 minutes or greater than 168 hours, the Batch service returns an error; if you are calling the REST API directly, the HTTP status code is 400 (Bad Request). */
-  autoScaleEvaluationInterval?: string;
-  /** Enabling inter-node communication limits the maximum size of the Pool due to deployment restrictions on the Compute Nodes of the Pool. This may result in the Pool not reaching its desired size. The default value is false. */
-  enableInterNodeCommunication?: boolean;
-  /** The network configuration for a Pool. */
-  networkConfiguration?: NetworkConfiguration;
-  /** The Task runs when the Compute Node is added to the Pool or when the Compute Node is restarted. */
-  startTask?: StartTask;
-  /** For Windows Nodes, the Batch service installs the Certificates to the specified Certificate store and location. For Linux Compute Nodes, the Certificates are stored in a directory inside the Task working directory and an environment variable AZ_BATCH_CERTIFICATES_DIR is supplied to the Task to query for this location. For Certificates with visibility of 'remoteUser', a 'certs' directory is created in the user's home directory (e.g., /home/{user-name}/certs) and Certificates are placed in that directory. */
-  certificateReferences?: CertificateReference[];
-  /** Changes to Package references affect all new Nodes joining the Pool, but do not affect Compute Nodes that are already in the Pool until they are rebooted or reimaged. There is a maximum of 10 Package references on any given Pool. */
-  applicationPackageReferences?: ApplicationPackageReference[];
-  /** The list of application licenses must be a subset of available Batch service application licenses. If a license is requested which is not supported, Pool creation will fail. */
-  applicationLicenses?: string[];
-  /** The default value is 1. The maximum value is the smaller of 4 times the number of cores of the vmSize of the pool or 256. */
-  taskSlotsPerNode?: number;
-  /** If not specified, the default is spread. */
-  taskSchedulingPolicy?: TaskSchedulingPolicy;
-  /** The list of user Accounts to be created on each Compute Node in the Pool. */
-  userAccounts?: UserAccount[];
-  /** The Batch service does not assign any meaning to metadata; it is solely for the use of user code. */
-  metadata?: MetadataItem[];
-  /** Mount the storage using Azure fileshare, NFS, CIFS or Blobfuse based file system. */
-  mountConfiguration?: MountConfiguration[];
-}
-
-/** The result of listing the Pools in an Account. */
-export interface CloudPoolListResult {
-  /** The list of Pools. */
-  value?: CloudPool[];
-  /** The URL to get the next set of results. */
-  odataNextLink?: string;
-}
-
 /** A Pool in the Azure Batch service. */
-export interface CloudPool {
+export interface Pool {
   /** The ID can contain any combination of alphanumeric characters including hyphens and underscores, and cannot contain more than 64 characters. The ID is case-preserving and case-insensitive (that is, you may not have two IDs within an Account that differ only by case). */
   id?: string;
   /** The display name need not be unique and can contain any Unicode characters up to a maximum length of 1024. */
   displayName?: string;
-  /** The URL of the Pool. */
-  url?: string;
-  /** This is an opaque string. You can use it to detect whether the Pool has changed between requests. In particular, you can be pass the ETag when updating a Pool to specify that your changes should take effect only if nobody else has modified the Pool in the meantime. */
-  eTag?: string;
-  /** This is the last time at which the Pool level data, such as the targetDedicatedNodes or enableAutoscale settings, changed. It does not factor in node-level changes such as a Compute Node changing state. */
-  lastModified?: Date;
-  /** The creation time of the Pool. */
-  creationTime?: Date;
-  /** The current state of the Pool. */
-  state?: PoolState;
-  /** The time at which the Pool entered its current state. */
-  stateTransitionTime?: Date;
-  /** Whether the Pool is resizing. */
-  allocationState?: AllocationState;
-  /** The time at which the Pool entered its current allocation state. */
-  allocationStateTransitionTime?: Date;
+  /**
+   * The URL of the Pool.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly url?: string;
+  /**
+   * This is an opaque string. You can use it to detect whether the Pool has changed between requests. In particular, you can be pass the ETag when updating a Pool to specify that your changes should take effect only if nobody else has modified the Pool in the meantime.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly eTag?: string;
+  /**
+   * This is the last time at which the Pool level data, such as the targetDedicatedNodes or enableAutoscale settings, changed. It does not factor in node-level changes such as a Compute Node changing state.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly lastModified?: Date;
+  /**
+   * The creation time of the Pool.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly creationTime?: Date;
+  /**
+   * The current state of the Pool.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly state?: PoolState;
+  /**
+   * The time at which the Pool entered its current state.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly stateTransitionTime?: Date;
+  /**
+   * Whether the Pool is resizing.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly allocationState?: AllocationState;
+  /**
+   * The time at which the Pool entered its current allocation state.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly allocationStateTransitionTime?: Date;
   /** For information about available sizes of virtual machines in Pools, see Choose a VM size for Compute Nodes in an Azure Batch Pool (https://docs.microsoft.com/azure/batch/batch-pool-vm-sizes). */
   vmSize?: string;
   /** This property and virtualMachineConfiguration are mutually exclusive and one of the properties must be specified. This property cannot be specified if the Batch Account was created with its poolAllocationMode property set to 'UserSubscription'. */
@@ -1518,12 +1468,21 @@ export interface CloudPool {
   virtualMachineConfiguration?: VirtualMachineConfiguration;
   /** This is the timeout for the most recent resize operation. (The initial sizing when the Pool is created counts as a resize.) The default value is 15 minutes. */
   resizeTimeout?: string;
-  /** This property is set only if one or more errors occurred during the last Pool resize, and only when the Pool allocationState is Steady. */
-  resizeErrors?: ResizeError[];
-  /** The number of dedicated Compute Nodes currently in the Pool. */
-  currentDedicatedNodes?: number;
-  /** Spot/Low-priority Compute Nodes which have been preempted are included in this count. */
-  currentLowPriorityNodes?: number;
+  /**
+   * This property is set only if one or more errors occurred during the last Pool resize, and only when the Pool allocationState is Steady.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly resizeErrors?: ResizeError[];
+  /**
+   * The number of dedicated Compute Nodes currently in the Pool.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly currentDedicatedNodes?: number;
+  /**
+   * Spot/Low-priority Compute Nodes which have been preempted are included in this count.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly currentLowPriorityNodes?: number;
   /** The desired number of dedicated Compute Nodes in the Pool. */
   targetDedicatedNodes?: number;
   /** The desired number of Spot/Low-priority Compute Nodes in the Pool. */
@@ -1534,8 +1493,11 @@ export interface CloudPool {
   autoScaleFormula?: string;
   /** This property is set only if the Pool automatically scales, i.e. enableAutoScale is true. */
   autoScaleEvaluationInterval?: string;
-  /** This property is set only if the Pool automatically scales, i.e. enableAutoScale is true. */
-  autoScaleRun?: AutoScaleRun;
+  /**
+   * This property is set only if the Pool automatically scales, i.e. enableAutoScale is true.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly autoScaleRun?: AutoScaleRun;
   /** This imposes restrictions on which Compute Nodes can be assigned to the Pool. Specifying this value can reduce the chance of the requested number of Compute Nodes to be allocated in the Pool. */
   enableInterNodeCommunication?: boolean;
   /** The network configuration for a Pool. */
@@ -1556,12 +1518,18 @@ export interface CloudPool {
   userAccounts?: UserAccount[];
   /** A list of name-value pairs associated with the Pool as metadata. */
   metadata?: MetadataItem[];
-  /** This property is populated only if the CloudPool was retrieved with an expand clause including the 'stats' attribute; otherwise it is null. The statistics may not be immediately available. The Batch service performs periodic roll-up of statistics. The typical delay is about 30 minutes. */
-  stats?: PoolStatistics;
+  /**
+   * This property is populated only if the CloudPool was retrieved with an expand clause including the 'stats' attribute; otherwise it is null. The statistics may not be immediately available. The Batch service performs periodic roll-up of statistics. The typical delay is about 30 minutes.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly stats?: PoolStatistics;
   /** This supports Azure Files, NFS, CIFS/SMB, and Blobfuse. */
   mountConfiguration?: MountConfiguration[];
-  /** The list of user identities associated with the Batch pool. The user identity dictionary key references will be ARM resource ids in the form: '/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/{identityName}'. */
-  identity?: BatchPoolIdentity;
+  /**
+   * The list of user identities associated with the Batch pool. The user identity dictionary key references will be ARM resource ids in the form: '/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/{identityName}'.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly identity?: BatchPoolIdentity;
 }
 
 /** An error that occurred when resizing a Pool. */
@@ -1618,8 +1586,16 @@ export interface UserAssignedIdentity {
   readonly principalId?: string;
 }
 
+/** The result of listing the Pools in an Account. */
+export interface PoolListResult {
+  /** The list of Pools. */
+  value?: Pool[];
+  /** The URL to get the next set of results. */
+  odataNextLink?: string;
+}
+
 /** The set of changes to be made to a Pool. */
-export interface PoolPatchParameter {
+export interface PoolUpdate {
   /** If this element is present, it overwrites any existing StartTask. If omitted, any existing StartTask is left unchanged. */
   startTask?: StartTask;
   /** If this element is present, it replaces any existing Certificate references configured on the Pool. If omitted, any existing Certificate references are left unchanged. For Windows Nodes, the Batch service installs the Certificates to the specified Certificate store and location. For Linux Compute Nodes, the Certificates are stored in a directory inside the Task working directory and an environment variable AZ_BATCH_CERTIFICATES_DIR is supplied to the Task to query for this location. For Certificates with visibility of 'remoteUser', a 'certs' directory is created in the user's home directory (e.g., /home/{user-name}/certs) and Certificates are placed in that directory. */
@@ -1656,18 +1632,6 @@ export interface PoolResizeParameter {
   nodeDeallocationOption?: ComputeNodeDeallocationOption;
 }
 
-/** The set of changes to be made to a Pool. */
-export interface PoolUpdatePropertiesParameter {
-  /** If this element is present, it overwrites any existing StartTask. If omitted, any existing StartTask is removed from the Pool. */
-  startTask?: StartTask;
-  /** This list replaces any existing Certificate references configured on the Pool. If you specify an empty collection, any existing Certificate references are removed from the Pool. For Windows Nodes, the Batch service installs the Certificates to the specified Certificate store and location. For Linux Compute Nodes, the Certificates are stored in a directory inside the Task working directory and an environment variable AZ_BATCH_CERTIFICATES_DIR is supplied to the Task to query for this location. For Certificates with visibility of 'remoteUser', a 'certs' directory is created in the user's home directory (e.g., /home/{user-name}/certs) and Certificates are placed in that directory. */
-  certificateReferences: CertificateReference[];
-  /** The list replaces any existing Application Package references on the Pool. Changes to Application Package references affect all new Compute Nodes joining the Pool, but do not affect Compute Nodes that are already in the Pool until they are rebooted or reimaged. There is a maximum of 10 Application Package references on any given Pool. If omitted, or if you specify an empty collection, any existing Application Packages references are removed from the Pool. A maximum of 10 references may be specified on a given Pool. */
-  applicationPackageReferences: ApplicationPackageReference[];
-  /** This list replaces any existing metadata configured on the Pool. If omitted, or if you specify an empty collection, any existing metadata is removed from the Pool. */
-  metadata: MetadataItem[];
-}
-
 /** Options for removing Compute Nodes from a Pool. */
 export interface NodeRemoveParameter {
   /** A maximum of 100 nodes may be removed per request. */
@@ -1679,17 +1643,57 @@ export interface NodeRemoveParameter {
 }
 
 /** Batch will retry Tasks when a recovery operation is triggered on a Node. Examples of recovery operations include (but are not limited to) when an unhealthy Node is rebooted or a Compute Node disappeared due to host failure. Retries due to recovery operations are independent of and are not counted against the maxTaskRetryCount. Even if the maxTaskRetryCount is 0, an internal retry due to a recovery operation may occur. Because of this, all Tasks should be idempotent. This means Tasks need to tolerate being interrupted and restarted without causing any corruption or duplicate data. The best practice for long running Tasks is to use some form of checkpointing. */
-export interface TaskAddParameter {
-  /** The ID can contain any combination of alphanumeric characters including hyphens and underscores, and cannot contain more than 64 characters. The ID is case-preserving and case-insensitive (that is, you may not have two IDs within a Job that differ only by case). */
-  id: string;
+export interface Task {
+  /** The ID can contain any combination of alphanumeric characters including hyphens and underscores, and cannot contain more than 64 characters. */
+  id?: string;
   /** The display name need not be unique and can contain any Unicode characters up to a maximum length of 1024. */
   displayName?: string;
-  /** For multi-instance Tasks, the command line is executed as the primary Task, after the primary Task and all subtasks have finished executing the coordination command line. The command line does not run under a shell, and therefore cannot take advantage of shell features such as environment variable expansion. If you want to take advantage of such features, you should invoke the shell in the command line, for example using "cmd /c MyCommand" in Windows or "/bin/sh -c MyCommand" in Linux. If the command line refers to file paths, it should use a relative path (relative to the Task working directory), or use the Batch provided environment variable (https://docs.microsoft.com/en-us/azure/batch/batch-compute-node-environment-variables). */
-  commandLine: string;
-  /** If the Pool that will run this Task has containerConfiguration set, this must be set as well. If the Pool that will run this Task doesn't have containerConfiguration set, this must not be set. When this is specified, all directories recursively below the AZ_BATCH_NODE_ROOT_DIR (the root of Azure Batch directories on the node) are mapped into the container, all Task environment variables are mapped into the container, and the Task command line is executed in the container. Files produced in the container outside of AZ_BATCH_NODE_ROOT_DIR might not be reflected to the host disk, meaning that Batch file APIs will not be able to access those files. */
-  containerSettings?: TaskContainerSettings;
+  /**
+   * The URL of the Task.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly url?: string;
+  /**
+   * This is an opaque string. You can use it to detect whether the Task has changed between requests. In particular, you can be pass the ETag when updating a Task to specify that your changes should take effect only if nobody else has modified the Task in the meantime.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly eTag?: string;
+  /**
+   * The last modified time of the Task.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly lastModified?: Date;
+  /**
+   * The creation time of the Task.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly creationTime?: Date;
   /** How the Batch service should respond when the Task completes. */
   exitConditions?: ExitConditions;
+  /**
+   * The state of the Task.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly state?: TaskState;
+  /**
+   * The time at which the Task entered its current state.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly stateTransitionTime?: Date;
+  /**
+   * This property is not set if the Task is in its initial Active state.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly previousState?: TaskState;
+  /**
+   * This property is not set if the Task is in its initial Active state.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly previousStateTransitionTime?: Date;
+  /** For multi-instance Tasks, the command line is executed as the primary Task, after the primary Task and all subtasks have finished executing the coordination command line. The command line does not run under a shell, and therefore cannot take advantage of shell features such as environment variable expansion. If you want to take advantage of such features, you should invoke the shell in the command line, for example using "cmd /c MyCommand" in Windows or "/bin/sh -c MyCommand" in Linux. If the command line refers to file paths, it should use a relative path (relative to the Task working directory), or use the Batch provided environment variable (https://docs.microsoft.com/en-us/azure/batch/batch-compute-node-environment-variables). */
+  commandLine?: string;
+  /** If the Pool that will run this Task has containerConfiguration set, this must be set as well. If the Pool that will run this Task doesn't have containerConfiguration set, this must not be set. When this is specified, all directories recursively below the AZ_BATCH_NODE_ROOT_DIR (the root of Azure Batch directories on the node) are mapped into the container, all Task environment variables are mapped into the container, and the Task command line is executed in the container. Files produced in the container outside of AZ_BATCH_NODE_ROOT_DIR might not be reflected to the host disk, meaning that Batch file APIs will not be able to access those files. */
+  containerSettings?: TaskContainerSettings;
   /** For multi-instance Tasks, the resource files will only be downloaded to the Compute Node on which the primary Task is executed. There is a maximum size for the list of resource files.  When the max size is exceeded, the request will fail and the response error code will be RequestEntityTooLarge. If this occurs, the collection of ResourceFiles must be reduced in size. This can be achieved using .zip files, Application Packages, or Docker Containers. */
   resourceFiles?: ResourceFile[];
   /** For multi-instance Tasks, the files will only be uploaded from the Compute Node on which the primary Task is executed. */
@@ -1698,15 +1702,30 @@ export interface TaskAddParameter {
   environmentSettings?: EnvironmentSetting[];
   /** A locality hint that can be used by the Batch service to select a Compute Node on which to start a Task. */
   affinityInfo?: AffinityInformation;
-  /** If you do not specify constraints, the maxTaskRetryCount is the maxTaskRetryCount specified for the Job, the maxWallClockTime is infinite, and the retentionTime is 7 days. */
+  /** Execution constraints to apply to a Task. */
   constraints?: TaskConstraints;
   /** The default is 1. A Task can only be scheduled to run on a compute node if the node has enough free scheduling slots available. For multi-instance Tasks, this must be 1. */
   requiredSlots?: number;
   /** If omitted, the Task runs as a non-administrative user unique to the Task. */
   userIdentity?: UserIdentity;
+  /**
+   * Information about the execution of a Task.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly executionInfo?: TaskExecutionInformation;
+  /**
+   * Information about the Compute Node on which a Task ran.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly nodeInfo?: ComputeNodeInformation;
   /** Multi-instance Tasks are commonly used to support MPI Tasks. In the MPI case, if any of the subtasks fail (for example due to exiting with a non-zero exit code) the entire multi-instance Task fails. The multi-instance Task is then terminated and retried, up to its retry limit. */
   multiInstanceSettings?: MultiInstanceSettings;
-  /** This Task will not be scheduled until all Tasks that it depends on have completed successfully. If any of those Tasks fail and exhaust their retry counts, this Task will never be scheduled. If the Job does not have usesTaskDependencies set to true, and this element is present, the request fails with error code TaskDependenciesNotSpecifiedOnJob. */
+  /**
+   * Resource usage statistics for a Task.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly stats?: TaskStatistics;
+  /** This Task will not be scheduled until all Tasks that it depends on have completed successfully. If any of those Tasks fail and exhaust their retry counts, this Task will never be scheduled. */
   dependsOn?: TaskDependencies;
   /** Application packages are downloaded and deployed to a shared directory, not the Task working directory. Therefore, if a referenced package is already on the Node, and is up to date, then it is not re-downloaded; the existing copy on the Compute Node is used. If a referenced Package cannot be installed, for example because the package has been deleted or because download failed, the Task fails. */
   applicationPackageReferences?: ApplicationPackageReference[];
@@ -1760,98 +1779,6 @@ export interface AffinityInformation {
   affinityId: string;
 }
 
-/** Multi-instance Tasks are commonly used to support MPI Tasks. In the MPI case, if any of the subtasks fail (for example due to exiting with a non-zero exit code) the entire multi-instance Task fails. The multi-instance Task is then terminated and retried, up to its retry limit. */
-export interface MultiInstanceSettings {
-  /** If omitted, the default is 1. */
-  numberOfInstances?: number;
-  /** A typical coordination command line launches a background service and verifies that the service is ready to process inter-node messages. */
-  coordinationCommandLine: string;
-  /** The difference between common resource files and Task resource files is that common resource files are downloaded for all subtasks including the primary, whereas Task resource files are downloaded only for the primary. Also note that these resource files are not downloaded to the Task working directory, but instead are downloaded to the Task root directory (one directory above the working directory).  There is a maximum size for the list of resource files.  When the max size is exceeded, the request will fail and the response error code will be RequestEntityTooLarge. If this occurs, the collection of ResourceFiles must be reduced in size. This can be achieved using .zip files, Application Packages, or Docker Containers. */
-  commonResourceFiles?: ResourceFile[];
-}
-
-/** Specifies any dependencies of a Task. Any Task that is explicitly specified or within a dependency range must complete before the dependant Task will be scheduled. */
-export interface TaskDependencies {
-  /** The taskIds collection is limited to 64000 characters total (i.e. the combined length of all Task IDs). If the taskIds collection exceeds the maximum length, the Add Task request fails with error code TaskDependencyListTooLong. In this case consider using Task ID ranges instead. */
-  taskIds?: string[];
-  /** The list of Task ID ranges that this Task depends on. All Tasks in all ranges must complete successfully before the dependent Task can be scheduled. */
-  taskIdRanges?: TaskIdRange[];
-}
-
-/** The start and end of the range are inclusive. For example, if a range has start 9 and end 12, then it represents Tasks '9', '10', '11' and '12'. */
-export interface TaskIdRange {
-  /** The first Task ID in the range. */
-  start: number;
-  /** The last Task ID in the range. */
-  end: number;
-}
-
-/** The result of listing the Tasks in a Job. */
-export interface CloudTaskListResult {
-  /** The list of Tasks. */
-  value?: CloudTask[];
-  /** The URL to get the next set of results. */
-  odataNextLink?: string;
-}
-
-/** Batch will retry Tasks when a recovery operation is triggered on a Node. Examples of recovery operations include (but are not limited to) when an unhealthy Node is rebooted or a Compute Node disappeared due to host failure. Retries due to recovery operations are independent of and are not counted against the maxTaskRetryCount. Even if the maxTaskRetryCount is 0, an internal retry due to a recovery operation may occur. Because of this, all Tasks should be idempotent. This means Tasks need to tolerate being interrupted and restarted without causing any corruption or duplicate data. The best practice for long running Tasks is to use some form of checkpointing. */
-export interface CloudTask {
-  /** The ID can contain any combination of alphanumeric characters including hyphens and underscores, and cannot contain more than 64 characters. */
-  id?: string;
-  /** The display name need not be unique and can contain any Unicode characters up to a maximum length of 1024. */
-  displayName?: string;
-  /** The URL of the Task. */
-  url?: string;
-  /** This is an opaque string. You can use it to detect whether the Task has changed between requests. In particular, you can be pass the ETag when updating a Task to specify that your changes should take effect only if nobody else has modified the Task in the meantime. */
-  eTag?: string;
-  /** The last modified time of the Task. */
-  lastModified?: Date;
-  /** The creation time of the Task. */
-  creationTime?: Date;
-  /** How the Batch service should respond when the Task completes. */
-  exitConditions?: ExitConditions;
-  /** The state of the Task. */
-  state?: TaskState;
-  /** The time at which the Task entered its current state. */
-  stateTransitionTime?: Date;
-  /** This property is not set if the Task is in its initial Active state. */
-  previousState?: TaskState;
-  /** This property is not set if the Task is in its initial Active state. */
-  previousStateTransitionTime?: Date;
-  /** For multi-instance Tasks, the command line is executed as the primary Task, after the primary Task and all subtasks have finished executing the coordination command line. The command line does not run under a shell, and therefore cannot take advantage of shell features such as environment variable expansion. If you want to take advantage of such features, you should invoke the shell in the command line, for example using "cmd /c MyCommand" in Windows or "/bin/sh -c MyCommand" in Linux. If the command line refers to file paths, it should use a relative path (relative to the Task working directory), or use the Batch provided environment variable (https://docs.microsoft.com/en-us/azure/batch/batch-compute-node-environment-variables). */
-  commandLine?: string;
-  /** If the Pool that will run this Task has containerConfiguration set, this must be set as well. If the Pool that will run this Task doesn't have containerConfiguration set, this must not be set. When this is specified, all directories recursively below the AZ_BATCH_NODE_ROOT_DIR (the root of Azure Batch directories on the node) are mapped into the container, all Task environment variables are mapped into the container, and the Task command line is executed in the container. Files produced in the container outside of AZ_BATCH_NODE_ROOT_DIR might not be reflected to the host disk, meaning that Batch file APIs will not be able to access those files. */
-  containerSettings?: TaskContainerSettings;
-  /** For multi-instance Tasks, the resource files will only be downloaded to the Compute Node on which the primary Task is executed. There is a maximum size for the list of resource files.  When the max size is exceeded, the request will fail and the response error code will be RequestEntityTooLarge. If this occurs, the collection of ResourceFiles must be reduced in size. This can be achieved using .zip files, Application Packages, or Docker Containers. */
-  resourceFiles?: ResourceFile[];
-  /** For multi-instance Tasks, the files will only be uploaded from the Compute Node on which the primary Task is executed. */
-  outputFiles?: OutputFile[];
-  /** A list of environment variable settings for the Task. */
-  environmentSettings?: EnvironmentSetting[];
-  /** A locality hint that can be used by the Batch service to select a Compute Node on which to start a Task. */
-  affinityInfo?: AffinityInformation;
-  /** Execution constraints to apply to a Task. */
-  constraints?: TaskConstraints;
-  /** The default is 1. A Task can only be scheduled to run on a compute node if the node has enough free scheduling slots available. For multi-instance Tasks, this must be 1. */
-  requiredSlots?: number;
-  /** If omitted, the Task runs as a non-administrative user unique to the Task. */
-  userIdentity?: UserIdentity;
-  /** Information about the execution of a Task. */
-  executionInfo?: TaskExecutionInformation;
-  /** Information about the Compute Node on which a Task ran. */
-  nodeInfo?: ComputeNodeInformation;
-  /** Multi-instance Tasks are commonly used to support MPI Tasks. In the MPI case, if any of the subtasks fail (for example due to exiting with a non-zero exit code) the entire multi-instance Task fails. The multi-instance Task is then terminated and retried, up to its retry limit. */
-  multiInstanceSettings?: MultiInstanceSettings;
-  /** Resource usage statistics for a Task. */
-  stats?: TaskStatistics;
-  /** This Task will not be scheduled until all Tasks that it depends on have completed successfully. If any of those Tasks fail and exhaust their retry counts, this Task will never be scheduled. */
-  dependsOn?: TaskDependencies;
-  /** Application packages are downloaded and deployed to a shared directory, not the Task working directory. Therefore, if a referenced package is already on the Node, and is up to date, then it is not re-downloaded; the existing copy on the Compute Node is used. If a referenced Package cannot be installed, for example because the package has been deleted or because download failed, the Task fails. */
-  applicationPackageReferences?: ApplicationPackageReference[];
-  /** If this property is set, the Batch service provides the Task with an authentication token which can be used to authenticate Batch service operations without requiring an Account access key. The token is provided via the AZ_BATCH_AUTHENTICATION_TOKEN environment variable. The operations that the Task can carry out using the token depend on the settings. For example, a Task can request Job permissions in order to add other Tasks to the Job, or check the status of the Job or of other Tasks under the Job. */
-  authenticationTokenSettings?: AuthenticationTokenSettings;
-}
-
 /** Information about the execution of a Task. */
 export interface TaskExecutionInformation {
   /** 'Running' corresponds to the running state, so if the Task specifies resource files or Packages, then the start time reflects the time at which the Task started downloading or deploying these. If the Task has been restarted or retried, this is the most recent time at which the Task started running. This property is present only for Tasks that are in the running or completed state. */
@@ -1892,6 +1819,16 @@ export interface ComputeNodeInformation {
   taskRootDirectoryUrl?: string;
 }
 
+/** Multi-instance Tasks are commonly used to support MPI Tasks. In the MPI case, if any of the subtasks fail (for example due to exiting with a non-zero exit code) the entire multi-instance Task fails. The multi-instance Task is then terminated and retried, up to its retry limit. */
+export interface MultiInstanceSettings {
+  /** If omitted, the default is 1. */
+  numberOfInstances?: number;
+  /** A typical coordination command line launches a background service and verifies that the service is ready to process inter-node messages. */
+  coordinationCommandLine: string;
+  /** The difference between common resource files and Task resource files is that common resource files are downloaded for all subtasks including the primary, whereas Task resource files are downloaded only for the primary. Also note that these resource files are not downloaded to the Task working directory, but instead are downloaded to the Task root directory (one directory above the working directory).  There is a maximum size for the list of resource files.  When the max size is exceeded, the request will fail and the response error code will be RequestEntityTooLarge. If this occurs, the collection of ResourceFiles must be reduced in size. This can be achieved using .zip files, Application Packages, or Docker Containers. */
+  commonResourceFiles?: ResourceFile[];
+}
+
 /** Resource usage statistics for a Task. */
 export interface TaskStatistics {
   /** The URL of the statistics. */
@@ -1918,10 +1855,34 @@ export interface TaskStatistics {
   waitTime: string;
 }
 
+/** Specifies any dependencies of a Task. Any Task that is explicitly specified or within a dependency range must complete before the dependant Task will be scheduled. */
+export interface TaskDependencies {
+  /** The taskIds collection is limited to 64000 characters total (i.e. the combined length of all Task IDs). If the taskIds collection exceeds the maximum length, the Add Task request fails with error code TaskDependencyListTooLong. In this case consider using Task ID ranges instead. */
+  taskIds?: string[];
+  /** The list of Task ID ranges that this Task depends on. All Tasks in all ranges must complete successfully before the dependent Task can be scheduled. */
+  taskIdRanges?: TaskIdRange[];
+}
+
+/** The start and end of the range are inclusive. For example, if a range has start 9 and end 12, then it represents Tasks '9', '10', '11' and '12'. */
+export interface TaskIdRange {
+  /** The first Task ID in the range. */
+  start: number;
+  /** The last Task ID in the range. */
+  end: number;
+}
+
+/** The result of listing the Tasks in a Job. */
+export interface TaskListResult {
+  /** The list of Tasks. */
+  value?: Task[];
+  /** The URL to get the next set of results. */
+  odataNextLink?: string;
+}
+
 /** A collection of Azure Batch Tasks to add. */
 export interface TaskAddCollectionParameter {
   /** The total serialized size of this collection must be less than 1MB. If it is greater than 1MB (for example if each Task has 100's of resource files or environment variables), the request will fail with code 'RequestBodyTooLarge' and should be retried again with fewer Tasks. */
-  value: TaskAddParameter[];
+  value: Task[];
 }
 
 /** The result of adding a collection of Tasks to a Job. */
@@ -1946,14 +1907,8 @@ export interface TaskAddResult {
   error?: BatchError;
 }
 
-/** The set of changes to be made to a Task. */
-export interface TaskUpdateParameter {
-  /** If omitted, the Task is given the default constraints. For multi-instance Tasks, updating the retention time applies only to the primary Task and not subtasks. */
-  constraints?: TaskConstraints;
-}
-
 /** The result of listing the subtasks of a Task. */
-export interface CloudTaskListSubtasksResult {
+export interface TaskListSubtasksResult {
   /** The list of subtasks. */
   value?: SubtaskInformation[];
 }
@@ -4876,7 +4831,7 @@ export interface ApplicationGetOptionalParams
 }
 
 /** Contains response data for the get operation. */
-export type ApplicationGetResponse = ApplicationGetHeaders & ApplicationSummary;
+export type ApplicationGetResponse = ApplicationGetHeaders & Application;
 
 /** Optional parameters. */
 export interface ApplicationListNextOptionalParams
@@ -4927,7 +4882,7 @@ export interface PoolListOptionalParams extends coreClient.OperationOptions {
 }
 
 /** Contains response data for the list operation. */
-export type PoolListResponse = PoolListHeaders & CloudPoolListResult;
+export type PoolListResponse = PoolListHeaders & PoolListResult;
 
 /** Optional parameters. */
 export interface PoolDeleteOptionalParams extends coreClient.OperationOptions {
@@ -4954,7 +4909,7 @@ export interface PoolGetOptionalParams extends coreClient.OperationOptions {
 }
 
 /** Contains response data for the get operation. */
-export type PoolGetResponse = PoolGetHeaders & CloudPool;
+export type PoolGetResponse = PoolGetHeaders & Pool;
 
 /** Optional parameters. */
 export interface PoolPatchOptionalParams extends coreClient.OperationOptions {
@@ -5054,7 +5009,7 @@ export interface PoolListNextOptionalParams
 }
 
 /** Contains response data for the listNext operation. */
-export type PoolListNextResponse = PoolListNextHeaders & CloudPoolListResult;
+export type PoolListNextResponse = PoolListNextHeaders & PoolListResult;
 
 /** Optional parameters. */
 export interface AccountListSupportedImagesOptionalParams
@@ -5127,7 +5082,7 @@ export interface JobGetOptionalParams extends coreClient.OperationOptions {
 }
 
 /** Contains response data for the get operation. */
-export type JobGetResponse = JobGetHeaders & CloudJob;
+export type JobGetResponse = JobGetHeaders & Job;
 
 /** Optional parameters. */
 export interface JobPatchOptionalParams extends coreClient.OperationOptions {
@@ -5193,7 +5148,7 @@ export interface JobListOptionalParams extends coreClient.OperationOptions {
 }
 
 /** Contains response data for the list operation. */
-export type JobListResponse = JobListHeaders & CloudJobListResult;
+export type JobListResponse = JobListHeaders & JobListResult;
 
 /** Optional parameters. */
 export interface JobListFromJobScheduleOptionalParams
@@ -5204,7 +5159,7 @@ export interface JobListFromJobScheduleOptionalParams
 
 /** Contains response data for the listFromJobSchedule operation. */
 export type JobListFromJobScheduleResponse = JobListFromJobScheduleHeaders &
-  CloudJobListResult;
+  JobListResult;
 
 /** Optional parameters. */
 export interface JobListPreparationAndReleaseTaskStatusOptionalParams
@@ -5215,7 +5170,7 @@ export interface JobListPreparationAndReleaseTaskStatusOptionalParams
 
 /** Contains response data for the listPreparationAndReleaseTaskStatus operation. */
 export type JobListPreparationAndReleaseTaskStatusResponse = JobListPreparationAndReleaseTaskStatusHeaders &
-  CloudJobListPreparationAndReleaseTaskStatusResult;
+  JobListPreparationAndReleaseTaskStatusResult;
 
 /** Optional parameters. */
 export interface JobGetTaskCountsOptionalParams
@@ -5235,7 +5190,7 @@ export interface JobListNextOptionalParams extends coreClient.OperationOptions {
 }
 
 /** Contains response data for the listNext operation. */
-export type JobListNextResponse = JobListNextHeaders & CloudJobListResult;
+export type JobListNextResponse = JobListNextHeaders & JobListResult;
 
 /** Optional parameters. */
 export interface JobListFromJobScheduleNextOptionalParams
@@ -5246,7 +5201,7 @@ export interface JobListFromJobScheduleNextOptionalParams
 
 /** Contains response data for the listFromJobScheduleNext operation. */
 export type JobListFromJobScheduleNextResponse = JobListFromJobScheduleNextHeaders &
-  CloudJobListResult;
+  JobListResult;
 
 /** Optional parameters. */
 export interface JobListPreparationAndReleaseTaskStatusNextOptionalParams
@@ -5257,7 +5212,7 @@ export interface JobListPreparationAndReleaseTaskStatusNextOptionalParams
 
 /** Contains response data for the listPreparationAndReleaseTaskStatusNext operation. */
 export type JobListPreparationAndReleaseTaskStatusNextResponse = JobListPreparationAndReleaseTaskStatusNextHeaders &
-  CloudJobListPreparationAndReleaseTaskStatusResult;
+  JobListPreparationAndReleaseTaskStatusResult;
 
 /** Optional parameters. */
 export interface CertificateAddOptionalParams
@@ -5495,7 +5450,7 @@ export interface JobScheduleGetOptionalParams
 }
 
 /** Contains response data for the get operation. */
-export type JobScheduleGetResponse = JobScheduleGetHeaders & CloudJobSchedule;
+export type JobScheduleGetResponse = JobScheduleGetHeaders & JobSchedule;
 
 /** Optional parameters. */
 export interface JobSchedulePatchOptionalParams
@@ -5566,7 +5521,7 @@ export interface JobScheduleListOptionalParams
 
 /** Contains response data for the list operation. */
 export type JobScheduleListResponse = JobScheduleListHeaders &
-  CloudJobScheduleListResult;
+  JobScheduleListResult;
 
 /** Optional parameters. */
 export interface JobScheduleListNextOptionalParams
@@ -5577,7 +5532,7 @@ export interface JobScheduleListNextOptionalParams
 
 /** Contains response data for the listNext operation. */
 export type JobScheduleListNextResponse = JobScheduleListNextHeaders &
-  CloudJobScheduleListResult;
+  JobScheduleListResult;
 
 /** Optional parameters. */
 export interface TaskAddOptionalParams extends coreClient.OperationOptions {
@@ -5595,7 +5550,7 @@ export interface TaskListOptionalParams extends coreClient.OperationOptions {
 }
 
 /** Contains response data for the list operation. */
-export type TaskListResponse = TaskListHeaders & CloudTaskListResult;
+export type TaskListResponse = TaskListHeaders & TaskListResult;
 
 /** Optional parameters. */
 export interface TaskAddCollectionOptionalParams
@@ -5624,7 +5579,7 @@ export interface TaskGetOptionalParams extends coreClient.OperationOptions {
 }
 
 /** Contains response data for the get operation. */
-export type TaskGetResponse = TaskGetHeaders & CloudTask;
+export type TaskGetResponse = TaskGetHeaders & Task;
 
 /** Optional parameters. */
 export interface TaskUpdateOptionalParams extends coreClient.OperationOptions {
@@ -5644,7 +5599,7 @@ export interface TaskListSubtasksOptionalParams
 
 /** Contains response data for the listSubtasks operation. */
 export type TaskListSubtasksResponse = TaskListSubtasksHeaders &
-  CloudTaskListSubtasksResult;
+  TaskListSubtasksResult;
 
 /** Optional parameters. */
 export interface TaskTerminateOptionalParams
@@ -5674,7 +5629,7 @@ export interface TaskListNextOptionalParams
 }
 
 /** Contains response data for the listNext operation. */
-export type TaskListNextResponse = TaskListNextHeaders & CloudTaskListResult;
+export type TaskListNextResponse = TaskListNextHeaders & TaskListResult;
 
 /** Optional parameters. */
 export interface ComputeNodeAddUserOptionalParams

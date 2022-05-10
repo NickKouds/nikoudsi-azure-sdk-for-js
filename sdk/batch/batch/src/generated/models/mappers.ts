@@ -20,7 +20,7 @@ export const ApplicationListResult: coreClient.CompositeMapper = {
           element: {
             type: {
               name: "Composite",
-              className: "ApplicationSummary"
+              className: "Application"
             }
           }
         }
@@ -35,10 +35,10 @@ export const ApplicationListResult: coreClient.CompositeMapper = {
   }
 };
 
-export const ApplicationSummary: coreClient.CompositeMapper = {
+export const Application: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
-    className: "ApplicationSummary",
+    className: "Application",
     modelProperties: {
       id: {
         serializedName: "id",
@@ -1083,10 +1083,10 @@ export const FileProperties: coreClient.CompositeMapper = {
   }
 };
 
-export const CloudJobSchedule: coreClient.CompositeMapper = {
+export const JobSchedule: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
-    className: "CloudJobSchedule",
+    className: "JobSchedule",
     modelProperties: {
       id: {
         serializedName: "id",
@@ -1102,30 +1102,35 @@ export const CloudJobSchedule: coreClient.CompositeMapper = {
       },
       url: {
         serializedName: "url",
+        readOnly: true,
         type: {
           name: "String"
         }
       },
       eTag: {
         serializedName: "eTag",
+        readOnly: true,
         type: {
           name: "String"
         }
       },
       lastModified: {
         serializedName: "lastModified",
+        readOnly: true,
         type: {
           name: "DateTime"
         }
       },
       creationTime: {
         serializedName: "creationTime",
+        readOnly: true,
         type: {
           name: "DateTime"
         }
       },
       state: {
         serializedName: "state",
+        readOnly: true,
         type: {
           name: "Enum",
           allowedValues: [
@@ -1139,12 +1144,14 @@ export const CloudJobSchedule: coreClient.CompositeMapper = {
       },
       stateTransitionTime: {
         serializedName: "stateTransitionTime",
+        readOnly: true,
         type: {
           name: "DateTime"
         }
       },
       previousState: {
         serializedName: "previousState",
+        readOnly: true,
         type: {
           name: "Enum",
           allowedValues: [
@@ -1158,6 +1165,7 @@ export const CloudJobSchedule: coreClient.CompositeMapper = {
       },
       previousStateTransitionTime: {
         serializedName: "previousStateTransitionTime",
+        readOnly: true,
         type: {
           name: "DateTime"
         }
@@ -3438,10 +3446,10 @@ export const JobScheduleStatistics: coreClient.CompositeMapper = {
   }
 };
 
-export const JobSchedulePatchParameter: coreClient.CompositeMapper = {
+export const JobScheduleUpdate: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
-    className: "JobSchedulePatchParameter",
+    className: "JobScheduleUpdate",
     modelProperties: {
       schedule: {
         serializedName: "schedule",
@@ -3473,93 +3481,10 @@ export const JobSchedulePatchParameter: coreClient.CompositeMapper = {
   }
 };
 
-export const JobScheduleUpdateParameter: coreClient.CompositeMapper = {
+export const JobScheduleListResult: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
-    className: "JobScheduleUpdateParameter",
-    modelProperties: {
-      schedule: {
-        serializedName: "schedule",
-        type: {
-          name: "Composite",
-          className: "Schedule"
-        }
-      },
-      jobSpecification: {
-        serializedName: "jobSpecification",
-        type: {
-          name: "Composite",
-          className: "JobSpecification"
-        }
-      },
-      metadata: {
-        serializedName: "metadata",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Composite",
-              className: "MetadataItem"
-            }
-          }
-        }
-      }
-    }
-  }
-};
-
-export const JobScheduleAddParameter: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "JobScheduleAddParameter",
-    modelProperties: {
-      id: {
-        serializedName: "id",
-        required: true,
-        type: {
-          name: "String"
-        }
-      },
-      displayName: {
-        serializedName: "displayName",
-        type: {
-          name: "String"
-        }
-      },
-      schedule: {
-        serializedName: "schedule",
-        type: {
-          name: "Composite",
-          className: "Schedule"
-        }
-      },
-      jobSpecification: {
-        serializedName: "jobSpecification",
-        type: {
-          name: "Composite",
-          className: "JobSpecification"
-        }
-      },
-      metadata: {
-        serializedName: "metadata",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Composite",
-              className: "MetadataItem"
-            }
-          }
-        }
-      }
-    }
-  }
-};
-
-export const CloudJobScheduleListResult: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "CloudJobScheduleListResult",
+    className: "JobScheduleListResult",
     modelProperties: {
       value: {
         serializedName: "value",
@@ -3568,7 +3493,7 @@ export const CloudJobScheduleListResult: coreClient.CompositeMapper = {
           element: {
             type: {
               name: "Composite",
-              className: "CloudJobSchedule"
+              className: "JobSchedule"
             }
           }
         }
@@ -3583,10 +3508,10 @@ export const CloudJobScheduleListResult: coreClient.CompositeMapper = {
   }
 };
 
-export const CloudJob: coreClient.CompositeMapper = {
+export const Job: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
-    className: "CloudJob",
+    className: "Job",
     modelProperties: {
       id: {
         serializedName: "id",
@@ -3608,30 +3533,35 @@ export const CloudJob: coreClient.CompositeMapper = {
       },
       url: {
         serializedName: "url",
+        readOnly: true,
         type: {
           name: "String"
         }
       },
       eTag: {
         serializedName: "eTag",
+        readOnly: true,
         type: {
           name: "String"
         }
       },
       lastModified: {
         serializedName: "lastModified",
+        readOnly: true,
         type: {
           name: "DateTime"
         }
       },
       creationTime: {
         serializedName: "creationTime",
+        readOnly: true,
         type: {
           name: "DateTime"
         }
       },
       state: {
         serializedName: "state",
+        readOnly: true,
         type: {
           name: "Enum",
           allowedValues: [
@@ -3647,12 +3577,14 @@ export const CloudJob: coreClient.CompositeMapper = {
       },
       stateTransitionTime: {
         serializedName: "stateTransitionTime",
+        readOnly: true,
         type: {
           name: "DateTime"
         }
       },
       previousState: {
         serializedName: "previousState",
+        readOnly: true,
         type: {
           name: "Enum",
           allowedValues: [
@@ -3668,6 +3600,7 @@ export const CloudJob: coreClient.CompositeMapper = {
       },
       previousStateTransitionTime: {
         serializedName: "previousStateTransitionTime",
+        readOnly: true,
         type: {
           name: "DateTime"
         }
@@ -3871,10 +3804,10 @@ export const JobSchedulingError: coreClient.CompositeMapper = {
   }
 };
 
-export const JobPatchParameter: coreClient.CompositeMapper = {
+export const JobUpdate: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
-    className: "JobPatchParameter",
+    className: "JobUpdate",
     modelProperties: {
       priority: {
         serializedName: "priority",
@@ -3925,67 +3858,6 @@ export const JobPatchParameter: coreClient.CompositeMapper = {
               className: "MetadataItem"
             }
           }
-        }
-      }
-    }
-  }
-};
-
-export const JobUpdateParameter: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "JobUpdateParameter",
-    modelProperties: {
-      priority: {
-        serializedName: "priority",
-        type: {
-          name: "Number"
-        }
-      },
-      maxParallelTasks: {
-        defaultValue: -1,
-        serializedName: "maxParallelTasks",
-        type: {
-          name: "Number"
-        }
-      },
-      allowTaskPreemption: {
-        serializedName: "allowTaskPreemption",
-        type: {
-          name: "Boolean"
-        }
-      },
-      constraints: {
-        serializedName: "constraints",
-        type: {
-          name: "Composite",
-          className: "JobConstraints"
-        }
-      },
-      poolInfo: {
-        serializedName: "poolInfo",
-        type: {
-          name: "Composite",
-          className: "PoolInformation"
-        }
-      },
-      metadata: {
-        serializedName: "metadata",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Composite",
-              className: "MetadataItem"
-            }
-          }
-        }
-      },
-      onAllTasksComplete: {
-        serializedName: "onAllTasksComplete",
-        type: {
-          name: "Enum",
-          allowedValues: ["noaction", "terminatejob"]
         }
       }
     }
@@ -4024,137 +3896,10 @@ export const JobTerminateParameter: coreClient.CompositeMapper = {
   }
 };
 
-export const JobAddParameter: coreClient.CompositeMapper = {
+export const JobListResult: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
-    className: "JobAddParameter",
-    modelProperties: {
-      id: {
-        serializedName: "id",
-        required: true,
-        type: {
-          name: "String"
-        }
-      },
-      displayName: {
-        serializedName: "displayName",
-        type: {
-          name: "String"
-        }
-      },
-      priority: {
-        serializedName: "priority",
-        type: {
-          name: "Number"
-        }
-      },
-      maxParallelTasks: {
-        defaultValue: -1,
-        serializedName: "maxParallelTasks",
-        type: {
-          name: "Number"
-        }
-      },
-      allowTaskPreemption: {
-        serializedName: "allowTaskPreemption",
-        type: {
-          name: "Boolean"
-        }
-      },
-      constraints: {
-        serializedName: "constraints",
-        type: {
-          name: "Composite",
-          className: "JobConstraints"
-        }
-      },
-      jobManagerTask: {
-        serializedName: "jobManagerTask",
-        type: {
-          name: "Composite",
-          className: "JobManagerTask"
-        }
-      },
-      jobPreparationTask: {
-        serializedName: "jobPreparationTask",
-        type: {
-          name: "Composite",
-          className: "JobPreparationTask"
-        }
-      },
-      jobReleaseTask: {
-        serializedName: "jobReleaseTask",
-        type: {
-          name: "Composite",
-          className: "JobReleaseTask"
-        }
-      },
-      commonEnvironmentSettings: {
-        serializedName: "commonEnvironmentSettings",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Composite",
-              className: "EnvironmentSetting"
-            }
-          }
-        }
-      },
-      poolInfo: {
-        serializedName: "poolInfo",
-        type: {
-          name: "Composite",
-          className: "PoolInformation"
-        }
-      },
-      onAllTasksComplete: {
-        serializedName: "onAllTasksComplete",
-        type: {
-          name: "Enum",
-          allowedValues: ["noaction", "terminatejob"]
-        }
-      },
-      onTaskFailure: {
-        serializedName: "onTaskFailure",
-        type: {
-          name: "Enum",
-          allowedValues: ["noaction", "performexitoptionsjobaction"]
-        }
-      },
-      metadata: {
-        serializedName: "metadata",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Composite",
-              className: "MetadataItem"
-            }
-          }
-        }
-      },
-      usesTaskDependencies: {
-        serializedName: "usesTaskDependencies",
-        type: {
-          name: "Boolean"
-        }
-      },
-      networkConfiguration: {
-        serializedName: "networkConfiguration",
-        type: {
-          name: "Composite",
-          className: "JobNetworkConfiguration"
-        }
-      }
-    }
-  }
-};
-
-export const CloudJobListResult: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "CloudJobListResult",
+    className: "JobListResult",
     modelProperties: {
       value: {
         serializedName: "value",
@@ -4163,7 +3908,7 @@ export const CloudJobListResult: coreClient.CompositeMapper = {
           element: {
             type: {
               name: "Composite",
-              className: "CloudJob"
+              className: "Job"
             }
           }
         }
@@ -4178,10 +3923,10 @@ export const CloudJobListResult: coreClient.CompositeMapper = {
   }
 };
 
-export const CloudJobListPreparationAndReleaseTaskStatusResult: coreClient.CompositeMapper = {
+export const JobListPreparationAndReleaseTaskStatusResult: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
-    className: "CloudJobListPreparationAndReleaseTaskStatusResult",
+    className: "JobListPreparationAndReleaseTaskStatusResult",
     modelProperties: {
       value: {
         serializedName: "value",
@@ -4576,220 +4321,10 @@ export const TaskSlotCounts: coreClient.CompositeMapper = {
   }
 };
 
-export const PoolAddParameter: coreClient.CompositeMapper = {
+export const Pool: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
-    className: "PoolAddParameter",
-    modelProperties: {
-      id: {
-        serializedName: "id",
-        required: true,
-        type: {
-          name: "String"
-        }
-      },
-      displayName: {
-        serializedName: "displayName",
-        type: {
-          name: "String"
-        }
-      },
-      vmSize: {
-        serializedName: "vmSize",
-        required: true,
-        type: {
-          name: "String"
-        }
-      },
-      cloudServiceConfiguration: {
-        serializedName: "cloudServiceConfiguration",
-        type: {
-          name: "Composite",
-          className: "CloudServiceConfiguration"
-        }
-      },
-      virtualMachineConfiguration: {
-        serializedName: "virtualMachineConfiguration",
-        type: {
-          name: "Composite",
-          className: "VirtualMachineConfiguration"
-        }
-      },
-      resizeTimeout: {
-        serializedName: "resizeTimeout",
-        type: {
-          name: "TimeSpan"
-        }
-      },
-      targetDedicatedNodes: {
-        serializedName: "targetDedicatedNodes",
-        type: {
-          name: "Number"
-        }
-      },
-      targetLowPriorityNodes: {
-        serializedName: "targetLowPriorityNodes",
-        type: {
-          name: "Number"
-        }
-      },
-      enableAutoScale: {
-        serializedName: "enableAutoScale",
-        type: {
-          name: "Boolean"
-        }
-      },
-      autoScaleFormula: {
-        serializedName: "autoScaleFormula",
-        type: {
-          name: "String"
-        }
-      },
-      autoScaleEvaluationInterval: {
-        serializedName: "autoScaleEvaluationInterval",
-        type: {
-          name: "TimeSpan"
-        }
-      },
-      enableInterNodeCommunication: {
-        serializedName: "enableInterNodeCommunication",
-        type: {
-          name: "Boolean"
-        }
-      },
-      networkConfiguration: {
-        serializedName: "networkConfiguration",
-        type: {
-          name: "Composite",
-          className: "NetworkConfiguration"
-        }
-      },
-      startTask: {
-        serializedName: "startTask",
-        type: {
-          name: "Composite",
-          className: "StartTask"
-        }
-      },
-      certificateReferences: {
-        serializedName: "certificateReferences",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Composite",
-              className: "CertificateReference"
-            }
-          }
-        }
-      },
-      applicationPackageReferences: {
-        serializedName: "applicationPackageReferences",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Composite",
-              className: "ApplicationPackageReference"
-            }
-          }
-        }
-      },
-      applicationLicenses: {
-        serializedName: "applicationLicenses",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "String"
-            }
-          }
-        }
-      },
-      taskSlotsPerNode: {
-        serializedName: "taskSlotsPerNode",
-        type: {
-          name: "Number"
-        }
-      },
-      taskSchedulingPolicy: {
-        serializedName: "taskSchedulingPolicy",
-        type: {
-          name: "Composite",
-          className: "TaskSchedulingPolicy"
-        }
-      },
-      userAccounts: {
-        serializedName: "userAccounts",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Composite",
-              className: "UserAccount"
-            }
-          }
-        }
-      },
-      metadata: {
-        serializedName: "metadata",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Composite",
-              className: "MetadataItem"
-            }
-          }
-        }
-      },
-      mountConfiguration: {
-        serializedName: "mountConfiguration",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Composite",
-              className: "MountConfiguration"
-            }
-          }
-        }
-      }
-    }
-  }
-};
-
-export const CloudPoolListResult: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "CloudPoolListResult",
-    modelProperties: {
-      value: {
-        serializedName: "value",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Composite",
-              className: "CloudPool"
-            }
-          }
-        }
-      },
-      odataNextLink: {
-        serializedName: "odata\\.nextLink",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-
-export const CloudPool: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "CloudPool",
+    className: "Pool",
     modelProperties: {
       id: {
         serializedName: "id",
@@ -4805,30 +4340,35 @@ export const CloudPool: coreClient.CompositeMapper = {
       },
       url: {
         serializedName: "url",
+        readOnly: true,
         type: {
           name: "String"
         }
       },
       eTag: {
         serializedName: "eTag",
+        readOnly: true,
         type: {
           name: "String"
         }
       },
       lastModified: {
         serializedName: "lastModified",
+        readOnly: true,
         type: {
           name: "DateTime"
         }
       },
       creationTime: {
         serializedName: "creationTime",
+        readOnly: true,
         type: {
           name: "DateTime"
         }
       },
       state: {
         serializedName: "state",
+        readOnly: true,
         type: {
           name: "Enum",
           allowedValues: ["active", "deleting"]
@@ -4836,12 +4376,14 @@ export const CloudPool: coreClient.CompositeMapper = {
       },
       stateTransitionTime: {
         serializedName: "stateTransitionTime",
+        readOnly: true,
         type: {
           name: "DateTime"
         }
       },
       allocationState: {
         serializedName: "allocationState",
+        readOnly: true,
         type: {
           name: "Enum",
           allowedValues: ["steady", "resizing", "stopping"]
@@ -4849,6 +4391,7 @@ export const CloudPool: coreClient.CompositeMapper = {
       },
       allocationStateTransitionTime: {
         serializedName: "allocationStateTransitionTime",
+        readOnly: true,
         type: {
           name: "DateTime"
         }
@@ -4881,6 +4424,7 @@ export const CloudPool: coreClient.CompositeMapper = {
       },
       resizeErrors: {
         serializedName: "resizeErrors",
+        readOnly: true,
         type: {
           name: "Sequence",
           element: {
@@ -4893,12 +4437,14 @@ export const CloudPool: coreClient.CompositeMapper = {
       },
       currentDedicatedNodes: {
         serializedName: "currentDedicatedNodes",
+        readOnly: true,
         type: {
           name: "Number"
         }
       },
       currentLowPriorityNodes: {
         serializedName: "currentLowPriorityNodes",
+        readOnly: true,
         type: {
           name: "Number"
         }
@@ -5216,10 +4762,37 @@ export const UserAssignedIdentity: coreClient.CompositeMapper = {
   }
 };
 
-export const PoolPatchParameter: coreClient.CompositeMapper = {
+export const PoolListResult: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
-    className: "PoolPatchParameter",
+    className: "PoolListResult",
+    modelProperties: {
+      value: {
+        serializedName: "value",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "Composite",
+              className: "Pool"
+            }
+          }
+        }
+      },
+      odataNextLink: {
+        serializedName: "odata\\.nextLink",
+        type: {
+          name: "String"
+        }
+      }
+    }
+  }
+};
+
+export const PoolUpdate: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "PoolUpdate",
     modelProperties: {
       startTask: {
         serializedName: "startTask",
@@ -5344,61 +4917,6 @@ export const PoolResizeParameter: coreClient.CompositeMapper = {
   }
 };
 
-export const PoolUpdatePropertiesParameter: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "PoolUpdatePropertiesParameter",
-    modelProperties: {
-      startTask: {
-        serializedName: "startTask",
-        type: {
-          name: "Composite",
-          className: "StartTask"
-        }
-      },
-      certificateReferences: {
-        serializedName: "certificateReferences",
-        required: true,
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Composite",
-              className: "CertificateReference"
-            }
-          }
-        }
-      },
-      applicationPackageReferences: {
-        serializedName: "applicationPackageReferences",
-        required: true,
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Composite",
-              className: "ApplicationPackageReference"
-            }
-          }
-        }
-      },
-      metadata: {
-        serializedName: "metadata",
-        required: true,
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Composite",
-              className: "MetadataItem"
-            }
-          }
-        }
-      }
-    }
-  }
-};
-
 export const NodeRemoveParameter: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
@@ -5441,14 +4959,13 @@ export const NodeRemoveParameter: coreClient.CompositeMapper = {
   }
 };
 
-export const TaskAddParameter: coreClient.CompositeMapper = {
+export const Task: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
-    className: "TaskAddParameter",
+    className: "Task",
     modelProperties: {
       id: {
         serializedName: "id",
-        required: true,
         type: {
           name: "String"
         }
@@ -5459,9 +4976,73 @@ export const TaskAddParameter: coreClient.CompositeMapper = {
           name: "String"
         }
       },
+      url: {
+        serializedName: "url",
+        readOnly: true,
+        type: {
+          name: "String"
+        }
+      },
+      eTag: {
+        serializedName: "eTag",
+        readOnly: true,
+        type: {
+          name: "String"
+        }
+      },
+      lastModified: {
+        serializedName: "lastModified",
+        readOnly: true,
+        type: {
+          name: "DateTime"
+        }
+      },
+      creationTime: {
+        serializedName: "creationTime",
+        readOnly: true,
+        type: {
+          name: "DateTime"
+        }
+      },
+      exitConditions: {
+        serializedName: "exitConditions",
+        type: {
+          name: "Composite",
+          className: "ExitConditions"
+        }
+      },
+      state: {
+        serializedName: "state",
+        readOnly: true,
+        type: {
+          name: "Enum",
+          allowedValues: ["active", "preparing", "running", "completed"]
+        }
+      },
+      stateTransitionTime: {
+        serializedName: "stateTransitionTime",
+        readOnly: true,
+        type: {
+          name: "DateTime"
+        }
+      },
+      previousState: {
+        serializedName: "previousState",
+        readOnly: true,
+        type: {
+          name: "Enum",
+          allowedValues: ["active", "preparing", "running", "completed"]
+        }
+      },
+      previousStateTransitionTime: {
+        serializedName: "previousStateTransitionTime",
+        readOnly: true,
+        type: {
+          name: "DateTime"
+        }
+      },
       commandLine: {
         serializedName: "commandLine",
-        required: true,
         type: {
           name: "String"
         }
@@ -5471,13 +5052,6 @@ export const TaskAddParameter: coreClient.CompositeMapper = {
         type: {
           name: "Composite",
           className: "TaskContainerSettings"
-        }
-      },
-      exitConditions: {
-        serializedName: "exitConditions",
-        type: {
-          name: "Composite",
-          className: "ExitConditions"
         }
       },
       resourceFiles: {
@@ -5543,11 +5117,32 @@ export const TaskAddParameter: coreClient.CompositeMapper = {
           className: "UserIdentity"
         }
       },
+      executionInfo: {
+        serializedName: "executionInfo",
+        type: {
+          name: "Composite",
+          className: "TaskExecutionInformation"
+        }
+      },
+      nodeInfo: {
+        serializedName: "nodeInfo",
+        type: {
+          name: "Composite",
+          className: "ComputeNodeInformation"
+        }
+      },
       multiInstanceSettings: {
         serializedName: "multiInstanceSettings",
         type: {
           name: "Composite",
           className: "MultiInstanceSettings"
+        }
+      },
+      stats: {
+        serializedName: "stats",
+        type: {
+          name: "Composite",
+          className: "TaskStatistics"
         }
       },
       dependsOn: {
@@ -5726,330 +5321,6 @@ export const AffinityInformation: coreClient.CompositeMapper = {
   }
 };
 
-export const MultiInstanceSettings: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "MultiInstanceSettings",
-    modelProperties: {
-      numberOfInstances: {
-        serializedName: "numberOfInstances",
-        type: {
-          name: "Number"
-        }
-      },
-      coordinationCommandLine: {
-        serializedName: "coordinationCommandLine",
-        required: true,
-        type: {
-          name: "String"
-        }
-      },
-      commonResourceFiles: {
-        serializedName: "commonResourceFiles",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Composite",
-              className: "ResourceFile"
-            }
-          }
-        }
-      }
-    }
-  }
-};
-
-export const TaskDependencies: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "TaskDependencies",
-    modelProperties: {
-      taskIds: {
-        serializedName: "taskIds",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "String"
-            }
-          }
-        }
-      },
-      taskIdRanges: {
-        serializedName: "taskIdRanges",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Composite",
-              className: "TaskIdRange"
-            }
-          }
-        }
-      }
-    }
-  }
-};
-
-export const TaskIdRange: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "TaskIdRange",
-    modelProperties: {
-      start: {
-        serializedName: "start",
-        required: true,
-        type: {
-          name: "Number"
-        }
-      },
-      end: {
-        serializedName: "end",
-        required: true,
-        type: {
-          name: "Number"
-        }
-      }
-    }
-  }
-};
-
-export const CloudTaskListResult: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "CloudTaskListResult",
-    modelProperties: {
-      value: {
-        serializedName: "value",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Composite",
-              className: "CloudTask"
-            }
-          }
-        }
-      },
-      odataNextLink: {
-        serializedName: "odata\\.nextLink",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-
-export const CloudTask: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "CloudTask",
-    modelProperties: {
-      id: {
-        serializedName: "id",
-        type: {
-          name: "String"
-        }
-      },
-      displayName: {
-        serializedName: "displayName",
-        type: {
-          name: "String"
-        }
-      },
-      url: {
-        serializedName: "url",
-        type: {
-          name: "String"
-        }
-      },
-      eTag: {
-        serializedName: "eTag",
-        type: {
-          name: "String"
-        }
-      },
-      lastModified: {
-        serializedName: "lastModified",
-        type: {
-          name: "DateTime"
-        }
-      },
-      creationTime: {
-        serializedName: "creationTime",
-        type: {
-          name: "DateTime"
-        }
-      },
-      exitConditions: {
-        serializedName: "exitConditions",
-        type: {
-          name: "Composite",
-          className: "ExitConditions"
-        }
-      },
-      state: {
-        serializedName: "state",
-        type: {
-          name: "Enum",
-          allowedValues: ["active", "preparing", "running", "completed"]
-        }
-      },
-      stateTransitionTime: {
-        serializedName: "stateTransitionTime",
-        type: {
-          name: "DateTime"
-        }
-      },
-      previousState: {
-        serializedName: "previousState",
-        type: {
-          name: "Enum",
-          allowedValues: ["active", "preparing", "running", "completed"]
-        }
-      },
-      previousStateTransitionTime: {
-        serializedName: "previousStateTransitionTime",
-        type: {
-          name: "DateTime"
-        }
-      },
-      commandLine: {
-        serializedName: "commandLine",
-        type: {
-          name: "String"
-        }
-      },
-      containerSettings: {
-        serializedName: "containerSettings",
-        type: {
-          name: "Composite",
-          className: "TaskContainerSettings"
-        }
-      },
-      resourceFiles: {
-        serializedName: "resourceFiles",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Composite",
-              className: "ResourceFile"
-            }
-          }
-        }
-      },
-      outputFiles: {
-        serializedName: "outputFiles",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Composite",
-              className: "OutputFile"
-            }
-          }
-        }
-      },
-      environmentSettings: {
-        serializedName: "environmentSettings",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Composite",
-              className: "EnvironmentSetting"
-            }
-          }
-        }
-      },
-      affinityInfo: {
-        serializedName: "affinityInfo",
-        type: {
-          name: "Composite",
-          className: "AffinityInformation"
-        }
-      },
-      constraints: {
-        serializedName: "constraints",
-        type: {
-          name: "Composite",
-          className: "TaskConstraints"
-        }
-      },
-      requiredSlots: {
-        serializedName: "requiredSlots",
-        type: {
-          name: "Number"
-        }
-      },
-      userIdentity: {
-        serializedName: "userIdentity",
-        type: {
-          name: "Composite",
-          className: "UserIdentity"
-        }
-      },
-      executionInfo: {
-        serializedName: "executionInfo",
-        type: {
-          name: "Composite",
-          className: "TaskExecutionInformation"
-        }
-      },
-      nodeInfo: {
-        serializedName: "nodeInfo",
-        type: {
-          name: "Composite",
-          className: "ComputeNodeInformation"
-        }
-      },
-      multiInstanceSettings: {
-        serializedName: "multiInstanceSettings",
-        type: {
-          name: "Composite",
-          className: "MultiInstanceSettings"
-        }
-      },
-      stats: {
-        serializedName: "stats",
-        type: {
-          name: "Composite",
-          className: "TaskStatistics"
-        }
-      },
-      dependsOn: {
-        serializedName: "dependsOn",
-        type: {
-          name: "Composite",
-          className: "TaskDependencies"
-        }
-      },
-      applicationPackageReferences: {
-        serializedName: "applicationPackageReferences",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Composite",
-              className: "ApplicationPackageReference"
-            }
-          }
-        }
-      },
-      authenticationTokenSettings: {
-        serializedName: "authenticationTokenSettings",
-        type: {
-          name: "Composite",
-          className: "AuthenticationTokenSettings"
-        }
-      }
-    }
-  }
-};
-
 export const TaskExecutionInformation: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
@@ -6169,6 +5440,40 @@ export const ComputeNodeInformation: coreClient.CompositeMapper = {
   }
 };
 
+export const MultiInstanceSettings: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "MultiInstanceSettings",
+    modelProperties: {
+      numberOfInstances: {
+        serializedName: "numberOfInstances",
+        type: {
+          name: "Number"
+        }
+      },
+      coordinationCommandLine: {
+        serializedName: "coordinationCommandLine",
+        required: true,
+        type: {
+          name: "String"
+        }
+      },
+      commonResourceFiles: {
+        serializedName: "commonResourceFiles",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "Composite",
+              className: "ResourceFile"
+            }
+          }
+        }
+      }
+    }
+  }
+};
+
 export const TaskStatistics: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
@@ -6255,6 +5560,88 @@ export const TaskStatistics: coreClient.CompositeMapper = {
   }
 };
 
+export const TaskDependencies: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "TaskDependencies",
+    modelProperties: {
+      taskIds: {
+        serializedName: "taskIds",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "String"
+            }
+          }
+        }
+      },
+      taskIdRanges: {
+        serializedName: "taskIdRanges",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "Composite",
+              className: "TaskIdRange"
+            }
+          }
+        }
+      }
+    }
+  }
+};
+
+export const TaskIdRange: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "TaskIdRange",
+    modelProperties: {
+      start: {
+        serializedName: "start",
+        required: true,
+        type: {
+          name: "Number"
+        }
+      },
+      end: {
+        serializedName: "end",
+        required: true,
+        type: {
+          name: "Number"
+        }
+      }
+    }
+  }
+};
+
+export const TaskListResult: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "TaskListResult",
+    modelProperties: {
+      value: {
+        serializedName: "value",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "Composite",
+              className: "Task"
+            }
+          }
+        }
+      },
+      odataNextLink: {
+        serializedName: "odata\\.nextLink",
+        type: {
+          name: "String"
+        }
+      }
+    }
+  }
+};
+
 export const TaskAddCollectionParameter: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
@@ -6271,7 +5658,7 @@ export const TaskAddCollectionParameter: coreClient.CompositeMapper = {
           element: {
             type: {
               name: "Composite",
-              className: "TaskAddParameter"
+              className: "Task"
             }
           }
         }
@@ -6350,26 +5737,10 @@ export const TaskAddResult: coreClient.CompositeMapper = {
   }
 };
 
-export const TaskUpdateParameter: coreClient.CompositeMapper = {
+export const TaskListSubtasksResult: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
-    className: "TaskUpdateParameter",
-    modelProperties: {
-      constraints: {
-        serializedName: "constraints",
-        type: {
-          name: "Composite",
-          className: "TaskConstraints"
-        }
-      }
-    }
-  }
-};
-
-export const CloudTaskListSubtasksResult: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "CloudTaskListSubtasksResult",
+    className: "TaskListSubtasksResult",
     modelProperties: {
       value: {
         serializedName: "value",

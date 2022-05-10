@@ -6,13 +6,13 @@
  * Changes may cause incorrect behavior and will be lost if the code is regenerated.
  */
 
-export * from "./application";
-export * from "./pool";
+export * from "./applicationOperations";
+export * from "./poolOperations";
 export * from "./account";
-export * from "./job";
+export * from "./jobOperations";
 export * from "./certificateOperations";
 export * from "./file";
-export * from "./jobSchedule";
-export * from "./task";
+export * from "./jobScheduleOperations";
+export * from "./taskOperations";
 export * from "./computeNodeOperations";
 export * from "./computeNodeExtension";

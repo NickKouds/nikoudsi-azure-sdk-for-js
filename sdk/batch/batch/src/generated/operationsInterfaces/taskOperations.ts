@@ -8,9 +8,8 @@
 
 import { PagedAsyncIterableIterator } from "@azure/core-paging";
 import {
-  CloudTask,
+  Task,
   TaskListOptionalParams,
-  TaskAddParameter,
   TaskAddOptionalParams,
   TaskAddResponse,
   TaskAddCollectionParameter,
@@ -20,7 +19,6 @@ import {
   TaskDeleteResponse,
   TaskGetOptionalParams,
   TaskGetResponse,
-  TaskUpdateParameter,
   TaskUpdateOptionalParams,
   TaskUpdateResponse,
   TaskListSubtasksOptionalParams,
@@ -32,8 +30,8 @@ import {
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Interface representing a Task. */
-export interface Task {
+/** Interface representing a TaskOperations. */
+export interface TaskOperations {
   /**
    * For multi-instance Tasks, information such as affinityId, executionInfo and nodeInfo refer to the
    * primary Task. Use the list subtasks API to retrieve information about subtasks.
@@ -43,7 +41,7 @@ export interface Task {
   list(
     jobId: string,
     options?: TaskListOptionalParams
-  ): PagedAsyncIterableIterator<CloudTask>;
+  ): PagedAsyncIterableIterator<Task>;
   /**
    * The maximum lifetime of a Task from addition to completion is 180 days. If a Task has not completed
    * within 180 days of being added it will be terminated by the Batch service and left in whatever state
@@ -54,7 +52,7 @@ export interface Task {
    */
   add(
     jobId: string,
-    task: TaskAddParameter,
+    task: Task,
     options?: TaskAddOptionalParams
   ): Promise<TaskAddResponse>;
   /**
@@ -114,7 +112,7 @@ export interface Task {
   update(
     jobId: string,
     taskId: string,
-    taskUpdateParameter: TaskUpdateParameter,
+    taskUpdateParameter: Task,
     options?: TaskUpdateOptionalParams
   ): Promise<TaskUpdateResponse>;
   /**

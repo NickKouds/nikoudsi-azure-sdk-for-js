@@ -8,15 +8,15 @@
 
 import { PagedAsyncIterableIterator } from "@azure/core-paging";
 import {
-  ApplicationSummary,
+  Application,
   ApplicationListOptionalParams,
   ApplicationGetOptionalParams,
   ApplicationGetResponse
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Interface representing a Application. */
-export interface Application {
+/** Interface representing a ApplicationOperations. */
+export interface ApplicationOperations {
   /**
    * This operation returns only Applications and versions that are available for use on Compute Nodes;
    * that is, that can be used in an Package reference. For administrator information about applications
@@ -26,7 +26,7 @@ export interface Application {
    */
   list(
     options?: ApplicationListOptionalParams
-  ): PagedAsyncIterableIterator<ApplicationSummary>;
+  ): PagedAsyncIterableIterator<Application>;
   /**
    * This operation returns only Applications and versions that are available for use on Compute Nodes;
    * that is, that can be used in an Package reference. For administrator information about Applications

@@ -7,13 +7,13 @@
  */
 
 import { PagedAsyncIterableIterator } from "@azure/core-paging";
-import { Job } from "../operationsInterfaces";
+import { JobOperations } from "../operationsInterfaces";
 import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
 import { GeneratedClient } from "../generatedClient";
 import {
-  CloudJob,
+  Job,
   JobListNextOptionalParams,
   JobListOptionalParams,
   JobListFromJobScheduleNextOptionalParams,
@@ -27,10 +27,9 @@ import {
   JobDeleteResponse,
   JobGetOptionalParams,
   JobGetResponse,
-  JobPatchParameter,
+  JobUpdate,
   JobPatchOptionalParams,
   JobPatchResponse,
-  JobUpdateParameter,
   JobUpdateOptionalParams,
   JobUpdateResponse,
   JobDisableParameter,
@@ -40,7 +39,6 @@ import {
   JobEnableResponse,
   JobTerminateOptionalParams,
   JobTerminateResponse,
-  JobAddParameter,
   JobAddOptionalParams,
   JobAddResponse,
   JobListResponse,
@@ -54,12 +52,12 @@ import {
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Class containing Job operations. */
-export class JobImpl implements Job {
+/** Class containing JobOperations operations. */
+export class JobOperationsImpl implements JobOperations {
   private readonly client: GeneratedClient;
 
   /**
-   * Initialize a new instance of the class Job class.
+   * Initialize a new instance of the class JobOperations class.
    * @param client Reference to the service client
    */
   constructor(client: GeneratedClient) {
@@ -72,7 +70,7 @@ export class JobImpl implements Job {
    */
   public list(
     options?: JobListOptionalParams
-  ): PagedAsyncIterableIterator<CloudJob> {
+  ): PagedAsyncIterableIterator<Job> {
     const iter = this.listPagingAll(options);
     return {
       next() {
@@ -89,7 +87,7 @@ export class JobImpl implements Job {
 
   private async *listPagingPage(
     options?: JobListOptionalParams
-  ): AsyncIterableIterator<CloudJob[]> {
+  ): AsyncIterableIterator<Job[]> {
     let result = await this._list(options);
     yield result.value || [];
     let continuationToken = result.odataNextLink;
@@ -102,7 +100,7 @@ export class JobImpl implements Job {
 
   private async *listPagingAll(
     options?: JobListOptionalParams
-  ): AsyncIterableIterator<CloudJob> {
+  ): AsyncIterableIterator<Job> {
     for await (const page of this.listPagingPage(options)) {
       yield* page;
     }
@@ -116,7 +114,7 @@ export class JobImpl implements Job {
   public listFromJobSchedule(
     jobScheduleId: string,
     options?: JobListFromJobScheduleOptionalParams
-  ): PagedAsyncIterableIterator<CloudJob> {
+  ): PagedAsyncIterableIterator<Job> {
     const iter = this.listFromJobSchedulePagingAll(jobScheduleId, options);
     return {
       next() {
@@ -134,7 +132,7 @@ export class JobImpl implements Job {
   private async *listFromJobSchedulePagingPage(
     jobScheduleId: string,
     options?: JobListFromJobScheduleOptionalParams
-  ): AsyncIterableIterator<CloudJob[]> {
+  ): AsyncIterableIterator<Job[]> {
     let result = await this._listFromJobSchedule(jobScheduleId, options);
     yield result.value || [];
     let continuationToken = result.odataNextLink;
@@ -152,7 +150,7 @@ export class JobImpl implements Job {
   private async *listFromJobSchedulePagingAll(
     jobScheduleId: string,
     options?: JobListFromJobScheduleOptionalParams
-  ): AsyncIterableIterator<CloudJob> {
+  ): AsyncIterableIterator<Job> {
     for await (const page of this.listFromJobSchedulePagingPage(
       jobScheduleId,
       options
@@ -286,7 +284,7 @@ export class JobImpl implements Job {
    */
   patch(
     jobId: string,
-    jobPatchParameter: JobPatchParameter,
+    jobPatchParameter: JobUpdate,
     options?: JobPatchOptionalParams
   ): Promise<JobPatchResponse> {
     return this.client.sendOperationRequest(
@@ -305,7 +303,7 @@ export class JobImpl implements Job {
    */
   update(
     jobId: string,
-    jobUpdateParameter: JobUpdateParameter,
+    jobUpdateParameter: Job,
     options?: JobUpdateOptionalParams
   ): Promise<JobUpdateResponse> {
     return this.client.sendOperationRequest(
@@ -385,10 +383,7 @@ export class JobImpl implements Job {
    * @param job The Job to be added.
    * @param options The options parameters.
    */
-  add(
-    job: JobAddParameter,
-    options?: JobAddOptionalParams
-  ): Promise<JobAddResponse> {
+  add(job: Job, options?: JobAddOptionalParams): Promise<JobAddResponse> {
     return this.client.sendOperationRequest({ job, options }, addOperationSpec);
   }
 
@@ -556,7 +551,7 @@ const getOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.CloudJob,
+      bodyMapper: Mappers.Job,
       headersMapper: Mappers.JobGetHeaders
     },
     default: {
@@ -748,7 +743,7 @@ const listOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.CloudJobListResult,
+      bodyMapper: Mappers.JobListResult,
       headersMapper: Mappers.JobListHeaders
     },
     default: {
@@ -777,7 +772,7 @@ const listFromJobScheduleOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.CloudJobListResult,
+      bodyMapper: Mappers.JobListResult,
       headersMapper: Mappers.JobListFromJobScheduleHeaders
     },
     default: {
@@ -806,7 +801,7 @@ const listPreparationAndReleaseTaskStatusOperationSpec: coreClient.OperationSpec
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.CloudJobListPreparationAndReleaseTaskStatusResult,
+      bodyMapper: Mappers.JobListPreparationAndReleaseTaskStatusResult,
       headersMapper: Mappers.JobListPreparationAndReleaseTaskStatusHeaders
     },
     default: {
@@ -856,7 +851,7 @@ const listNextOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.CloudJobListResult,
+      bodyMapper: Mappers.JobListResult,
       headersMapper: Mappers.JobListNextHeaders
     },
     default: {
@@ -885,7 +880,7 @@ const listFromJobScheduleNextOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.CloudJobListResult,
+      bodyMapper: Mappers.JobListResult,
       headersMapper: Mappers.JobListFromJobScheduleNextHeaders
     },
     default: {
@@ -918,7 +913,7 @@ const listPreparationAndReleaseTaskStatusNextOperationSpec: coreClient.Operation
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.CloudJobListPreparationAndReleaseTaskStatusResult,
+      bodyMapper: Mappers.JobListPreparationAndReleaseTaskStatusResult,
       headersMapper: Mappers.JobListPreparationAndReleaseTaskStatusNextHeaders
     },
     default: {

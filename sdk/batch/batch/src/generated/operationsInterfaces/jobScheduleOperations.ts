@@ -8,7 +8,7 @@
 
 import { PagedAsyncIterableIterator } from "@azure/core-paging";
 import {
-  CloudJobSchedule,
+  JobSchedule,
   JobScheduleListOptionalParams,
   JobScheduleExistsOptionalParams,
   JobScheduleExistsResponse,
@@ -16,10 +16,9 @@ import {
   JobScheduleDeleteResponse,
   JobScheduleGetOptionalParams,
   JobScheduleGetResponse,
-  JobSchedulePatchParameter,
+  JobScheduleUpdate,
   JobSchedulePatchOptionalParams,
   JobSchedulePatchResponse,
-  JobScheduleUpdateParameter,
   JobScheduleUpdateOptionalParams,
   JobScheduleUpdateResponse,
   JobScheduleDisableOptionalParams,
@@ -28,21 +27,20 @@ import {
   JobScheduleEnableResponse,
   JobScheduleTerminateOptionalParams,
   JobScheduleTerminateResponse,
-  JobScheduleAddParameter,
   JobScheduleAddOptionalParams,
   JobScheduleAddResponse
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Interface representing a JobSchedule. */
-export interface JobSchedule {
+/** Interface representing a JobScheduleOperations. */
+export interface JobScheduleOperations {
   /**
    * Lists all of the Job Schedules in the specified Account.
    * @param options The options parameters.
    */
   list(
     options?: JobScheduleListOptionalParams
-  ): PagedAsyncIterableIterator<CloudJobSchedule>;
+  ): PagedAsyncIterableIterator<JobSchedule>;
   /**
    * Checks the specified Job Schedule exists.
    * @param jobScheduleId The ID of the Job Schedule which you want to check.
@@ -84,7 +82,7 @@ export interface JobSchedule {
    */
   patch(
     jobScheduleId: string,
-    jobSchedulePatchParameter: JobSchedulePatchParameter,
+    jobSchedulePatchParameter: JobScheduleUpdate,
     options?: JobSchedulePatchOptionalParams
   ): Promise<JobSchedulePatchResponse>;
   /**
@@ -98,7 +96,7 @@ export interface JobSchedule {
    */
   update(
     jobScheduleId: string,
-    jobScheduleUpdateParameter: JobScheduleUpdateParameter,
+    jobScheduleUpdateParameter: JobSchedule,
     options?: JobScheduleUpdateOptionalParams
   ): Promise<JobScheduleUpdateResponse>;
   /**
@@ -130,11 +128,11 @@ export interface JobSchedule {
   ): Promise<JobScheduleTerminateResponse>;
   /**
    * Adds a Job Schedule to the specified Account.
-   * @param cloudJobSchedule The Job Schedule to be added.
+   * @param jobSchedule The Job Schedule to be added.
    * @param options The options parameters.
    */
   add(
-    cloudJobSchedule: JobScheduleAddParameter,
+    jobSchedule: JobSchedule,
     options?: JobScheduleAddOptionalParams
   ): Promise<JobScheduleAddResponse>;
 }

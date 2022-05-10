@@ -8,7 +8,7 @@
 
 import { PagedAsyncIterableIterator } from "@azure/core-paging";
 import {
-  CloudJob,
+  Job,
   JobListOptionalParams,
   JobListFromJobScheduleOptionalParams,
   JobPreparationAndReleaseTaskExecutionInformation,
@@ -19,10 +19,9 @@ import {
   JobDeleteResponse,
   JobGetOptionalParams,
   JobGetResponse,
-  JobPatchParameter,
+  JobUpdate,
   JobPatchOptionalParams,
   JobPatchResponse,
-  JobUpdateParameter,
   JobUpdateOptionalParams,
   JobUpdateResponse,
   JobDisableParameter,
@@ -32,7 +31,6 @@ import {
   JobEnableResponse,
   JobTerminateOptionalParams,
   JobTerminateResponse,
-  JobAddParameter,
   JobAddOptionalParams,
   JobAddResponse,
   JobGetTaskCountsOptionalParams,
@@ -40,13 +38,13 @@ import {
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Interface representing a Job. */
-export interface Job {
+/** Interface representing a JobOperations. */
+export interface JobOperations {
   /**
    * Lists all of the Jobs in the specified Account.
    * @param options The options parameters.
    */
-  list(options?: JobListOptionalParams): PagedAsyncIterableIterator<CloudJob>;
+  list(options?: JobListOptionalParams): PagedAsyncIterableIterator<Job>;
   /**
    * Lists the Jobs that have been created under the specified Job Schedule.
    * @param jobScheduleId The ID of the Job Schedule from which you want to get a list of Jobs.
@@ -55,7 +53,7 @@ export interface Job {
   listFromJobSchedule(
     jobScheduleId: string,
     options?: JobListFromJobScheduleOptionalParams
-  ): PagedAsyncIterableIterator<CloudJob>;
+  ): PagedAsyncIterableIterator<Job>;
   /**
    * This API returns the Job Preparation and Job Release Task status on all Compute Nodes that have run
    * the Job Preparation or Job Release Task. This includes Compute Nodes which have since been removed
@@ -110,7 +108,7 @@ export interface Job {
    */
   patch(
     jobId: string,
-    jobPatchParameter: JobPatchParameter,
+    jobPatchParameter: JobUpdate,
     options?: JobPatchOptionalParams
   ): Promise<JobPatchResponse>;
   /**
@@ -123,7 +121,7 @@ export interface Job {
    */
   update(
     jobId: string,
-    jobUpdateParameter: JobUpdateParameter,
+    jobUpdateParameter: Job,
     options?: JobUpdateOptionalParams
   ): Promise<JobUpdateResponse>;
   /**
@@ -179,10 +177,7 @@ export interface Job {
    * @param job The Job to be added.
    * @param options The options parameters.
    */
-  add(
-    job: JobAddParameter,
-    options?: JobAddOptionalParams
-  ): Promise<JobAddResponse>;
+  add(job: Job, options?: JobAddOptionalParams): Promise<JobAddResponse>;
   /**
    * Task counts provide a count of the Tasks by active, running or completed Task state, and a count of
    * Tasks which succeeded or failed. Tasks in the preparing state are counted as running. Note that the

@@ -7,27 +7,28 @@
  */
 
 import * as coreClient from "@azure/core-client";
+import * as coreRestPipeline from "@azure/core-rest-pipeline";
 import {
-  ApplicationImpl,
-  PoolImpl,
+  ApplicationOperationsImpl,
+  PoolOperationsImpl,
   AccountImpl,
-  JobImpl,
+  JobOperationsImpl,
   CertificateOperationsImpl,
   FileImpl,
-  JobScheduleImpl,
-  TaskImpl,
+  JobScheduleOperationsImpl,
+  TaskOperationsImpl,
   ComputeNodeOperationsImpl,
   ComputeNodeExtensionImpl
 } from "./operations";
 import {
-  Application,
-  Pool,
+  ApplicationOperations,
+  PoolOperations,
   Account,
-  Job,
+  JobOperations,
   CertificateOperations,
   File,
-  JobSchedule,
-  Task,
+  JobScheduleOperations,
+  TaskOperations,
   ComputeNodeOperations,
   ComputeNodeExtension
 } from "./operationsInterfaces";
@@ -71,31 +72,54 @@ export class GeneratedClient extends coreClient.ServiceClient {
       baseUri: options.endpoint ?? options.baseUri ?? "{batchUrl}"
     };
     super(optionsWithDefaults);
+
+    if (options?.pipeline && options.pipeline.getOrderedPolicies().length > 0) {
+      const pipelinePolicies: coreRestPipeline.PipelinePolicy[] = options.pipeline.getOrderedPolicies();
+      const bearerTokenAuthenticationPolicyFound = pipelinePolicies.some(
+        (pipelinePolicy) =>
+          pipelinePolicy.name ===
+          coreRestPipeline.bearerTokenAuthenticationPolicyName
+      );
+      if (!bearerTokenAuthenticationPolicyFound) {
+        this.pipeline.removePolicy({
+          name: coreRestPipeline.bearerTokenAuthenticationPolicyName
+        });
+        this.pipeline.addPolicy(
+          coreRestPipeline.bearerTokenAuthenticationPolicy({
+            scopes: `${optionsWithDefaults.baseUri}/.default`,
+            challengeCallbacks: {
+              authorizeRequestOnChallenge:
+                coreClient.authorizeRequestOnClaimChallenge
+            }
+          })
+        );
+      }
+    }
     // Parameter assignments
     this.batchUrl = batchUrl;
 
     // Assigning values to Constant parameters
     this.apiVersion = options.apiVersion || "2022-01-01.15.0";
-    this.application = new ApplicationImpl(this);
-    this.pool = new PoolImpl(this);
+    this.applicationOperations = new ApplicationOperationsImpl(this);
+    this.poolOperations = new PoolOperationsImpl(this);
     this.account = new AccountImpl(this);
-    this.job = new JobImpl(this);
+    this.jobOperations = new JobOperationsImpl(this);
     this.certificateOperations = new CertificateOperationsImpl(this);
     this.file = new FileImpl(this);
-    this.jobSchedule = new JobScheduleImpl(this);
-    this.task = new TaskImpl(this);
+    this.jobScheduleOperations = new JobScheduleOperationsImpl(this);
+    this.taskOperations = new TaskOperationsImpl(this);
     this.computeNodeOperations = new ComputeNodeOperationsImpl(this);
     this.computeNodeExtension = new ComputeNodeExtensionImpl(this);
   }
 
-  application: Application;
-  pool: Pool;
+  applicationOperations: ApplicationOperations;
+  poolOperations: PoolOperations;
   account: Account;
-  job: Job;
+  jobOperations: JobOperations;
   certificateOperations: CertificateOperations;
   file: File;
-  jobSchedule: JobSchedule;
-  task: Task;
+  jobScheduleOperations: JobScheduleOperations;
+  taskOperations: TaskOperations;
   computeNodeOperations: ComputeNodeOperations;
   computeNodeExtension: ComputeNodeExtension;
 }

@@ -7,13 +7,13 @@
  */
 
 import { PagedAsyncIterableIterator } from "@azure/core-paging";
-import { JobSchedule } from "../operationsInterfaces";
+import { JobScheduleOperations } from "../operationsInterfaces";
 import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
 import { GeneratedClient } from "../generatedClient";
 import {
-  CloudJobSchedule,
+  JobSchedule,
   JobScheduleListNextOptionalParams,
   JobScheduleListOptionalParams,
   JobScheduleExistsOptionalParams,
@@ -22,10 +22,9 @@ import {
   JobScheduleDeleteResponse,
   JobScheduleGetOptionalParams,
   JobScheduleGetResponse,
-  JobSchedulePatchParameter,
+  JobScheduleUpdate,
   JobSchedulePatchOptionalParams,
   JobSchedulePatchResponse,
-  JobScheduleUpdateParameter,
   JobScheduleUpdateOptionalParams,
   JobScheduleUpdateResponse,
   JobScheduleDisableOptionalParams,
@@ -34,7 +33,6 @@ import {
   JobScheduleEnableResponse,
   JobScheduleTerminateOptionalParams,
   JobScheduleTerminateResponse,
-  JobScheduleAddParameter,
   JobScheduleAddOptionalParams,
   JobScheduleAddResponse,
   JobScheduleListResponse,
@@ -42,12 +40,12 @@ import {
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Class containing JobSchedule operations. */
-export class JobScheduleImpl implements JobSchedule {
+/** Class containing JobScheduleOperations operations. */
+export class JobScheduleOperationsImpl implements JobScheduleOperations {
   private readonly client: GeneratedClient;
 
   /**
-   * Initialize a new instance of the class JobSchedule class.
+   * Initialize a new instance of the class JobScheduleOperations class.
    * @param client Reference to the service client
    */
   constructor(client: GeneratedClient) {
@@ -60,7 +58,7 @@ export class JobScheduleImpl implements JobSchedule {
    */
   public list(
     options?: JobScheduleListOptionalParams
-  ): PagedAsyncIterableIterator<CloudJobSchedule> {
+  ): PagedAsyncIterableIterator<JobSchedule> {
     const iter = this.listPagingAll(options);
     return {
       next() {
@@ -77,7 +75,7 @@ export class JobScheduleImpl implements JobSchedule {
 
   private async *listPagingPage(
     options?: JobScheduleListOptionalParams
-  ): AsyncIterableIterator<CloudJobSchedule[]> {
+  ): AsyncIterableIterator<JobSchedule[]> {
     let result = await this._list(options);
     yield result.value || [];
     let continuationToken = result.odataNextLink;
@@ -90,7 +88,7 @@ export class JobScheduleImpl implements JobSchedule {
 
   private async *listPagingAll(
     options?: JobScheduleListOptionalParams
-  ): AsyncIterableIterator<CloudJobSchedule> {
+  ): AsyncIterableIterator<JobSchedule> {
     for await (const page of this.listPagingPage(options)) {
       yield* page;
     }
@@ -155,7 +153,7 @@ export class JobScheduleImpl implements JobSchedule {
    */
   patch(
     jobScheduleId: string,
-    jobSchedulePatchParameter: JobSchedulePatchParameter,
+    jobSchedulePatchParameter: JobScheduleUpdate,
     options?: JobSchedulePatchOptionalParams
   ): Promise<JobSchedulePatchResponse> {
     return this.client.sendOperationRequest(
@@ -175,7 +173,7 @@ export class JobScheduleImpl implements JobSchedule {
    */
   update(
     jobScheduleId: string,
-    jobScheduleUpdateParameter: JobScheduleUpdateParameter,
+    jobScheduleUpdateParameter: JobSchedule,
     options?: JobScheduleUpdateOptionalParams
   ): Promise<JobScheduleUpdateResponse> {
     return this.client.sendOperationRequest(
@@ -231,15 +229,15 @@ export class JobScheduleImpl implements JobSchedule {
 
   /**
    * Adds a Job Schedule to the specified Account.
-   * @param cloudJobSchedule The Job Schedule to be added.
+   * @param jobSchedule The Job Schedule to be added.
    * @param options The options parameters.
    */
   add(
-    cloudJobSchedule: JobScheduleAddParameter,
+    jobSchedule: JobSchedule,
     options?: JobScheduleAddOptionalParams
   ): Promise<JobScheduleAddResponse> {
     return this.client.sendOperationRequest(
-      { cloudJobSchedule, options },
+      { jobSchedule, options },
       addOperationSpec
     );
   }
@@ -328,7 +326,7 @@ const getOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.CloudJobSchedule,
+      bodyMapper: Mappers.JobSchedule,
       headersMapper: Mappers.JobScheduleGetHeaders
     },
     default: {
@@ -496,7 +494,7 @@ const addOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.BatchError
     }
   },
-  requestBody: Parameters.cloudJobSchedule,
+  requestBody: Parameters.jobSchedule,
   queryParameters: [Parameters.apiVersion, Parameters.timeout53],
   urlParameters: [Parameters.batchUrl],
   headerParameters: [
@@ -514,7 +512,7 @@ const listOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.CloudJobScheduleListResult,
+      bodyMapper: Mappers.JobScheduleListResult,
       headersMapper: Mappers.JobScheduleListHeaders
     },
     default: {
@@ -543,7 +541,7 @@ const listNextOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.CloudJobScheduleListResult,
+      bodyMapper: Mappers.JobScheduleListResult,
       headersMapper: Mappers.JobScheduleListNextHeaders
     },
     default: {

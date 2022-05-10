@@ -7,13 +7,13 @@
  */
 
 import { PagedAsyncIterableIterator } from "@azure/core-paging";
-import { Application } from "../operationsInterfaces";
+import { ApplicationOperations } from "../operationsInterfaces";
 import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
 import { GeneratedClient } from "../generatedClient";
 import {
-  ApplicationSummary,
+  Application,
   ApplicationListNextOptionalParams,
   ApplicationListOptionalParams,
   ApplicationListResponse,
@@ -23,12 +23,12 @@ import {
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Class containing Application operations. */
-export class ApplicationImpl implements Application {
+/** Class containing ApplicationOperations operations. */
+export class ApplicationOperationsImpl implements ApplicationOperations {
   private readonly client: GeneratedClient;
 
   /**
-   * Initialize a new instance of the class Application class.
+   * Initialize a new instance of the class ApplicationOperations class.
    * @param client Reference to the service client
    */
   constructor(client: GeneratedClient) {
@@ -44,7 +44,7 @@ export class ApplicationImpl implements Application {
    */
   public list(
     options?: ApplicationListOptionalParams
-  ): PagedAsyncIterableIterator<ApplicationSummary> {
+  ): PagedAsyncIterableIterator<Application> {
     const iter = this.listPagingAll(options);
     return {
       next() {
@@ -61,7 +61,7 @@ export class ApplicationImpl implements Application {
 
   private async *listPagingPage(
     options?: ApplicationListOptionalParams
-  ): AsyncIterableIterator<ApplicationSummary[]> {
+  ): AsyncIterableIterator<Application[]> {
     let result = await this._list(options);
     yield result.value || [];
     let continuationToken = result.odataNextLink;
@@ -74,7 +74,7 @@ export class ApplicationImpl implements Application {
 
   private async *listPagingAll(
     options?: ApplicationListOptionalParams
-  ): AsyncIterableIterator<ApplicationSummary> {
+  ): AsyncIterableIterator<Application> {
     for await (const page of this.listPagingPage(options)) {
       yield* page;
     }
@@ -160,7 +160,7 @@ const getOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.ApplicationSummary,
+      bodyMapper: Mappers.Application,
       headersMapper: Mappers.ApplicationGetHeaders
     },
     default: {

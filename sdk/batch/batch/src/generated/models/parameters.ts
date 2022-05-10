@@ -12,25 +12,21 @@ import {
   OperationQueryParameter
 } from "@azure/core-client";
 import {
-  PoolAddParameter as PoolAddParameterMapper,
-  PoolPatchParameter as PoolPatchParameterMapper,
+  Pool as PoolMapper,
+  PoolUpdate as PoolUpdateMapper,
   PoolEnableAutoScaleParameter as PoolEnableAutoScaleParameterMapper,
   PoolEvaluateAutoScaleParameter as PoolEvaluateAutoScaleParameterMapper,
   PoolResizeParameter as PoolResizeParameterMapper,
-  PoolUpdatePropertiesParameter as PoolUpdatePropertiesParameterMapper,
   NodeRemoveParameter as NodeRemoveParameterMapper,
-  JobPatchParameter as JobPatchParameterMapper,
-  JobUpdateParameter as JobUpdateParameterMapper,
+  JobUpdate as JobUpdateMapper,
+  Job as JobMapper,
   JobDisableParameter as JobDisableParameterMapper,
   JobTerminateParameter as JobTerminateParameterMapper,
-  JobAddParameter as JobAddParameterMapper,
   CertificateAddParameter as CertificateAddParameterMapper,
-  JobSchedulePatchParameter as JobSchedulePatchParameterMapper,
-  JobScheduleUpdateParameter as JobScheduleUpdateParameterMapper,
-  JobScheduleAddParameter as JobScheduleAddParameterMapper,
-  TaskAddParameter as TaskAddParameterMapper,
+  JobScheduleUpdate as JobScheduleUpdateMapper,
+  JobSchedule as JobScheduleMapper,
+  Task as TaskMapper,
   TaskAddCollectionParameter as TaskAddCollectionParameterMapper,
-  TaskUpdateParameter as TaskUpdateParameterMapper,
   ComputeNodeUser as ComputeNodeUserMapper,
   NodeUpdateUserParameter as NodeUpdateUserParameterMapper,
   NodeRebootParameter as NodeRebootParameterMapper,
@@ -352,7 +348,7 @@ export const contentType: OperationParameter = {
 
 export const pool: OperationParameter = {
   parameterPath: "pool",
-  mapper: PoolAddParameterMapper
+  mapper: PoolMapper
 };
 
 export const timeout4: OperationQueryParameter = {
@@ -763,7 +759,7 @@ export const ifUnmodifiedSince2: OperationParameter = {
 
 export const poolPatchParameter: OperationParameter = {
   parameterPath: "poolPatchParameter",
-  mapper: PoolPatchParameterMapper
+  mapper: PoolUpdateMapper
 };
 
 export const timeout9: OperationQueryParameter = {
@@ -1207,7 +1203,7 @@ export const ifUnmodifiedSince6: OperationParameter = {
 
 export const poolUpdatePropertiesParameter: OperationParameter = {
   parameterPath: "poolUpdatePropertiesParameter",
-  mapper: PoolUpdatePropertiesParameterMapper
+  mapper: PoolMapper
 };
 
 export const timeout15: OperationQueryParameter = {
@@ -1740,7 +1736,7 @@ export const ifUnmodifiedSince9: OperationParameter = {
 
 export const jobPatchParameter: OperationParameter = {
   parameterPath: "jobPatchParameter",
-  mapper: JobPatchParameterMapper
+  mapper: JobUpdateMapper
 };
 
 export const timeout22: OperationQueryParameter = {
@@ -1827,7 +1823,7 @@ export const ifUnmodifiedSince10: OperationParameter = {
 
 export const jobUpdateParameter: OperationParameter = {
   parameterPath: "jobUpdateParameter",
-  mapper: JobUpdateParameterMapper
+  mapper: JobMapper
 };
 
 export const timeout23: OperationQueryParameter = {
@@ -2170,7 +2166,7 @@ export const ifUnmodifiedSince14: OperationParameter = {
 
 export const job: OperationParameter = {
   parameterPath: "job",
-  mapper: JobAddParameterMapper
+  mapper: JobMapper
 };
 
 export const timeout27: OperationQueryParameter = {
@@ -3750,7 +3746,7 @@ export const ifUnmodifiedSince21: OperationParameter = {
 
 export const jobSchedulePatchParameter: OperationParameter = {
   parameterPath: "jobSchedulePatchParameter",
-  mapper: JobSchedulePatchParameterMapper
+  mapper: JobScheduleUpdateMapper
 };
 
 export const timeout48: OperationQueryParameter = {
@@ -3841,7 +3837,7 @@ export const ifUnmodifiedSince22: OperationParameter = {
 
 export const jobScheduleUpdateParameter: OperationParameter = {
   parameterPath: "jobScheduleUpdateParameter",
-  mapper: JobScheduleUpdateParameterMapper
+  mapper: JobScheduleMapper
 };
 
 export const timeout49: OperationQueryParameter = {
@@ -4192,9 +4188,9 @@ export const ifUnmodifiedSince26: OperationParameter = {
   }
 };
 
-export const cloudJobSchedule: OperationParameter = {
-  parameterPath: "cloudJobSchedule",
-  mapper: JobScheduleAddParameterMapper
+export const jobSchedule: OperationParameter = {
+  parameterPath: "jobSchedule",
+  mapper: JobScheduleMapper
 };
 
 export const timeout53: OperationQueryParameter = {
@@ -4328,7 +4324,7 @@ export const ocpDate54: OperationParameter = {
 
 export const task: OperationParameter = {
   parameterPath: "task",
-  mapper: TaskAddParameterMapper
+  mapper: TaskMapper
 };
 
 export const timeout55: OperationQueryParameter = {
@@ -4697,7 +4693,7 @@ export const ifUnmodifiedSince28: OperationParameter = {
 
 export const taskUpdateParameter: OperationParameter = {
   parameterPath: "taskUpdateParameter",
-  mapper: TaskUpdateParameterMapper
+  mapper: TaskMapper
 };
 
 export const timeout60: OperationQueryParameter = {

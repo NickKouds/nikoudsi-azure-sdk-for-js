@@ -7,16 +7,15 @@
  */
 
 import { PagedAsyncIterableIterator } from "@azure/core-paging";
-import { Task } from "../operationsInterfaces";
+import { TaskOperations } from "../operationsInterfaces";
 import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
 import { GeneratedClient } from "../generatedClient";
 import {
-  CloudTask,
+  Task,
   TaskListNextOptionalParams,
   TaskListOptionalParams,
-  TaskAddParameter,
   TaskAddOptionalParams,
   TaskAddResponse,
   TaskListResponse,
@@ -27,7 +26,6 @@ import {
   TaskDeleteResponse,
   TaskGetOptionalParams,
   TaskGetResponse,
-  TaskUpdateParameter,
   TaskUpdateOptionalParams,
   TaskUpdateResponse,
   TaskListSubtasksOptionalParams,
@@ -40,12 +38,12 @@ import {
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Class containing Task operations. */
-export class TaskImpl implements Task {
+/** Class containing TaskOperations operations. */
+export class TaskOperationsImpl implements TaskOperations {
   private readonly client: GeneratedClient;
 
   /**
-   * Initialize a new instance of the class Task class.
+   * Initialize a new instance of the class TaskOperations class.
    * @param client Reference to the service client
    */
   constructor(client: GeneratedClient) {
@@ -61,7 +59,7 @@ export class TaskImpl implements Task {
   public list(
     jobId: string,
     options?: TaskListOptionalParams
-  ): PagedAsyncIterableIterator<CloudTask> {
+  ): PagedAsyncIterableIterator<Task> {
     const iter = this.listPagingAll(jobId, options);
     return {
       next() {
@@ -79,7 +77,7 @@ export class TaskImpl implements Task {
   private async *listPagingPage(
     jobId: string,
     options?: TaskListOptionalParams
-  ): AsyncIterableIterator<CloudTask[]> {
+  ): AsyncIterableIterator<Task[]> {
     let result = await this._list(jobId, options);
     yield result.value || [];
     let continuationToken = result.odataNextLink;
@@ -93,7 +91,7 @@ export class TaskImpl implements Task {
   private async *listPagingAll(
     jobId: string,
     options?: TaskListOptionalParams
-  ): AsyncIterableIterator<CloudTask> {
+  ): AsyncIterableIterator<Task> {
     for await (const page of this.listPagingPage(jobId, options)) {
       yield* page;
     }
@@ -109,7 +107,7 @@ export class TaskImpl implements Task {
    */
   add(
     jobId: string,
-    task: TaskAddParameter,
+    task: Task,
     options?: TaskAddOptionalParams
   ): Promise<TaskAddResponse> {
     return this.client.sendOperationRequest(
@@ -209,7 +207,7 @@ export class TaskImpl implements Task {
   update(
     jobId: string,
     taskId: string,
-    taskUpdateParameter: TaskUpdateParameter,
+    taskUpdateParameter: Task,
     options?: TaskUpdateOptionalParams
   ): Promise<TaskUpdateResponse> {
     return this.client.sendOperationRequest(
@@ -325,7 +323,7 @@ const listOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.CloudTaskListResult,
+      bodyMapper: Mappers.TaskListResult,
       headersMapper: Mappers.TaskListHeaders
     },
     default: {
@@ -404,7 +402,7 @@ const getOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.CloudTask,
+      bodyMapper: Mappers.Task,
       headersMapper: Mappers.TaskGetHeaders
     },
     default: {
@@ -463,7 +461,7 @@ const listSubtasksOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.CloudTaskListSubtasksResult,
+      bodyMapper: Mappers.TaskListSubtasksResult,
       headersMapper: Mappers.TaskListSubtasksHeaders
     },
     default: {
@@ -539,7 +537,7 @@ const listNextOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.CloudTaskListResult,
+      bodyMapper: Mappers.TaskListResult,
       headersMapper: Mappers.TaskListNextHeaders
     },
     default: {
