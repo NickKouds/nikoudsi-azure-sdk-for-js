@@ -10,16 +10,16 @@ import { CommonClientOptions } from "@azure/core-client";
 import { BatchSharedKeyCredentials, createBatchKeyCredentialPolicy } from "./batchSharedKeyCredentials";
 import {
   GeneratedClient,
-  Application,
   Account,
   CertificateOperations,
   ComputeNodeOperations,
   ComputeNodeExtension,
   File,
-  Job,
-  JobSchedule,
-  Pool,
-  Task
+  JobOperations,
+  ApplicationOperations,
+  JobScheduleOperations,
+  PoolOperations,
+  TaskOperations
 } from "./generated";
 
 export interface BatchServiceClientOptions extends CommonClientOptions { }
@@ -28,8 +28,8 @@ export class BatchServiceClient {
   batchUrl: string;
   private readonly client: GeneratedClient;
 
-  get application(): Application {
-    return this.client.application;
+  get application(): ApplicationOperations {
+    return this.client.applicationOperations;
   }
 
   get account(): Account {
@@ -52,20 +52,20 @@ export class BatchServiceClient {
     return this.client.file;
   }
 
-  get job(): Job {
-    return this.client.job;
+  get job(): JobOperations {
+    return this.client.jobOperations;
   }
 
-  get jobSchedule(): JobSchedule {
-    return this.client.jobSchedule;
+  get jobSchedule(): JobScheduleOperations {
+    return this.client.jobScheduleOperations;
   }
 
-  get pool(): Pool {
-    return this.client.pool;
+  get pool(): PoolOperations {
+    return this.client.poolOperations;
   }
 
-  get task(): Task {
-    return this.client.task;
+  get task(): TaskOperations {
+    return this.client.taskOperations;
   }
 
   /**
