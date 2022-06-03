@@ -1,6 +1,5 @@
 {
   "name": "@azure/batch",
-  "sdk-type": "mgmt",
   "author": "Microsoft Corporation",
   "description": "A generated SDK for BatchServiceClient.",
   "version": "11.0.0-beta.1",
