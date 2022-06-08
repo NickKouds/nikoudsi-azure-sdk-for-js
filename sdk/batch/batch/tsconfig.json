@@ -1,8 +1,21 @@
 {
-  "extends": "../../../tsconfig.package",
   "compilerOptions": {
+    "module": "es6",
+    "target": "es2015",
+    "moduleResolution": "node",
+    "declaration": true,
+    "declarationMap": true,
     "outDir": "./dist-esm",
-    "declarationDir": "./types"
+    "allowSyntheticDefaultImports": true,
+    "paths": {
+      "@azure/batch": [
+        "./src/generated/index.ts"
+      ]
+    }
   },
-  "include": ["src/**/*.ts", "test/**/*.ts", "samples-dev/**/*.ts"]
+  "include": [
+    "src/**/*.ts",
+    "./test/**/*.ts",
+    "samples-dev/**/*.ts"
+  ]
 }
