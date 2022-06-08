@@ -1,5 +1,5 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT License.
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
 
 // https://github.com/karma-runner/karma-chrome-launcher
 process.env.CHROME_BIN = require("puppeteer").executablePath();
@@ -11,14 +11,14 @@ const {
   isRecordMode
 } = require("@azure-tools/test-recorder");
 
-module.exports = function(config) {
+module.exports = function (config) {
   config.set({
     // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: "./",
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ["mocha"],
+    frameworks: ["source-map-support", "mocha"],
 
     plugins: [
       "karma-mocha",
@@ -29,16 +29,27 @@ module.exports = function(config) {
       "karma-ie-launcher",
       "karma-env-preprocessor",
       "karma-coverage",
+      "karma-sourcemap-loader",
       "karma-junit-reporter",
       "karma-json-to-file-reporter",
+      "karma-source-map-support",
       "karma-json-preprocessor"
     ],
 
     // list of files / patterns to load in the browser
     files: [
       "dist-test/index.browser.js",
-      { pattern: "dist-test/index.browser.js.map", type: "html", included: false, served: true }
-    ].concat(isPlaybackMode() || isSoftRecordMode() ? ["recordings/browsers/**/*.json"] : []),
+      {
+        pattern: "dist-test/index.browser.js.map",
+        type: "html",
+        included: false,
+        served: true
+      }
+    ].concat(
+      isPlaybackMode() || isSoftRecordMode()
+        ? ["recordings/browsers/**/*.json"]
+        : []
+    ),
 
     // list of files / patterns to exclude
     exclude: [],
@@ -46,20 +57,20 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      "**/*.js": ["env"],
+      "**/*.js": ["sourcemap", "env"],
       "recordings/browsers/**/*.json": ["json"]
       // IMPORTANT: COMMENT following line if you want to debug in your browsers!!
       // Preprocess source file to calculate code coverage, however this will make source file unreadable
-      //"dist-test/index.browser.js": ["coverage"]
+      // "dist-test/index.js": ["coverage"]
     },
 
     envPreprocessor: [
       "TEST_MODE",
-      "AZURE_BATCH_ENDPOINT",
-      "AZURE_BATCH_ACCOUNT",
-      "AZURE_BATCH_ACCESS_KEY",
+      "ENDPOINT",
+      "AZURE_CLIENT_SECRET",
       "AZURE_CLIENT_ID",
-      "AZURE_CLIENT_SECRET"
+      "AZURE_TENANT_ID",
+      "SUBSCRIPTION_ID"
     ],
 
     // test results reporter to use
@@ -70,7 +81,12 @@ module.exports = function(config) {
     coverageReporter: {
       // specify a common output directory
       dir: "coverage-browser/",
-      reporters: [{ type: "json", subdir: ".", file: "coverage.json" }]
+      reporters: [
+        { type: "json", subdir: ".", file: "coverage.json" },
+        { type: "lcovonly", subdir: ".", file: "lcov.info" },
+        { type: "html", subdir: "html" },
+        { type: "cobertura", subdir: ".", file: "cobertura-coverage.xml" }
+      ]
     },
 
     junitReporter: {
@@ -113,13 +129,13 @@ module.exports = function(config) {
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
-    singleRun: true,
+    singleRun: false,
 
     // Concurrency level
     // how many browser should be started simultaneous
     concurrency: 1,
 
-    browserNoActivityTimeout: 600000,
+    browserNoActivityTimeout: 60000000,
     browserDisconnectTimeout: 10000,
     browserDisconnectTolerance: 3,
     browserConsoleLogOptions: {
