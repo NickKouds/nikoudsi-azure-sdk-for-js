@@ -10,7 +10,7 @@ import {
 // import { ClientOptions } from "@azure-rest/core-client";
 import { BatchServiceClient } from "../../../src";
 import { BatchServiceClientOptions } from "../../../src/batchServiceClient";
-import { BatchSharedKeyCredentials } from "../../../src/batchSharedKeyCredentials";
+import { BatchSharedKeyCredentials } from "../../../src/credentials/batchSharedKeyCredentials";
 import { ClientSecretCredential, TokenCredential } from "@azure/identity";
 import { Context } from "mocha";
 

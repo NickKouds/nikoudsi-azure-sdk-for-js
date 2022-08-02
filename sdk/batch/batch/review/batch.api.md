@@ -279,8 +279,8 @@ export interface BatchPoolIdentity {
 
 // @public (undocumented)
 export class BatchServiceClient {
-    // Warning: (ae-forgotten-export) The symbol "BatchSharedKeyCredInterfaceImpl" needs to be exported by the entry point index.d.ts
-    constructor(credentials: TokenCredential | BatchSharedKeyCredInterfaceImpl, batchUrl: string, options?: BatchServiceClientOptions);
+    // Warning: (ae-forgotten-export) The symbol "BatchClientCredential" needs to be exported by the entry point index.d.ts
+    constructor(credentials: TokenCredential | BatchClientCredential, batchUrl: string, options?: BatchServiceClientOptions);
     // (undocumented)
     get account(): Account;
     // (undocumented)

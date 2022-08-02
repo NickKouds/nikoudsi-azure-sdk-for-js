@@ -19,8 +19,10 @@ import { createRecorder, createClient } from "./utils/recordedClient"
 import { assert } from "chai";
 import { BatchServiceClient } from "../../src/batchServiceClient";
 import { wait } from "./utils/wait";
-import { Pool, CertificateAddParameter, PoolGetOptionalParams, PoolUpdate } from "../../src/generated/models";
-import { errorMonitor } from "events";
+import { Pool, CertificateAddParameter, PoolGetOptionalParams, PoolUpdate, JobSchedule } from "../../src/generated/models";
+import { duration } from "moment";
+import moment from "moment";
+import { PagedAsyncIterableIterator } from "@azure/core-paging";
 
 //const wait = (timeout = 1000) => new Promise((resolve) => setTimeout(() => resolve(null), timeout));
 
@@ -28,6 +30,16 @@ const _SUFFIX = Math.random()
   .toString(16)
   .substr(2, 4);
 
+
+async function getListPagedCount(objIterator: PagedAsyncIterableIterator<any>): Promise<number> {
+  let objCounter = 0;
+
+  for await (const obj of objIterator) {
+    ++objCounter;
+  }
+
+  return objCounter;
+}
 
 function getPoolName(type: string) {
   return `jssdktest-${type}-${_SUFFIX}`;
@@ -37,6 +49,7 @@ const BASIC_POOL = getPoolName("basic");
 const VNET_POOL = getPoolName("vnet");
 const IMAGE_POOL = getPoolName("image");
 const DISK_POOL = getPoolName("datadisk");
+const ADVANCED_POOL = getPoolName("Advanced");
 const BASIC_POOL_NUM_VMS = 4;
 const JOB_NAME = `JSSDKTestJob-${_SUFFIX}`;
 const TASK_NAME = `${JOB_NAME}-task1`;
@@ -584,6 +597,98 @@ describe("Batch Service Test", () => {
   //     assert.isAtLeast(result.numberOfFilesUploaded, 1);
   //   });
   // });
+
+  describe("Job schedules", async () => {
+    it("should create a job schedule successfully", async () => {
+      const options: JobSchedule = {
+        id: SCHEDULE,
+        jobSpecification: {
+          displayName: JOB_NAME,
+          poolInfo: { poolId: BASIC_POOL }
+        },
+        schedule: {
+          doNotRunUntil: moment().add(3, "days").toDate(),
+          startWindow: duration({ minutes: 6 }).toISOString()
+        }
+      };
+
+      const result = await client.jobSchedule.add(options);
+
+      //assert.equal(result._response.status, 201);
+    });
+
+    it("should list job schedules successfully", async () => {
+      const result = await client.jobSchedule.list();
+      const jobScheduleCount = await getListPagedCount(result);
+      assert.equal(jobScheduleCount, 1);
+    });
+
+    it("should list jobs from job schedule successfully", async () => {
+      const result = await client.job.listFromJobSchedule(SCHEDULE);
+      const jobCount = await getListPagedCount(result);
+      assert.equal(jobCount, 0);
+    });
+
+    it("should check if a job schedule exists successfully", async () => {
+      const result = await client.jobSchedule.exists(SCHEDULE);
+    });
+
+    it("should get a job schedule reference successfully", async () => {
+      const result = await client.jobSchedule.get(SCHEDULE);
+
+      assert.equal(result.id, SCHEDULE);
+      assert.equal(result.state, "active");
+      assert.equal(result.jobSpecification?.displayName, JOB_NAME);
+    });
+
+    it("should update a job schedule successfully", async () => {
+      const options: JobSchedule = {
+        schedule: { recurrenceInterval: duration({ hours: 6 }).toISOString() },
+        jobSpecification: { poolInfo: { poolId: ADVANCED_POOL } }
+      };
+
+      const result = await client.jobSchedule.update(SCHEDULE, options);
+
+      //assert.equal(result._response.status, 200);
+    });
+
+    it("should patch a job schedule successfully", async () => {
+      const options = {
+        schedule: {
+          recurrenceInterval: duration({ hours: 3 }).toISOString(),
+          startWindow: duration({ hours: 1 }).toISOString()
+        }
+      };
+
+      const result = await client.jobSchedule.patch(SCHEDULE, options);
+
+      //assert.equal(result._response.status, 200);
+    });
+
+    it("should disable a job schedule successfully", async () => {
+      const result = await client.jobSchedule.disable(SCHEDULE);
+
+      //assert.equal(result._response.status, 204);
+    });
+
+    it("should enable a job schedule successfully", async () => {
+      const result = await client.jobSchedule.enable(SCHEDULE);
+
+      //assert.equal(result._response.status, 204);
+    });
+
+    it("should terminate a job schedule successfully", async () => {
+      const result = await client.jobSchedule.terminate(SCHEDULE);
+
+      // assert.equal(result._response.status, 202);
+    });
+
+    it("should delete a job schedule successfully", async () => {
+      const result = await client.jobSchedule.delete(SCHEDULE);
+
+      // assert.equal(result._response.status, 202);
+    });
+  });
 
   describe("Resource cleanup", () => {
     it("Delete Batch Pool", async function () {

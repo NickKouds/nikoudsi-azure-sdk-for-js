@@ -48,7 +48,7 @@ export class BatchSharedKeyCredentials {
    * Signs a request with the Authentication header.
    *
    * @param {request} Authorization Pipeline Request.
-   * @return {undefined}
+   * @return {PipelineRequest} Pipeline request with signed authentication header
    */
   signRequest(request: PipelineRequest): PipelineRequest {
     // Help function to get header value, if header without value, append a newline

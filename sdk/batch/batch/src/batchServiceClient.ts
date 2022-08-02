@@ -7,7 +7,7 @@
 import { isTokenCredential, TokenCredential } from "@azure/core-auth";
 import { bearerTokenAuthenticationPolicy } from "@azure/core-rest-pipeline";
 import { CommonClientOptions } from "@azure/core-client";
-import { BatchSharedKeyCredentials, createBatchKeyCredentialPolicy } from "./batchSharedKeyCredentials";
+import { BatchClientCredential, createBatchClientCredentialPolicy } from "./credentials/batchClientCredential";
 import {
   GeneratedClient,
   Account,
@@ -75,7 +75,7 @@ export class BatchServiceClient {
    * @param options The parameter options
    */
   constructor(
-    credentials: TokenCredential | BatchSharedKeyCredentials,
+    credentials: TokenCredential | BatchClientCredential,
     batchUrl: string,
     options?: BatchServiceClientOptions
   ) {
@@ -91,10 +91,9 @@ export class BatchServiceClient {
 
     const authPolicy = isTokenCredential(credentials)
       ? bearerTokenAuthenticationPolicy({ credential: credentials, scopes: "https://batch.core.windows.net//.default" })
-      : createBatchKeyCredentialPolicy(credentials);
+      : createBatchClientCredentialPolicy("batchClientCredentialPolicy", credentials);
 
     this.client.pipeline.addPolicy(authPolicy);
-
   }
 
 }
