@@ -17,6 +17,10 @@ export interface BatchClientCredential {
   signRequest(request: PipelineRequest): PipelineRequest;
 }
 
+/**
+ * Creates an HTTP pipeline policy to authenticate a request
+ * using a `BatchClientCredential`
+ */
 export function createBatchClientCredentialPolicy(
   name: string,
   credential: BatchClientCredential

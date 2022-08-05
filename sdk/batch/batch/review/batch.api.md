@@ -310,7 +310,7 @@ export interface BatchServiceClientOptions extends CommonClientOptions {
 }
 
 // @public
-export class BatchSharedKeyCredentials {
+export class BatchSharedKeyCredentials implements BatchClientCredential {
     constructor(accountName: string, accountKey: string);
     _accountKey: string;
     _accountName: string;

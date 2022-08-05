@@ -15,6 +15,7 @@ import {
 import { createHmac } from "crypto";
 import url from "url-parse";
 import { Buffer } from "buffer";
+import { BatchClientCredential } from "./batchClientCredential";
 
 /**
  * Creates a new BatchSharedKeyCredentials object.
@@ -22,7 +23,7 @@ import { Buffer } from "buffer";
  * @param accountName The batch account name.
  * @param accountKey The batch account key.
  */
-export class BatchSharedKeyCredentials {
+export class BatchSharedKeyCredentials implements BatchClientCredential {
   /**
    * The batch account name.
    */
@@ -199,25 +200,4 @@ export class BatchSharedKeyCredentials {
 
     return canonicalizedResource;
   }
-}
-
-
-/**
- * Creates an HTTP pipeline policy to authenticate a request
- * using a `BatchSharedKeyCredential`
- */
-export function createBatchKeyCredentialPolicy(
-  credential: BatchSharedKeyCredentials
-): PipelinePolicy {
-  return {
-    name: "batchKeyCredentialPolicy",
-    sendRequest(request: PipelineRequest, next: SendRequest): Promise<PipelineResponse> {
-      if (!request) {
-        throw new Error("webResource cannot be null or undefined");
-      }
-
-      credential.signRequest(request);
-      return next(request);
-    },
-  };
 }
