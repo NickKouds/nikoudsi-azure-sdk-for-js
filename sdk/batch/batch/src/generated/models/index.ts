@@ -254,47 +254,52 @@ export interface JobStatistics {
 }
 
 /** A Certificate that can be installed on Compute Nodes and can be used to authenticate operations on the machine. */
-export interface CertificateAddParameter {
-  /** The X.509 thumbprint of the Certificate. This is a sequence of up to 40 hex digits (it may include spaces but these are removed). */
-  thumbprint: string;
-  /** The algorithm used to derive the thumbprint. This must be sha1. */
-  thumbprintAlgorithm: string;
-  /** The base64-encoded contents of the Certificate. The maximum size is 10KB. */
-  data: string;
-  /** The format of the Certificate data. */
-  certificateFormat?: CertificateFormat;
-  /** This must be omitted if the Certificate format is cer. */
-  password?: string;
-}
-
-/** The result of listing the Certificates in the Account. */
-export interface CertificateListResult {
-  /** The list of Certificates. */
-  value?: Certificate[];
-  /** The URL to get the next set of results. */
-  odataNextLink?: string;
-}
-
-/** A Certificate that can be installed on Compute Nodes and can be used to authenticate operations on the machine. */
 export interface Certificate {
   /** The X.509 thumbprint of the Certificate. This is a sequence of up to 40 hex digits. */
   thumbprint?: string;
   /** The algorithm used to derive the thumbprint. */
   thumbprintAlgorithm?: string;
-  /** The URL of the Certificate. */
-  url?: string;
-  /** The state of the Certificate. */
-  state?: CertificateState;
-  /** The time at which the Certificate entered its current state. */
-  stateTransitionTime?: Date;
-  /** This property is not set if the Certificate is in its initial active state. */
-  previousState?: CertificateState;
-  /** This property is not set if the Certificate is in its initial Active state. */
-  previousStateTransitionTime?: Date;
-  /** The public part of the Certificate as a base-64 encoded .cer file. */
-  publicData?: string;
-  /** This property is set only if the Certificate is in the DeleteFailed state. */
-  deleteCertificateError?: DeleteCertificateError;
+  /**
+   * The URL of the Certificate.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly url?: string;
+  /**
+   * The state of the Certificate.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly state?: CertificateState;
+  /**
+   * The time at which the Certificate entered its current state.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly stateTransitionTime?: Date;
+  /**
+   * This property is not set if the Certificate is in its initial active state.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly previousState?: CertificateState;
+  /**
+   * This property is not set if the Certificate is in its initial Active state.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly previousStateTransitionTime?: Date;
+  /**
+   * The public part of the Certificate as a base-64 encoded .cer file.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly publicData?: string;
+  /**
+   * This property is set only if the Certificate is in the DeleteFailed state.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly deleteCertificateError?: DeleteCertificateError;
+  /** The base64-encoded contents of the Certificate. The maximum size is 10KB. */
+  data?: string;
+  /** The format of the Certificate data. */
+  certificateFormat?: CertificateFormat;
+  /** This must be omitted if the Certificate format is cer. */
+  password?: string;
 }
 
 /** An error encountered by the Batch service when deleting a Certificate. */
@@ -313,6 +318,14 @@ export interface NameValuePair {
   name?: string;
   /** The value in the name-value pair. */
   value?: string;
+}
+
+/** The result of listing the Certificates in the Account. */
+export interface CertificateListResult {
+  /** The list of Certificates. */
+  value?: Certificate[];
+  /** The URL to get the next set of results. */
+  odataNextLink?: string;
 }
 
 /** The result of listing the files on a Compute Node, or the files associated with a Task on a Compute Node. */
@@ -429,7 +442,7 @@ export interface Schedule {
 export interface JobSpecification {
   /** Priority values can range from -1000 to 1000, with -1000 being the lowest priority and 1000 being the highest priority. The default value is 0. This priority is used as the default for all Jobs under the Job Schedule. You can update a Job's priority after it has been created using by using the update Job API. */
   priority?: number;
-  /** If the value is set to True, other high priority jobs submitted to the system will take precedence and will be able requeue tasks from this job. You can update a job's allowTaskPreemption after it has been created using the update job API. */
+  /** If the value is set to True other high priority jobs submitted to the system will take precedence and will be able requeue tasks from this job. You can update a job's allowTaskPreemption after it has been created using the update job API. */
   allowTaskPreemption?: boolean;
   /** The value of maxParallelTasks must be -1 or greater than 0 if specified. If not specified, the default value is -1, which means there's no limit to the number of tasks that can be run at once. You can update a job's maxParallelTasks after it has been created using the update job API. */
   maxParallelTasks?: number;
@@ -469,7 +482,7 @@ export interface JobNetworkConfiguration {
 export interface JobConstraints {
   /** If the Job does not complete within the time limit, the Batch service terminates it and any Tasks that are still running. In this case, the termination reason will be MaxWallClockTimeExpiry. If this property is not specified, there is no time limit on how long the Job may run. */
   maxWallClockTime?: string;
-  /** Note that this value specifically controls the number of retries. The Batch service will try each Task once, and may then retry up to this limit. For example, if the maximum retry count is 3, Batch tries a Task up to 4 times (one initial try and 3 retries). If the maximum retry count is 0, the Batch service does not retry Tasks. If the maximum retry count is -1, the Batch service retries the Task without limit, however this is not recommended for a start task or any task. The default value is 0 (no retries) */
+  /** Note that this value specifically controls the number of retries. The Batch service will try each Task once, and may then retry up to this limit. For example, if the maximum retry count is 3, Batch tries a Task up to 4 times (one initial try and 3 retries). If the maximum retry count is 0, the Batch service does not retry Tasks. If the maximum retry count is -1, the Batch service retries Tasks without limit. The default value is 0 (no retries). */
   maxTaskRetryCount?: number;
 }
 
@@ -579,11 +592,11 @@ export interface OutputFileBlobContainerDestination {
   containerUrl: string;
   /** The identity must have write access to the Azure Blob Storage container */
   identityReference?: ComputeNodeIdentityReference;
-  /** These headers will be specified when uploading files to Azure Storage. For more information, see [Request Headers (All Blob Types)](https://docs.microsoft.com/rest/api/storageservices/put-blob#request-headers-all-blob-types). */
+  /** These headers will be specified when uploading files to Azure Storage. Official document on allowed headers when uploading blobs: https://docs.microsoft.com/en-us/rest/api/storageservices/put-blob#request-headers-all-blob-types */
   uploadHeaders?: HttpHeader[];
 }
 
-/** An HTTP header name-value pair */
+/** A HTTP header name-value pair */
 export interface HttpHeader {
   /** The case-insensitive name of the header to be used while uploading output files */
   name: string;
@@ -611,7 +624,7 @@ export interface TaskConstraints {
   maxWallClockTime?: string;
   /** The default is 7 days, i.e. the Task directory will be retained for 7 days unless the Compute Node is removed or the Job is deleted. */
   retentionTime?: string;
-  /** Note that this value specifically controls the number of retries for the Task executable due to a nonzero exit code. The Batch service will try the Task once, and may then retry up to this limit. For example, if the maximum retry count is 3, Batch tries the Task up to 4 times (one initial try and 3 retries). If the maximum retry count is 0, the Batch service does not retry the Task after the first attempt. If the maximum retry count is -1, the Batch service retries the Task without limit, however this is not recommended for a start task or any task. The default value is 0 (no retries) */
+  /** Note that this value specifically controls the number of retries for the Task executable due to a nonzero exit code. The Batch service will try the Task once, and may then retry up to this limit. For example, if the maximum retry count is 3, Batch tries the Task up to 4 times (one initial try and 3 retries). If the maximum retry count is 0, the Batch service does not retry the Task after the first attempt. If the maximum retry count is -1, the Batch service retries the Task without limit. */
   maxTaskRetryCount?: number;
 }
 
@@ -850,7 +863,7 @@ export interface VMExtension {
   typeHandlerVersion?: string;
   /** Indicates whether the extension should use a newer minor version if one is available at deployment time. Once deployed, however, the extension will not upgrade minor versions unless redeployed, even with this property set to true. */
   autoUpgradeMinorVersion?: boolean;
-  /** Any object */
+  /** JSON formatted public settings for the extension. */
   settings?: Record<string, unknown>;
   /** The extension can contain either protectedSettings or protectedSettingsFromKeyVault or no protected settings at all. */
   protectedSettings?: Record<string, unknown>;
@@ -926,7 +939,7 @@ export interface NetworkSecurityGroupRule {
 export interface PublicIPAddressConfiguration {
   /** The default value is BatchManaged. */
   provision?: IPAddressProvisioningType;
-  /** The number of IPs specified here limits the maximum size of the Pool - 100 dedicated nodes or 100 Spot/Low-priority nodes can be allocated for each public IP. For example, a pool needing 250 dedicated VMs would need at least 3 public IPs specified. Each element of this collection is of the form: /subscriptions/{subscription}/resourceGroups/{group}/providers/Microsoft.Network/publicIPAddresses/{ip}. */
+  /** The number of IPs specified here limits the maximum size of the Pool - 100 dedicated nodes or 100 low-priority nodes can be allocated for each public IP. For example, a pool needing 250 dedicated VMs would need at least 3 public IPs specified. Each element of this collection is of the form: /subscriptions/{subscription}/resourceGroups/{group}/providers/Microsoft.Network/publicIPAddresses/{ip}. */
   ipAddressIds?: string[];
 }
 
@@ -942,7 +955,7 @@ export interface StartTask {
   environmentSettings?: EnvironmentSetting[];
   /** If omitted, the Task runs as a non-administrative user unique to the Task. */
   userIdentity?: UserIdentity;
-  /** The Batch service retries a Task if its exit code is nonzero. Note that this value specifically controls the number of retries. The Batch service will try the Task once, and may then retry up to this limit. For example, if the maximum retry count is 3, Batch tries the Task up to 4 times (one initial try and 3 retries). If the maximum retry count is 0, the Batch service does not retry the Task. If the maximum retry count is -1, the Batch service retries the Task without limit, however this is not recommended for a start task or any task. The default value is 0 (no retries) */
+  /** The Batch service retries a Task if its exit code is nonzero. Note that this value specifically controls the number of retries. The Batch service will try the Task once, and may then retry up to this limit. For example, if the maximum retry count is 3, Batch tries the Task up to 4 times (one initial try and 3 retries). If the maximum retry count is 0, the Batch service does not retry the Task. If the maximum retry count is -1, the Batch service retries the Task without limit. */
   maxTaskRetryCount?: number;
   /** If true and the StartTask fails on a Node, the Batch service retries the StartTask up to its maximum retry count (maxTaskRetryCount). If the Task has still not completed successfully after all retries, then the Batch service marks the Node unusable, and will not schedule Tasks to it. This condition can be detected via the Compute Node state and failure info details. If false, the Batch service will not wait for the StartTask to complete. In this case, other Tasks can start executing on the Compute Node while the StartTask is still running; and even if the StartTask fails, new Tasks will continue to be scheduled on the Compute Node. The default is true. */
   waitForSuccess?: boolean;
@@ -1137,7 +1150,7 @@ export interface JobScheduleListResult {
 }
 
 /** An Azure Batch Job. */
-export interface Job {
+export interface BatchJob {
   /** The ID is case-preserving and case-insensitive (that is, you may not have two IDs within an Account that differ only by case). */
   id?: string;
   /** The display name for the Job. */
@@ -1186,7 +1199,7 @@ export interface Job {
   readonly previousStateTransitionTime?: Date;
   /** Priority values can range from -1000 to 1000, with -1000 being the lowest priority and 1000 being the highest priority. The default value is 0. */
   priority?: number;
-  /** If the value is set to True, other high priority jobs submitted to the system will take precedence and will be able requeue tasks from this job. You can update a job's allowTaskPreemption after it has been created using the update job API. */
+  /** If the value is set to True other high priority jobs submitted to the system will take precedence and will be able requeue tasks from this job. You can update a job's allowTaskPreemption after it has been created using the update job API. */
   allowTaskPreemption?: boolean;
   /** The value of maxParallelTasks must be -1 or greater than 0 if specified. If not specified, the default value is -1, which means there's no limit to the number of tasks that can be run at once. You can update a job's maxParallelTasks after it has been created using the update job API. */
   maxParallelTasks?: number;
@@ -1216,7 +1229,7 @@ export interface Job {
    */
   readonly executionInfo?: JobExecutionInformation;
   /**
-   * This property is populated only if the CloudJob was retrieved with an expand clause including the 'stats' attribute; otherwise it is null. The statistics may not be immediately available. The Batch service performs periodic roll-up of statistics. The typical delay is about 30 minutes.
+   * This property is populated only if the Job was retrieved with an expand clause including the 'stats' attribute; otherwise it is null. The statistics may not be immediately available. The Batch service performs periodic roll-up of statistics. The typical delay is about 30 minutes.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly stats?: JobStatistics;
@@ -1254,7 +1267,7 @@ export interface JobUpdate {
   priority?: number;
   /** The value of maxParallelTasks must be -1 or greater than 0 if specified. If not specified, the default value is -1, which means there's no limit to the number of tasks that can be run at once. You can update a job's maxParallelTasks after it has been created using the update job API. */
   maxParallelTasks?: number;
-  /** If the value is set to True, other high priority jobs submitted to the system will take precedence and will be able requeue tasks from this job. You can update a job's allowTaskPreemption after it has been created using the update job API. */
+  /** If the value is set to True other high priority jobs submitted to the system will take precedence and will be able requeue tasks from this job. You can update a job's allowTaskPreemption after it has been created using the update job API. */
   allowTaskPreemption?: boolean;
   /** If omitted, the completion behavior is left unchanged. You may not change the value from terminatejob to noaction - that is, once you have engaged automatic Job termination, you cannot turn it off again. If you try to do this, the request fails with an 'invalid property value' error response; if you are calling the REST API directly, the HTTP status code is 400 (Bad Request). */
   onAllTasksComplete?: OnAllTasksComplete;
@@ -1267,13 +1280,13 @@ export interface JobUpdate {
 }
 
 /** Options when disabling a Job. */
-export interface JobDisableParameter {
+export interface JobDisableParameters {
   /** What to do with active Tasks associated with the Job. */
   disableTasks: DisableJobOption;
 }
 
 /** Options when terminating a Job. */
-export interface JobTerminateParameter {
+export interface JobTerminateParameters {
   /** The text you want to appear as the Job's TerminateReason. The default is 'UserTerminate'. */
   terminateReason?: string;
 }
@@ -1281,7 +1294,7 @@ export interface JobTerminateParameter {
 /** The result of listing the Jobs in an Account. */
 export interface JobListResult {
   /** The list of Jobs. */
-  value?: Job[];
+  value?: BatchJob[];
   /** The URL to get the next set of results. */
   odataNextLink?: string;
 }
@@ -1479,13 +1492,13 @@ export interface Pool {
    */
   readonly currentDedicatedNodes?: number;
   /**
-   * Spot/Low-priority Compute Nodes which have been preempted are included in this count.
+   * Low-priority Compute Nodes which have been preempted are included in this count.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly currentLowPriorityNodes?: number;
   /** The desired number of dedicated Compute Nodes in the Pool. */
   targetDedicatedNodes?: number;
-  /** The desired number of Spot/Low-priority Compute Nodes in the Pool. */
+  /** The desired number of low-priority Compute Nodes in the Pool. */
   targetLowPriorityNodes?: number;
   /** If false, at least one of targetDedicatedNodes and targetLowPriorityNodes must be specified. If true, the autoScaleFormula property is required and the Pool automatically resizes according to the formula. The default value is false. */
   enableAutoScale?: boolean;
@@ -1519,7 +1532,7 @@ export interface Pool {
   /** A list of name-value pairs associated with the Pool as metadata. */
   metadata?: MetadataItem[];
   /**
-   * This property is populated only if the CloudPool was retrieved with an expand clause including the 'stats' attribute; otherwise it is null. The statistics may not be immediately available. The Batch service performs periodic roll-up of statistics. The typical delay is about 30 minutes.
+   * This property is populated only if the Pool was retrieved with an expand clause including the 'stats' attribute; otherwise it is null. The statistics may not be immediately available. The Batch service performs periodic roll-up of statistics. The typical delay is about 30 minutes.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly stats?: PoolStatistics;
@@ -1607,7 +1620,7 @@ export interface PoolUpdate {
 }
 
 /** Options for enabling automatic scaling on a Pool. */
-export interface PoolEnableAutoScaleParameter {
+export interface PoolEnableAutoScaleParameters {
   /** The formula is checked for validity before it is applied to the Pool. If the formula is not valid, the Batch service rejects the request with detailed error information. For more information about specifying this formula, see Automatically scale Compute Nodes in an Azure Batch Pool (https://azure.microsoft.com/en-us/documentation/articles/batch-automatic-scaling). */
   autoScaleFormula?: string;
   /** The default value is 15 minutes. The minimum and maximum value are 5 minutes and 168 hours respectively. If you specify a value less than 5 minutes or greater than 168 hours, the Batch service rejects the request with an invalid property value error; if you are calling the REST API directly, the HTTP status code is 400 (Bad Request). If you specify a new interval, then the existing autoscale evaluation schedule will be stopped and a new autoscale evaluation schedule will be started, with its starting time being the time when this request was issued. */
@@ -1615,16 +1628,16 @@ export interface PoolEnableAutoScaleParameter {
 }
 
 /** Options for evaluating an automatic scaling formula on a Pool. */
-export interface PoolEvaluateAutoScaleParameter {
+export interface PoolEvaluateAutoScaleParameters {
   /** The formula is validated and its results calculated, but it is not applied to the Pool. To apply the formula to the Pool, 'Enable automatic scaling on a Pool'. For more information about specifying this formula, see Automatically scale Compute Nodes in an Azure Batch Pool (https://azure.microsoft.com/en-us/documentation/articles/batch-automatic-scaling). */
   autoScaleFormula: string;
 }
 
 /** Options for changing the size of a Pool. */
-export interface PoolResizeParameter {
+export interface PoolResizeParameters {
   /** The desired number of dedicated Compute Nodes in the Pool. */
   targetDedicatedNodes?: number;
-  /** The desired number of Spot/Low-priority Compute Nodes in the Pool. */
+  /** The desired number of low-priority Compute Nodes in the Pool. */
   targetLowPriorityNodes?: number;
   /** The default value is 15 minutes. The minimum value is 5 minutes. If you specify a value less than 5 minutes, the Batch service returns an error; if you are calling the REST API directly, the HTTP status code is 400 (Bad Request). */
   resizeTimeout?: string;
@@ -1633,7 +1646,7 @@ export interface PoolResizeParameter {
 }
 
 /** Options for removing Compute Nodes from a Pool. */
-export interface NodeRemoveParameter {
+export interface NodeRemoveParameters {
   /** A maximum of 100 nodes may be removed per request. */
   nodeList: string[];
   /** The default value is 15 minutes. The minimum value is 5 minutes. If you specify a value less than 5 minutes, the Batch service returns an error; if you are calling the REST API directly, the HTTP status code is 400 (Bad Request). */
@@ -1643,7 +1656,7 @@ export interface NodeRemoveParameter {
 }
 
 /** Batch will retry Tasks when a recovery operation is triggered on a Node. Examples of recovery operations include (but are not limited to) when an unhealthy Node is rebooted or a Compute Node disappeared due to host failure. Retries due to recovery operations are independent of and are not counted against the maxTaskRetryCount. Even if the maxTaskRetryCount is 0, an internal retry due to a recovery operation may occur. Because of this, all Tasks should be idempotent. This means Tasks need to tolerate being interrupted and restarted without causing any corruption or duplicate data. The best practice for long running Tasks is to use some form of checkpointing. */
-export interface Task {
+export interface BatchTask {
   /** The ID can contain any combination of alphanumeric characters including hyphens and underscores, and cannot contain more than 64 characters. */
   id?: string;
   /** The display name need not be unique and can contain any Unicode characters up to a maximum length of 1024. */
@@ -1874,15 +1887,15 @@ export interface TaskIdRange {
 /** The result of listing the Tasks in a Job. */
 export interface TaskListResult {
   /** The list of Tasks. */
-  value?: Task[];
+  value?: BatchTask[];
   /** The URL to get the next set of results. */
   odataNextLink?: string;
 }
 
 /** A collection of Azure Batch Tasks to add. */
-export interface TaskAddCollectionParameter {
+export interface TaskCollection {
   /** The total serialized size of this collection must be less than 1MB. If it is greater than 1MB (for example if each Task has 100's of resource files or environment variables), the request will fail with code 'RequestBodyTooLarge' and should be retried again with fewer Tasks. */
-  value: Task[];
+  value: BatchTask[];
 }
 
 /** The result of adding a collection of Tasks to a Job. */
@@ -1956,7 +1969,7 @@ export interface ComputeNodeUser {
 }
 
 /** The set of changes to be made to a user Account on a Compute Node. */
-export interface NodeUpdateUserParameter {
+export interface NodeUpdateUserParameters {
   /** The password is required for Windows Compute Nodes (those created with 'cloudServiceConfiguration', or created with 'virtualMachineConfiguration' using a Windows Image reference). For Linux Compute Nodes, the password can optionally be specified along with the sshPublicKey property. If omitted, any existing password is removed. */
   password?: string;
   /** If omitted, the default is 1 day from the current time. For Linux Compute Nodes, the expiryTime has a precision up to a day. */
@@ -1971,7 +1984,7 @@ export interface ComputeNode {
   id?: string;
   /** The URL of the Compute Node. */
   url?: string;
-  /** The Spot/Low-priority Compute Node has been preempted. Tasks which were running on the Compute Node when it was preempted will be rescheduled when another Compute Node becomes available. */
+  /** The low-priority Compute Node has been preempted. Tasks which were running on the Compute Node when it was preempted will be rescheduled when another Compute Node becomes available. */
   state?: ComputeNodeState;
   /** Whether the Compute Node is available for Task scheduling. */
   schedulingState?: SchedulingState;
@@ -2005,7 +2018,7 @@ export interface ComputeNode {
   certificateReferences?: CertificateReference[];
   /** The list of errors that are currently being encountered by the Compute Node. */
   errors?: ComputeNodeError[];
-  /** Whether this Compute Node is a dedicated Compute Node. If false, the Compute Node is a Spot/Low-priority Compute Node. */
+  /** Whether this Compute Node is a dedicated Compute Node. If false, the Compute Node is a low-priority Compute Node. */
   isDedicated?: boolean;
   /** The endpoint configuration for the Compute Node. */
   endpointConfiguration?: ComputeNodeEndpointConfiguration;
@@ -2100,19 +2113,19 @@ export interface VirtualMachineInfo {
 }
 
 /** Options for rebooting a Compute Node. */
-export interface NodeRebootParameter {
+export interface NodeRebootParameters {
   /** The default value is requeue. */
   nodeRebootOption?: ComputeNodeRebootOption;
 }
 
 /** Options for reimaging a Compute Node. */
-export interface NodeReimageParameter {
+export interface NodeReimageParameters {
   /** The default value is requeue. */
   nodeReimageOption?: ComputeNodeReimageOption;
 }
 
 /** Options for disabling scheduling on a Compute Node. */
-export interface NodeDisableSchedulingParameter {
+export interface NodeDisableSchedulingParameters {
   /** The default value is requeue. */
   nodeDisableSchedulingOption?: DisableComputeNodeSchedulingOption;
 }
@@ -4675,10 +4688,10 @@ export interface ComputeNodeExtensionListOptions {
 export type OSType = "linux" | "windows";
 /** Defines values for VerificationType. */
 export type VerificationType = "verified" | "unverified";
-/** Defines values for CertificateFormat. */
-export type CertificateFormat = "pfx" | "cer";
 /** Defines values for CertificateState. */
 export type CertificateState = "active" | "deleting" | "deletefailed";
+/** Defines values for CertificateFormat. */
+export type CertificateFormat = "pfx" | "cer";
 /** Defines values for JobScheduleState. */
 export type JobScheduleState =
   | "active"
@@ -5082,7 +5095,7 @@ export interface JobGetOptionalParams extends coreClient.OperationOptions {
 }
 
 /** Contains response data for the get operation. */
-export type JobGetResponse = JobGetHeaders & Job;
+export type JobGetResponse = JobGetHeaders & BatchJob;
 
 /** Optional parameters. */
 export interface JobPatchOptionalParams extends coreClient.OperationOptions {
@@ -5126,7 +5139,7 @@ export interface JobTerminateOptionalParams
   /** Parameter group */
   jobTerminateOptions?: JobTerminateOptions;
   /** The parameters for the request. */
-  jobTerminateParameter?: JobTerminateParameter;
+  parameters?: JobTerminateParameters;
 }
 
 /** Contains response data for the terminate operation. */
@@ -5579,7 +5592,7 @@ export interface TaskGetOptionalParams extends coreClient.OperationOptions {
 }
 
 /** Contains response data for the get operation. */
-export type TaskGetResponse = TaskGetHeaders & Task;
+export type TaskGetResponse = TaskGetHeaders & BatchTask;
 
 /** Optional parameters. */
 export interface TaskUpdateOptionalParams extends coreClient.OperationOptions {
@@ -5677,7 +5690,7 @@ export interface ComputeNodeRebootOptionalParams
   /** Parameter group */
   computeNodeRebootOptions?: ComputeNodeRebootOptions;
   /** The parameters for the request. */
-  nodeRebootParameter?: NodeRebootParameter;
+  parameters?: NodeRebootParameters;
 }
 
 /** Contains response data for the reboot operation. */
@@ -5689,7 +5702,7 @@ export interface ComputeNodeReimageOptionalParams
   /** Parameter group */
   computeNodeReimageOptions?: ComputeNodeReimageOptions;
   /** The parameters for the request. */
-  nodeReimageParameter?: NodeReimageParameter;
+  parameters?: NodeReimageParameters;
 }
 
 /** Contains response data for the reimage operation. */
@@ -5701,7 +5714,7 @@ export interface ComputeNodeDisableSchedulingOptionalParams
   /** Parameter group */
   computeNodeDisableSchedulingOptions?: ComputeNodeDisableSchedulingOptions;
   /** The parameters for the request. */
-  nodeDisableSchedulingParameter?: NodeDisableSchedulingParameter;
+  parameters?: NodeDisableSchedulingParameters;
 }
 
 /** Contains response data for the disableScheduling operation. */

@@ -27,20 +27,20 @@ import {
   PoolPatchResponse,
   PoolDisableAutoScaleOptionalParams,
   PoolDisableAutoScaleResponse,
-  PoolEnableAutoScaleParameter,
+  PoolEnableAutoScaleParameters,
   PoolEnableAutoScaleOptionalParams,
   PoolEnableAutoScaleResponse,
-  PoolEvaluateAutoScaleParameter,
+  PoolEvaluateAutoScaleParameters,
   PoolEvaluateAutoScaleOptionalParams,
   PoolEvaluateAutoScaleResponse,
-  PoolResizeParameter,
+  PoolResizeParameters,
   PoolResizeOptionalParams,
   PoolResizeResponse,
   PoolStopResizeOptionalParams,
   PoolStopResizeResponse,
   PoolUpdatePropertiesOptionalParams,
   PoolUpdatePropertiesResponse,
-  NodeRemoveParameter,
+  NodeRemoveParameters,
   PoolRemoveNodesOptionalParams,
   PoolRemoveNodesResponse
 } from "../models";
@@ -121,12 +121,12 @@ export interface PoolOperations {
    * StartTask associated with it, and a request does not specify a StartTask element, then the Pool
    * keeps the existing StartTask.
    * @param poolId The ID of the Pool to update.
-   * @param poolPatchParameter The parameters for the request.
+   * @param poolUpdate The parameters for the request.
    * @param options The options parameters.
    */
   patch(
     poolId: string,
-    poolPatchParameter: PoolUpdate,
+    poolUpdate: PoolUpdate,
     options?: PoolPatchOptionalParams
   ): Promise<PoolPatchResponse>;
   /**
@@ -145,12 +145,12 @@ export interface PoolOperations {
    * autoscale formula and/or a new evaluation interval. You cannot call this API for the same Pool more
    * than once every 30 seconds.
    * @param poolId The ID of the Pool on which to enable automatic scaling.
-   * @param poolEnableAutoScaleParameter The parameters for the request.
+   * @param parameters The parameters for the request.
    * @param options The options parameters.
    */
   enableAutoScale(
     poolId: string,
-    poolEnableAutoScaleParameter: PoolEnableAutoScaleParameter,
+    parameters: PoolEnableAutoScaleParameters,
     options?: PoolEnableAutoScaleOptionalParams
   ): Promise<PoolEnableAutoScaleResponse>;
   /**
@@ -158,12 +158,12 @@ export interface PoolOperations {
    * applying the formula to the Pool. The Pool must have auto scaling enabled in order to evaluate a
    * formula.
    * @param poolId The ID of the Pool on which to evaluate the automatic scaling formula.
-   * @param poolEvaluateAutoScaleParameter The parameters for the request.
+   * @param parameters The parameters for the request.
    * @param options The options parameters.
    */
   evaluateAutoScale(
     poolId: string,
-    poolEvaluateAutoScaleParameter: PoolEvaluateAutoScaleParameter,
+    parameters: PoolEvaluateAutoScaleParameters,
     options?: PoolEvaluateAutoScaleOptionalParams
   ): Promise<PoolEvaluateAutoScaleResponse>;
   /**
@@ -174,12 +174,12 @@ export interface PoolOperations {
    * service chooses which Compute Nodes to remove. To remove specific Compute Nodes, use the Pool remove
    * Compute Nodes API instead.
    * @param poolId The ID of the Pool to resize.
-   * @param poolResizeParameter The parameters for the request.
+   * @param parameters The parameters for the request.
    * @param options The options parameters.
    */
   resize(
     poolId: string,
-    poolResizeParameter: PoolResizeParameter,
+    parameters: PoolResizeParameters,
     options?: PoolResizeOptionalParams
   ): Promise<PoolResizeResponse>;
   /**
@@ -213,12 +213,12 @@ export interface PoolOperations {
    * This operation can only run when the allocation state of the Pool is steady. When this operation
    * runs, the allocation state changes from steady to resizing. Each request may remove up to 100 nodes.
    * @param poolId The ID of the Pool from which you want to remove Compute Nodes.
-   * @param nodeRemoveParameter The parameters for the request.
+   * @param parameters The parameters for the request.
    * @param options The options parameters.
    */
   removeNodes(
     poolId: string,
-    nodeRemoveParameter: NodeRemoveParameter,
+    parameters: NodeRemoveParameters,
     options?: PoolRemoveNodesOptionalParams
   ): Promise<PoolRemoveNodesResponse>;
 }

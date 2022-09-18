@@ -148,16 +148,16 @@ export class JobScheduleOperationsImpl implements JobScheduleOperations {
    * schedule. Changes to a Job Schedule only impact Jobs created by the schedule after the update has
    * taken place; currently running Jobs are unaffected.
    * @param jobScheduleId The ID of the Job Schedule to update.
-   * @param jobSchedulePatchParameter The parameters for the request.
+   * @param jobScheduleUpdate The parameters for the request.
    * @param options The options parameters.
    */
   patch(
     jobScheduleId: string,
-    jobSchedulePatchParameter: JobScheduleUpdate,
+    jobScheduleUpdate: JobScheduleUpdate,
     options?: JobSchedulePatchOptionalParams
   ): Promise<JobSchedulePatchResponse> {
     return this.client.sendOperationRequest(
-      { jobScheduleId, jobSchedulePatchParameter, options },
+      { jobScheduleId, jobScheduleUpdate, options },
       patchOperationSpec
     );
   }
@@ -168,16 +168,16 @@ export class JobScheduleOperationsImpl implements JobScheduleOperations {
    * schedule. Changes to a Job Schedule only impact Jobs created by the schedule after the update has
    * taken place; currently running Jobs are unaffected.
    * @param jobScheduleId The ID of the Job Schedule to update.
-   * @param jobScheduleUpdateParameter The parameters for the request.
+   * @param jobSchedule The parameters for the request.
    * @param options The options parameters.
    */
   update(
     jobScheduleId: string,
-    jobScheduleUpdateParameter: JobSchedule,
+    jobSchedule: JobSchedule,
     options?: JobScheduleUpdateOptionalParams
   ): Promise<JobScheduleUpdateResponse> {
     return this.client.sendOperationRequest(
-      { jobScheduleId, jobScheduleUpdateParameter, options },
+      { jobScheduleId, jobSchedule, options },
       updateOperationSpec
     );
   }
@@ -363,7 +363,7 @@ const patchOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.BatchError
     }
   },
-  requestBody: Parameters.jobSchedulePatchParameter,
+  requestBody: Parameters.jobScheduleUpdate,
   queryParameters: [Parameters.apiVersion, Parameters.timeout48],
   urlParameters: [Parameters.batchUrl, Parameters.jobScheduleId],
   headerParameters: [
@@ -391,7 +391,7 @@ const updateOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.BatchError
     }
   },
-  requestBody: Parameters.jobScheduleUpdateParameter,
+  requestBody: Parameters.jobSchedule,
   queryParameters: [Parameters.apiVersion, Parameters.timeout49],
   urlParameters: [Parameters.batchUrl, Parameters.jobScheduleId],
   headerParameters: [

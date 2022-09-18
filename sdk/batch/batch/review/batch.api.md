@@ -272,6 +272,36 @@ export interface BatchErrorDetail {
 }
 
 // @public
+export interface BatchJob {
+    allowTaskPreemption?: boolean;
+    commonEnvironmentSettings?: EnvironmentSetting[];
+    constraints?: JobConstraints;
+    readonly creationTime?: Date;
+    displayName?: string;
+    readonly eTag?: string;
+    readonly executionInfo?: JobExecutionInformation;
+    id?: string;
+    jobManagerTask?: JobManagerTask;
+    jobPreparationTask?: JobPreparationTask;
+    jobReleaseTask?: JobReleaseTask;
+    readonly lastModified?: Date;
+    maxParallelTasks?: number;
+    metadata?: MetadataItem[];
+    networkConfiguration?: JobNetworkConfiguration;
+    onAllTasksComplete?: OnAllTasksComplete;
+    onTaskFailure?: OnTaskFailure;
+    poolInfo?: PoolInformation;
+    readonly previousState?: JobState;
+    readonly previousStateTransitionTime?: Date;
+    priority?: number;
+    readonly state?: JobState;
+    readonly stateTransitionTime?: Date;
+    readonly stats?: JobStatistics;
+    readonly url?: string;
+    usesTaskDependencies?: boolean;
+}
+
+// @public
 export interface BatchPoolIdentity {
     type: PoolIdentityType;
     userAssignedIdentities?: UserAssignedIdentity[];
@@ -282,27 +312,27 @@ export class BatchServiceClient {
     // Warning: (ae-forgotten-export) The symbol "BatchClientCredential" needs to be exported by the entry point index.d.ts
     constructor(credentials: TokenCredential | BatchClientCredential, batchUrl: string, options?: BatchServiceClientOptions);
     // (undocumented)
-    get account(): Account;
+    account: Account;
     // (undocumented)
-    get application(): ApplicationOperations;
+    application: ApplicationOperations;
     // (undocumented)
     batchUrl: string;
     // (undocumented)
-    get certificate(): CertificateOperations;
+    certificate: CertificateOperations;
     // (undocumented)
-    get computeNode(): ComputeNodeOperations;
+    computeNode: ComputeNodeOperations;
     // (undocumented)
-    get computeNodeExtension(): ComputeNodeExtension;
+    computeNodeExtension: ComputeNodeExtension;
     // (undocumented)
-    get file(): File_2;
+    file: File_2;
     // (undocumented)
-    get job(): JobOperations;
+    job: Job;
     // (undocumented)
-    get jobSchedule(): JobScheduleOperations;
+    jobSchedule: JobScheduleOperations;
     // (undocumented)
-    get pool(): PoolOperations;
+    pool: PoolOperations;
     // (undocumented)
-    get task(): TaskOperations;
+    task: Task;
 }
 
 // @public (undocumented)
@@ -318,19 +348,53 @@ export class BatchSharedKeyCredentials implements BatchClientCredential {
 }
 
 // @public
+export interface BatchTask {
+    affinityInfo?: AffinityInformation;
+    applicationPackageReferences?: ApplicationPackageReference[];
+    authenticationTokenSettings?: AuthenticationTokenSettings;
+    commandLine?: string;
+    constraints?: TaskConstraints;
+    containerSettings?: TaskContainerSettings;
+    readonly creationTime?: Date;
+    dependsOn?: TaskDependencies;
+    displayName?: string;
+    environmentSettings?: EnvironmentSetting[];
+    readonly eTag?: string;
+    readonly executionInfo?: TaskExecutionInformation;
+    exitConditions?: ExitConditions;
+    id?: string;
+    readonly lastModified?: Date;
+    multiInstanceSettings?: MultiInstanceSettings;
+    readonly nodeInfo?: ComputeNodeInformation;
+    outputFiles?: OutputFile[];
+    readonly previousState?: TaskState;
+    readonly previousStateTransitionTime?: Date;
+    requiredSlots?: number;
+    resourceFiles?: ResourceFile[];
+    readonly state?: TaskState;
+    readonly stateTransitionTime?: Date;
+    readonly stats?: TaskStatistics;
+    readonly url?: string;
+    userIdentity?: UserIdentity;
+}
+
+// @public
 export type CachingType = "none" | "readonly" | "readwrite";
 
 // @public
 export interface Certificate {
-    deleteCertificateError?: DeleteCertificateError;
-    previousState?: CertificateState;
-    previousStateTransitionTime?: Date;
-    publicData?: string;
-    state?: CertificateState;
-    stateTransitionTime?: Date;
+    certificateFormat?: CertificateFormat;
+    data?: string;
+    readonly deleteCertificateError?: DeleteCertificateError;
+    password?: string;
+    readonly previousState?: CertificateState;
+    readonly previousStateTransitionTime?: Date;
+    readonly publicData?: string;
+    readonly state?: CertificateState;
+    readonly stateTransitionTime?: Date;
     thumbprint?: string;
     thumbprintAlgorithm?: string;
-    url?: string;
+    readonly url?: string;
 }
 
 // @public
@@ -353,15 +417,6 @@ export interface CertificateAddOptions {
     ocpDate?: Date;
     returnClientRequestId?: boolean;
     timeout?: number;
-}
-
-// @public
-export interface CertificateAddParameter {
-    certificateFormat?: CertificateFormat;
-    data: string;
-    password?: string;
-    thumbprint: string;
-    thumbprintAlgorithm: string;
 }
 
 // @public
@@ -495,7 +550,7 @@ export interface CertificateListResult {
 
 // @public
 export interface CertificateOperations {
-    add(certificate: CertificateAddParameter, options?: CertificateAddOptionalParams): Promise<CertificateAddResponse>;
+    add(certificate: Certificate, options?: CertificateAddOptionalParams): Promise<CertificateAddResponse>;
     cancelDeletion(thumbprintAlgorithm: string, thumbprint: string, options?: CertificateCancelDeletionOptionalParams): Promise<CertificateCancelDeletionResponse>;
     delete(thumbprintAlgorithm: string, thumbprint: string, options?: CertificateDeleteOptionalParams): Promise<CertificateDeleteResponse>;
     get(thumbprintAlgorithm: string, thumbprint: string, options?: CertificateGetOptionalParams): Promise<CertificateGetResponse>;
@@ -624,7 +679,7 @@ export interface ComputeNodeDisableSchedulingHeaders {
 // @public
 export interface ComputeNodeDisableSchedulingOptionalParams extends coreClient.OperationOptions {
     computeNodeDisableSchedulingOptions?: ComputeNodeDisableSchedulingOptions;
-    nodeDisableSchedulingParameter?: NodeDisableSchedulingParameter;
+    parameters?: NodeDisableSchedulingParameters;
 }
 
 // @public
@@ -909,7 +964,7 @@ export interface ComputeNodeOperations {
     list(poolId: string, options?: ComputeNodeListOptionalParams): PagedAsyncIterableIterator<ComputeNode>;
     reboot(poolId: string, nodeId: string, options?: ComputeNodeRebootOptionalParams): Promise<ComputeNodeRebootResponse>;
     reimage(poolId: string, nodeId: string, options?: ComputeNodeReimageOptionalParams): Promise<ComputeNodeReimageResponse>;
-    updateUser(poolId: string, nodeId: string, userName: string, nodeUpdateUserParameter: NodeUpdateUserParameter, options?: ComputeNodeUpdateUserOptionalParams): Promise<ComputeNodeUpdateUserResponse>;
+    updateUser(poolId: string, nodeId: string, userName: string, parameters: NodeUpdateUserParameters, options?: ComputeNodeUpdateUserOptionalParams): Promise<ComputeNodeUpdateUserResponse>;
     uploadBatchServiceLogs(poolId: string, nodeId: string, uploadBatchServiceLogsConfiguration: UploadBatchServiceLogsConfiguration, options?: ComputeNodeUploadBatchServiceLogsOptionalParams): Promise<ComputeNodeUploadBatchServiceLogsResponse>;
 }
 
@@ -928,7 +983,7 @@ export type ComputeNodeRebootOption = "requeue" | "terminate" | "taskcompletion"
 // @public
 export interface ComputeNodeRebootOptionalParams extends coreClient.OperationOptions {
     computeNodeRebootOptions?: ComputeNodeRebootOptions;
-    nodeRebootParameter?: NodeRebootParameter;
+    parameters?: NodeRebootParameters;
 }
 
 // @public
@@ -957,7 +1012,7 @@ export type ComputeNodeReimageOption = "requeue" | "terminate" | "taskcompletion
 // @public
 export interface ComputeNodeReimageOptionalParams extends coreClient.OperationOptions {
     computeNodeReimageOptions?: ComputeNodeReimageOptions;
-    nodeReimageParameter?: NodeReimageParameter;
+    parameters?: NodeReimageParameters;
 }
 
 // @public
@@ -1495,32 +1550,19 @@ export type IPAddressProvisioningType = "batchmanaged" | "usermanaged" | "nopubl
 
 // @public
 export interface Job {
-    allowTaskPreemption?: boolean;
-    commonEnvironmentSettings?: EnvironmentSetting[];
-    constraints?: JobConstraints;
-    readonly creationTime?: Date;
-    displayName?: string;
-    readonly eTag?: string;
-    readonly executionInfo?: JobExecutionInformation;
-    id?: string;
-    jobManagerTask?: JobManagerTask;
-    jobPreparationTask?: JobPreparationTask;
-    jobReleaseTask?: JobReleaseTask;
-    readonly lastModified?: Date;
-    maxParallelTasks?: number;
-    metadata?: MetadataItem[];
-    networkConfiguration?: JobNetworkConfiguration;
-    onAllTasksComplete?: OnAllTasksComplete;
-    onTaskFailure?: OnTaskFailure;
-    poolInfo?: PoolInformation;
-    readonly previousState?: JobState;
-    readonly previousStateTransitionTime?: Date;
-    priority?: number;
-    readonly state?: JobState;
-    readonly stateTransitionTime?: Date;
-    readonly stats?: JobStatistics;
-    readonly url?: string;
-    usesTaskDependencies?: boolean;
+    add(job: BatchJob, options?: JobAddOptionalParams): Promise<JobAddResponse>;
+    delete(jobId: string, options?: JobDeleteOptionalParams): Promise<JobDeleteResponse>;
+    disable(jobId: string, parameters: JobDisableParameters, options?: JobDisableOptionalParams): Promise<JobDisableResponse>;
+    enable(jobId: string, options?: JobEnableOptionalParams): Promise<JobEnableResponse>;
+    get(jobId: string, options?: JobGetOptionalParams): Promise<JobGetResponse>;
+    getAllLifetimeStatistics(options?: JobGetAllLifetimeStatisticsOptionalParams): Promise<JobGetAllLifetimeStatisticsResponse>;
+    getTaskCounts(jobId: string, options?: JobGetTaskCountsOptionalParams): Promise<JobGetTaskCountsResponse>;
+    list(options?: JobListOptionalParams): PagedAsyncIterableIterator<BatchJob>;
+    listFromJobSchedule(jobScheduleId: string, options?: JobListFromJobScheduleOptionalParams): PagedAsyncIterableIterator<BatchJob>;
+    listPreparationAndReleaseTaskStatus(jobId: string, options?: JobListPreparationAndReleaseTaskStatusOptionalParams): PagedAsyncIterableIterator<JobPreparationAndReleaseTaskExecutionInformation>;
+    patch(jobId: string, jobUpdate: JobUpdate, options?: JobPatchOptionalParams): Promise<JobPatchResponse>;
+    terminate(jobId: string, options?: JobTerminateOptionalParams): Promise<JobTerminateResponse>;
+    update(jobId: string, job: BatchJob, options?: JobUpdateOptionalParams): Promise<JobUpdateResponse>;
 }
 
 // @public
@@ -1610,7 +1652,7 @@ export interface JobDisableOptions {
 }
 
 // @public
-export interface JobDisableParameter {
+export interface JobDisableParameters {
     disableTasks: DisableJobOption;
 }
 
@@ -1707,7 +1749,7 @@ export interface JobGetOptions {
 }
 
 // @public
-export type JobGetResponse = JobGetHeaders & Job;
+export type JobGetResponse = JobGetHeaders & BatchJob;
 
 // @public
 export interface JobGetTaskCountsHeaders {
@@ -1871,7 +1913,7 @@ export type JobListResponse = JobListHeaders & JobListResult;
 // @public
 export interface JobListResult {
     odataNextLink?: string;
-    value?: Job[];
+    value?: BatchJob[];
 }
 
 // @public
@@ -1896,23 +1938,6 @@ export interface JobManagerTask {
 // @public
 export interface JobNetworkConfiguration {
     subnetId: string;
-}
-
-// @public
-export interface JobOperations {
-    add(job: Job, options?: JobAddOptionalParams): Promise<JobAddResponse>;
-    delete(jobId: string, options?: JobDeleteOptionalParams): Promise<JobDeleteResponse>;
-    disable(jobId: string, jobDisableParameter: JobDisableParameter, options?: JobDisableOptionalParams): Promise<JobDisableResponse>;
-    enable(jobId: string, options?: JobEnableOptionalParams): Promise<JobEnableResponse>;
-    get(jobId: string, options?: JobGetOptionalParams): Promise<JobGetResponse>;
-    getAllLifetimeStatistics(options?: JobGetAllLifetimeStatisticsOptionalParams): Promise<JobGetAllLifetimeStatisticsResponse>;
-    getTaskCounts(jobId: string, options?: JobGetTaskCountsOptionalParams): Promise<JobGetTaskCountsResponse>;
-    list(options?: JobListOptionalParams): PagedAsyncIterableIterator<Job>;
-    listFromJobSchedule(jobScheduleId: string, options?: JobListFromJobScheduleOptionalParams): PagedAsyncIterableIterator<Job>;
-    listPreparationAndReleaseTaskStatus(jobId: string, options?: JobListPreparationAndReleaseTaskStatusOptionalParams): PagedAsyncIterableIterator<JobPreparationAndReleaseTaskExecutionInformation>;
-    patch(jobId: string, jobPatchParameter: JobUpdate, options?: JobPatchOptionalParams): Promise<JobPatchResponse>;
-    terminate(jobId: string, options?: JobTerminateOptionalParams): Promise<JobTerminateResponse>;
-    update(jobId: string, jobUpdateParameter: Job, options?: JobUpdateOptionalParams): Promise<JobUpdateResponse>;
 }
 
 // @public
@@ -2264,9 +2289,9 @@ export interface JobScheduleOperations {
     exists(jobScheduleId: string, options?: JobScheduleExistsOptionalParams): Promise<JobScheduleExistsResponse>;
     get(jobScheduleId: string, options?: JobScheduleGetOptionalParams): Promise<JobScheduleGetResponse>;
     list(options?: JobScheduleListOptionalParams): PagedAsyncIterableIterator<JobSchedule>;
-    patch(jobScheduleId: string, jobSchedulePatchParameter: JobScheduleUpdate, options?: JobSchedulePatchOptionalParams): Promise<JobSchedulePatchResponse>;
+    patch(jobScheduleId: string, jobScheduleUpdate: JobScheduleUpdate, options?: JobSchedulePatchOptionalParams): Promise<JobSchedulePatchResponse>;
     terminate(jobScheduleId: string, options?: JobScheduleTerminateOptionalParams): Promise<JobScheduleTerminateResponse>;
-    update(jobScheduleId: string, jobScheduleUpdateParameter: JobSchedule, options?: JobScheduleUpdateOptionalParams): Promise<JobScheduleUpdateResponse>;
+    update(jobScheduleId: string, jobSchedule: JobSchedule, options?: JobScheduleUpdateOptionalParams): Promise<JobScheduleUpdateResponse>;
 }
 
 // @public
@@ -2444,7 +2469,7 @@ export interface JobTerminateHeaders {
 // @public
 export interface JobTerminateOptionalParams extends coreClient.OperationOptions {
     jobTerminateOptions?: JobTerminateOptions;
-    jobTerminateParameter?: JobTerminateParameter;
+    parameters?: JobTerminateParameters;
 }
 
 // @public
@@ -2460,7 +2485,7 @@ export interface JobTerminateOptions {
 }
 
 // @public
-export interface JobTerminateParameter {
+export interface JobTerminateParameters {
     terminateReason?: string;
 }
 
@@ -2595,7 +2620,7 @@ export interface NodeCounts {
 }
 
 // @public
-export interface NodeDisableSchedulingParameter {
+export interface NodeDisableSchedulingParameters {
     nodeDisableSchedulingOption?: DisableComputeNodeSchedulingOption;
 }
 
@@ -2622,24 +2647,24 @@ export interface NodePlacementConfiguration {
 export type NodePlacementPolicyType = "regional" | "zonal";
 
 // @public
-export interface NodeRebootParameter {
+export interface NodeRebootParameters {
     nodeRebootOption?: ComputeNodeRebootOption;
 }
 
 // @public
-export interface NodeReimageParameter {
+export interface NodeReimageParameters {
     nodeReimageOption?: ComputeNodeReimageOption;
 }
 
 // @public
-export interface NodeRemoveParameter {
+export interface NodeRemoveParameters {
     nodeDeallocationOption?: ComputeNodeDeallocationOption;
     nodeList: string[];
     resizeTimeout?: string;
 }
 
 // @public
-export interface NodeUpdateUserParameter {
+export interface NodeUpdateUserParameters {
     expiryTime?: Date;
     password?: string;
     sshPublicKey?: string;
@@ -2843,7 +2868,7 @@ export interface PoolEnableAutoScaleOptions {
 }
 
 // @public
-export interface PoolEnableAutoScaleParameter {
+export interface PoolEnableAutoScaleParameters {
     autoScaleEvaluationInterval?: string;
     autoScaleFormula?: string;
 }
@@ -2879,7 +2904,7 @@ export interface PoolEvaluateAutoScaleOptions {
 }
 
 // @public
-export interface PoolEvaluateAutoScaleParameter {
+export interface PoolEvaluateAutoScaleParameters {
     autoScaleFormula: string;
 }
 
@@ -3098,16 +3123,16 @@ export interface PoolOperations {
     add(pool: Pool, options?: PoolAddOptionalParams): Promise<PoolAddResponse>;
     delete(poolId: string, options?: PoolDeleteOptionalParams): Promise<PoolDeleteResponse>;
     disableAutoScale(poolId: string, options?: PoolDisableAutoScaleOptionalParams): Promise<PoolDisableAutoScaleResponse>;
-    enableAutoScale(poolId: string, poolEnableAutoScaleParameter: PoolEnableAutoScaleParameter, options?: PoolEnableAutoScaleOptionalParams): Promise<PoolEnableAutoScaleResponse>;
-    evaluateAutoScale(poolId: string, poolEvaluateAutoScaleParameter: PoolEvaluateAutoScaleParameter, options?: PoolEvaluateAutoScaleOptionalParams): Promise<PoolEvaluateAutoScaleResponse>;
+    enableAutoScale(poolId: string, parameters: PoolEnableAutoScaleParameters, options?: PoolEnableAutoScaleOptionalParams): Promise<PoolEnableAutoScaleResponse>;
+    evaluateAutoScale(poolId: string, parameters: PoolEvaluateAutoScaleParameters, options?: PoolEvaluateAutoScaleOptionalParams): Promise<PoolEvaluateAutoScaleResponse>;
     exists(poolId: string, options?: PoolExistsOptionalParams): Promise<PoolExistsResponse>;
     get(poolId: string, options?: PoolGetOptionalParams): Promise<PoolGetResponse>;
     getAllLifetimeStatistics(options?: PoolGetAllLifetimeStatisticsOptionalParams): Promise<PoolGetAllLifetimeStatisticsResponse>;
     list(options?: PoolListOptionalParams): PagedAsyncIterableIterator<Pool>;
     listUsageMetrics(options?: PoolListUsageMetricsOptionalParams): PagedAsyncIterableIterator<PoolUsageMetrics>;
-    patch(poolId: string, poolPatchParameter: PoolUpdate, options?: PoolPatchOptionalParams): Promise<PoolPatchResponse>;
-    removeNodes(poolId: string, nodeRemoveParameter: NodeRemoveParameter, options?: PoolRemoveNodesOptionalParams): Promise<PoolRemoveNodesResponse>;
-    resize(poolId: string, poolResizeParameter: PoolResizeParameter, options?: PoolResizeOptionalParams): Promise<PoolResizeResponse>;
+    patch(poolId: string, poolUpdate: PoolUpdate, options?: PoolPatchOptionalParams): Promise<PoolPatchResponse>;
+    removeNodes(poolId: string, parameters: NodeRemoveParameters, options?: PoolRemoveNodesOptionalParams): Promise<PoolRemoveNodesResponse>;
+    resize(poolId: string, parameters: PoolResizeParameters, options?: PoolResizeOptionalParams): Promise<PoolResizeResponse>;
     stopResize(poolId: string, options?: PoolStopResizeOptionalParams): Promise<PoolStopResizeResponse>;
     updateProperties(poolId: string, poolUpdatePropertiesParameter: Pool, options?: PoolUpdatePropertiesOptionalParams): Promise<PoolUpdatePropertiesResponse>;
 }
@@ -3197,7 +3222,7 @@ export interface PoolResizeOptions {
 }
 
 // @public
-export interface PoolResizeParameter {
+export interface PoolResizeParameters {
     nodeDeallocationOption?: ComputeNodeDeallocationOption;
     resizeTimeout?: string;
     targetDedicatedNodes?: number;
@@ -3427,33 +3452,15 @@ export type SubtaskState = "preparing" | "running" | "completed";
 
 // @public
 export interface Task {
-    affinityInfo?: AffinityInformation;
-    applicationPackageReferences?: ApplicationPackageReference[];
-    authenticationTokenSettings?: AuthenticationTokenSettings;
-    commandLine?: string;
-    constraints?: TaskConstraints;
-    containerSettings?: TaskContainerSettings;
-    readonly creationTime?: Date;
-    dependsOn?: TaskDependencies;
-    displayName?: string;
-    environmentSettings?: EnvironmentSetting[];
-    readonly eTag?: string;
-    readonly executionInfo?: TaskExecutionInformation;
-    exitConditions?: ExitConditions;
-    id?: string;
-    readonly lastModified?: Date;
-    multiInstanceSettings?: MultiInstanceSettings;
-    readonly nodeInfo?: ComputeNodeInformation;
-    outputFiles?: OutputFile[];
-    readonly previousState?: TaskState;
-    readonly previousStateTransitionTime?: Date;
-    requiredSlots?: number;
-    resourceFiles?: ResourceFile[];
-    readonly state?: TaskState;
-    readonly stateTransitionTime?: Date;
-    readonly stats?: TaskStatistics;
-    readonly url?: string;
-    userIdentity?: UserIdentity;
+    add(jobId: string, task: BatchTask, options?: TaskAddOptionalParams): Promise<TaskAddResponse>;
+    addCollection(jobId: string, taskCollection: TaskCollection, options?: TaskAddCollectionOptionalParams): Promise<TaskAddCollectionResponse>;
+    delete(jobId: string, taskId: string, options?: TaskDeleteOptionalParams): Promise<TaskDeleteResponse>;
+    get(jobId: string, taskId: string, options?: TaskGetOptionalParams): Promise<TaskGetResponse>;
+    list(jobId: string, options?: TaskListOptionalParams): PagedAsyncIterableIterator<BatchTask>;
+    listSubtasks(jobId: string, taskId: string, options?: TaskListSubtasksOptionalParams): Promise<TaskListSubtasksResponse>;
+    reactivate(jobId: string, taskId: string, options?: TaskReactivateOptionalParams): Promise<TaskReactivateResponse>;
+    terminate(jobId: string, taskId: string, options?: TaskTerminateOptionalParams): Promise<TaskTerminateResponse>;
+    update(jobId: string, taskId: string, task: BatchTask, options?: TaskUpdateOptionalParams): Promise<TaskUpdateResponse>;
 }
 
 // @public
@@ -3473,11 +3480,6 @@ export interface TaskAddCollectionOptions {
     ocpDate?: Date;
     returnClientRequestId?: boolean;
     timeout?: number;
-}
-
-// @public
-export interface TaskAddCollectionParameter {
-    value: Task[];
 }
 
 // @public
@@ -3525,6 +3527,11 @@ export interface TaskAddResult {
 
 // @public
 export type TaskAddStatus = "success" | "clienterror" | "servererror";
+
+// @public
+export interface TaskCollection {
+    value: BatchTask[];
+}
 
 // @public
 export interface TaskConstraints {
@@ -3649,7 +3656,7 @@ export interface TaskGetOptions {
 }
 
 // @public
-export type TaskGetResponse = TaskGetHeaders & Task;
+export type TaskGetResponse = TaskGetHeaders & BatchTask;
 
 // @public
 export interface TaskIdRange {
@@ -3714,7 +3721,7 @@ export type TaskListResponse = TaskListHeaders & TaskListResult;
 // @public
 export interface TaskListResult {
     odataNextLink?: string;
-    value?: Task[];
+    value?: BatchTask[];
 }
 
 // @public
@@ -3745,19 +3752,6 @@ export type TaskListSubtasksResponse = TaskListSubtasksHeaders & TaskListSubtask
 // @public
 export interface TaskListSubtasksResult {
     value?: SubtaskInformation[];
-}
-
-// @public
-export interface TaskOperations {
-    add(jobId: string, task: Task, options?: TaskAddOptionalParams): Promise<TaskAddResponse>;
-    addCollection(jobId: string, taskCollection: TaskAddCollectionParameter, options?: TaskAddCollectionOptionalParams): Promise<TaskAddCollectionResponse>;
-    delete(jobId: string, taskId: string, options?: TaskDeleteOptionalParams): Promise<TaskDeleteResponse>;
-    get(jobId: string, taskId: string, options?: TaskGetOptionalParams): Promise<TaskGetResponse>;
-    list(jobId: string, options?: TaskListOptionalParams): PagedAsyncIterableIterator<Task>;
-    listSubtasks(jobId: string, taskId: string, options?: TaskListSubtasksOptionalParams): Promise<TaskListSubtasksResponse>;
-    reactivate(jobId: string, taskId: string, options?: TaskReactivateOptionalParams): Promise<TaskReactivateResponse>;
-    terminate(jobId: string, taskId: string, options?: TaskTerminateOptionalParams): Promise<TaskTerminateResponse>;
-    update(jobId: string, taskId: string, taskUpdateParameter: Task, options?: TaskUpdateOptionalParams): Promise<TaskUpdateResponse>;
 }
 
 // @public

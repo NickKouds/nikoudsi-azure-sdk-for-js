@@ -17,11 +17,11 @@ import {
   ApplicationOperationsImpl,
   PoolOperationsImpl,
   AccountImpl,
-  JobOperationsImpl,
+  JobImpl,
   CertificateOperationsImpl,
   FileImpl,
   JobScheduleOperationsImpl,
-  TaskOperationsImpl,
+  TaskImpl,
   ComputeNodeOperationsImpl,
   ComputeNodeExtensionImpl
 } from "./operations";
@@ -29,11 +29,11 @@ import {
   ApplicationOperations,
   PoolOperations,
   Account,
-  JobOperations,
+  Job,
   CertificateOperations,
   File,
   JobScheduleOperations,
-  TaskOperations,
+  Task,
   ComputeNodeOperations,
   ComputeNodeExtension
 } from "./operationsInterfaces";
@@ -108,11 +108,11 @@ export class GeneratedClient extends coreClient.ServiceClient {
     this.applicationOperations = new ApplicationOperationsImpl(this);
     this.poolOperations = new PoolOperationsImpl(this);
     this.account = new AccountImpl(this);
-    this.jobOperations = new JobOperationsImpl(this);
+    this.job = new JobImpl(this);
     this.certificateOperations = new CertificateOperationsImpl(this);
     this.file = new FileImpl(this);
     this.jobScheduleOperations = new JobScheduleOperationsImpl(this);
-    this.taskOperations = new TaskOperationsImpl(this);
+    this.task = new TaskImpl(this);
     this.computeNodeOperations = new ComputeNodeOperationsImpl(this);
     this.computeNodeExtension = new ComputeNodeExtensionImpl(this);
     this.addCustomApiVersionPolicy(options.apiVersion);
@@ -133,7 +133,7 @@ export class GeneratedClient extends coreClient.ServiceClient {
         if (param.length > 1) {
           const newParams = param[1].split("&").map((item) => {
             if (item.indexOf("api-version") > -1) {
-              return item.replace(/(?<==).*$/, apiVersion);
+              return "api-version=" + apiVersion;
             } else {
               return item;
             }
@@ -149,11 +149,11 @@ export class GeneratedClient extends coreClient.ServiceClient {
   applicationOperations: ApplicationOperations;
   poolOperations: PoolOperations;
   account: Account;
-  jobOperations: JobOperations;
+  job: Job;
   certificateOperations: CertificateOperations;
   file: File;
   jobScheduleOperations: JobScheduleOperations;
-  taskOperations: TaskOperations;
+  task: Task;
   computeNodeOperations: ComputeNodeOperations;
   computeNodeExtension: ComputeNodeExtension;
 }

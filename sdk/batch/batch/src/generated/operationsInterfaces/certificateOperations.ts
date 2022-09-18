@@ -10,7 +10,6 @@ import { PagedAsyncIterableIterator } from "@azure/core-paging";
 import {
   Certificate,
   CertificateListOptionalParams,
-  CertificateAddParameter,
   CertificateAddOptionalParams,
   CertificateAddResponse,
   CertificateCancelDeletionOptionalParams,
@@ -37,7 +36,7 @@ export interface CertificateOperations {
    * @param options The options parameters.
    */
   add(
-    certificate: CertificateAddParameter,
+    certificate: Certificate,
     options?: CertificateAddOptionalParams
   ): Promise<CertificateAddResponse>;
   /**

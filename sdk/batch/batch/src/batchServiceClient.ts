@@ -15,11 +15,11 @@ import {
   ComputeNodeOperations,
   ComputeNodeExtension,
   File,
-  JobOperations,
+  Job,
   ApplicationOperations,
   JobScheduleOperations,
   PoolOperations,
-  TaskOperations
+  Task
 } from "./generated";
 
 export interface BatchServiceClientOptions extends CommonClientOptions { }
@@ -28,45 +28,16 @@ export class BatchServiceClient {
   batchUrl: string;
   private readonly client: GeneratedClient;
 
-  get application(): ApplicationOperations {
-    return this.client.applicationOperations;
-  }
-
-  get account(): Account {
-    return this.client.account;
-  }
-
-  get certificate(): CertificateOperations {
-    return this.client.certificateOperations;
-  }
-
-  get computeNode(): ComputeNodeOperations {
-    return this.client.computeNodeOperations;
-  }
-
-  get computeNodeExtension(): ComputeNodeExtension {
-    return this.client.computeNodeExtension;
-  }
-
-  get file(): File {
-    return this.client.file;
-  }
-
-  get job(): JobOperations {
-    return this.client.jobOperations;
-  }
-
-  get jobSchedule(): JobScheduleOperations {
-    return this.client.jobScheduleOperations;
-  }
-
-  get pool(): PoolOperations {
-    return this.client.poolOperations;
-  }
-
-  get task(): TaskOperations {
-    return this.client.taskOperations;
-  }
+  application: ApplicationOperations;
+  account: Account
+  certificate: CertificateOperations;
+  computeNode: ComputeNodeOperations;
+  computeNodeExtension: ComputeNodeExtension;
+  file: File;
+  job: Job
+  jobSchedule: JobScheduleOperations;
+  pool: PoolOperations;
+  task: Task;
 
   /**
    * Initializes a new instance of the BatchServiceClient class.
@@ -94,6 +65,17 @@ export class BatchServiceClient {
       : createBatchClientCredentialPolicy("batchClientCredentialPolicy", credentials);
 
     this.client.pipeline.addPolicy(authPolicy);
+
+    this.application = this.client.applicationOperations;
+    this.account = this.client.account;
+    this.certificate = this.client.certificateOperations;
+    this.computeNode = this.client.computeNodeOperations;
+    this.computeNodeExtension = this.client.computeNodeExtension;
+    this.file = this.client.file;
+    this.job = this.client.job;
+    this.jobSchedule = this.client.jobScheduleOperations;
+    this.pool = this.client.poolOperations;
+    this.task = this.client.task;
   }
 
 }

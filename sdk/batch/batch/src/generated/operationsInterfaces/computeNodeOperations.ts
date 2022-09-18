@@ -15,7 +15,7 @@ import {
   ComputeNodeAddUserResponse,
   ComputeNodeDeleteUserOptionalParams,
   ComputeNodeDeleteUserResponse,
-  NodeUpdateUserParameter,
+  NodeUpdateUserParameters,
   ComputeNodeUpdateUserOptionalParams,
   ComputeNodeUpdateUserResponse,
   ComputeNodeGetOptionalParams,
@@ -83,14 +83,14 @@ export interface ComputeNodeOperations {
    * @param poolId The ID of the Pool that contains the Compute Node.
    * @param nodeId The ID of the machine on which you want to update a user Account.
    * @param userName The name of the user Account to update.
-   * @param nodeUpdateUserParameter The parameters for the request.
+   * @param parameters The parameters for the request.
    * @param options The options parameters.
    */
   updateUser(
     poolId: string,
     nodeId: string,
     userName: string,
-    nodeUpdateUserParameter: NodeUpdateUserParameter,
+    parameters: NodeUpdateUserParameters,
     options?: ComputeNodeUpdateUserOptionalParams
   ): Promise<ComputeNodeUpdateUserResponse>;
   /**

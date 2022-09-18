@@ -16,7 +16,6 @@ import {
   Certificate,
   CertificateListNextOptionalParams,
   CertificateListOptionalParams,
-  CertificateAddParameter,
   CertificateAddOptionalParams,
   CertificateAddResponse,
   CertificateListResponse,
@@ -90,7 +89,7 @@ export class CertificateOperationsImpl implements CertificateOperations {
    * @param options The options parameters.
    */
   add(
-    certificate: CertificateAddParameter,
+    certificate: Certificate,
     options?: CertificateAddOptionalParams
   ): Promise<CertificateAddResponse> {
     return this.client.sendOperationRequest(

@@ -21,7 +21,7 @@ import {
   ComputeNodeAddUserResponse,
   ComputeNodeDeleteUserOptionalParams,
   ComputeNodeDeleteUserResponse,
-  NodeUpdateUserParameter,
+  NodeUpdateUserParameters,
   ComputeNodeUpdateUserOptionalParams,
   ComputeNodeUpdateUserResponse,
   ComputeNodeGetOptionalParams,
@@ -150,18 +150,18 @@ export class ComputeNodeOperationsImpl implements ComputeNodeOperations {
    * @param poolId The ID of the Pool that contains the Compute Node.
    * @param nodeId The ID of the machine on which you want to update a user Account.
    * @param userName The name of the user Account to update.
-   * @param nodeUpdateUserParameter The parameters for the request.
+   * @param parameters The parameters for the request.
    * @param options The options parameters.
    */
   updateUser(
     poolId: string,
     nodeId: string,
     userName: string,
-    nodeUpdateUserParameter: NodeUpdateUserParameter,
+    parameters: NodeUpdateUserParameters,
     options?: ComputeNodeUpdateUserOptionalParams
   ): Promise<ComputeNodeUpdateUserResponse> {
     return this.client.sendOperationRequest(
-      { poolId, nodeId, userName, nodeUpdateUserParameter, options },
+      { poolId, nodeId, userName, parameters, options },
       updateUserOperationSpec
     );
   }
@@ -409,7 +409,7 @@ const updateUserOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.BatchError
     }
   },
-  requestBody: Parameters.nodeUpdateUserParameter,
+  requestBody: Parameters.parameters6,
   queryParameters: [Parameters.apiVersion, Parameters.timeout66],
   urlParameters: [
     Parameters.batchUrl,
@@ -464,7 +464,7 @@ const rebootOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.BatchError
     }
   },
-  requestBody: Parameters.nodeRebootParameter,
+  requestBody: Parameters.parameters7,
   queryParameters: [Parameters.apiVersion, Parameters.timeout68],
   urlParameters: [Parameters.batchUrl, Parameters.poolId, Parameters.nodeId],
   headerParameters: [
@@ -488,7 +488,7 @@ const reimageOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.BatchError
     }
   },
-  requestBody: Parameters.nodeReimageParameter,
+  requestBody: Parameters.parameters8,
   queryParameters: [Parameters.apiVersion, Parameters.timeout69],
   urlParameters: [Parameters.batchUrl, Parameters.poolId, Parameters.nodeId],
   headerParameters: [
@@ -512,7 +512,7 @@ const disableSchedulingOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.BatchError
     }
   },
-  requestBody: Parameters.nodeDisableSchedulingParameter,
+  requestBody: Parameters.parameters9,
   queryParameters: [Parameters.apiVersion, Parameters.timeout70],
   urlParameters: [Parameters.batchUrl, Parameters.poolId, Parameters.nodeId],
   headerParameters: [

@@ -77,12 +77,12 @@ export interface JobScheduleOperations {
    * schedule. Changes to a Job Schedule only impact Jobs created by the schedule after the update has
    * taken place; currently running Jobs are unaffected.
    * @param jobScheduleId The ID of the Job Schedule to update.
-   * @param jobSchedulePatchParameter The parameters for the request.
+   * @param jobScheduleUpdate The parameters for the request.
    * @param options The options parameters.
    */
   patch(
     jobScheduleId: string,
-    jobSchedulePatchParameter: JobScheduleUpdate,
+    jobScheduleUpdate: JobScheduleUpdate,
     options?: JobSchedulePatchOptionalParams
   ): Promise<JobSchedulePatchResponse>;
   /**
@@ -91,12 +91,12 @@ export interface JobScheduleOperations {
    * schedule. Changes to a Job Schedule only impact Jobs created by the schedule after the update has
    * taken place; currently running Jobs are unaffected.
    * @param jobScheduleId The ID of the Job Schedule to update.
-   * @param jobScheduleUpdateParameter The parameters for the request.
+   * @param jobSchedule The parameters for the request.
    * @param options The options parameters.
    */
   update(
     jobScheduleId: string,
-    jobScheduleUpdateParameter: JobSchedule,
+    jobSchedule: JobSchedule,
     options?: JobScheduleUpdateOptionalParams
   ): Promise<JobScheduleUpdateResponse>;
   /**

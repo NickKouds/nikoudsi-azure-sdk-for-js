@@ -14,24 +14,24 @@ import {
 import {
   Pool as PoolMapper,
   PoolUpdate as PoolUpdateMapper,
-  PoolEnableAutoScaleParameter as PoolEnableAutoScaleParameterMapper,
-  PoolEvaluateAutoScaleParameter as PoolEvaluateAutoScaleParameterMapper,
-  PoolResizeParameter as PoolResizeParameterMapper,
-  NodeRemoveParameter as NodeRemoveParameterMapper,
+  PoolEnableAutoScaleParameters as PoolEnableAutoScaleParametersMapper,
+  PoolEvaluateAutoScaleParameters as PoolEvaluateAutoScaleParametersMapper,
+  PoolResizeParameters as PoolResizeParametersMapper,
+  NodeRemoveParameters as NodeRemoveParametersMapper,
   JobUpdate as JobUpdateMapper,
-  Job as JobMapper,
-  JobDisableParameter as JobDisableParameterMapper,
-  JobTerminateParameter as JobTerminateParameterMapper,
-  CertificateAddParameter as CertificateAddParameterMapper,
+  BatchJob as BatchJobMapper,
+  JobDisableParameters as JobDisableParametersMapper,
+  JobTerminateParameters as JobTerminateParametersMapper,
+  Certificate as CertificateMapper,
   JobScheduleUpdate as JobScheduleUpdateMapper,
   JobSchedule as JobScheduleMapper,
-  Task as TaskMapper,
-  TaskAddCollectionParameter as TaskAddCollectionParameterMapper,
+  BatchTask as BatchTaskMapper,
+  TaskCollection as TaskCollectionMapper,
   ComputeNodeUser as ComputeNodeUserMapper,
-  NodeUpdateUserParameter as NodeUpdateUserParameterMapper,
-  NodeRebootParameter as NodeRebootParameterMapper,
-  NodeReimageParameter as NodeReimageParameterMapper,
-  NodeDisableSchedulingParameter as NodeDisableSchedulingParameterMapper,
+  NodeUpdateUserParameters as NodeUpdateUserParametersMapper,
+  NodeRebootParameters as NodeRebootParametersMapper,
+  NodeReimageParameters as NodeReimageParametersMapper,
+  NodeDisableSchedulingParameters as NodeDisableSchedulingParametersMapper,
   UploadBatchServiceLogsConfiguration as UploadBatchServiceLogsConfigurationMapper
 } from "../models/mappers";
 
@@ -757,8 +757,8 @@ export const ifUnmodifiedSince2: OperationParameter = {
   }
 };
 
-export const poolPatchParameter: OperationParameter = {
-  parameterPath: "poolPatchParameter",
+export const poolUpdate: OperationParameter = {
+  parameterPath: "poolUpdate",
   mapper: PoolUpdateMapper
 };
 
@@ -890,9 +890,9 @@ export const ocpDate10: OperationParameter = {
   }
 };
 
-export const poolEnableAutoScaleParameter: OperationParameter = {
-  parameterPath: "poolEnableAutoScaleParameter",
-  mapper: PoolEnableAutoScaleParameterMapper
+export const parameters: OperationParameter = {
+  parameterPath: "parameters",
+  mapper: PoolEnableAutoScaleParametersMapper
 };
 
 export const timeout11: OperationQueryParameter = {
@@ -981,9 +981,9 @@ export const ifUnmodifiedSince4: OperationParameter = {
   }
 };
 
-export const poolEvaluateAutoScaleParameter: OperationParameter = {
-  parameterPath: "poolEvaluateAutoScaleParameter",
-  mapper: PoolEvaluateAutoScaleParameterMapper
+export const parameters1: OperationParameter = {
+  parameterPath: "parameters",
+  mapper: PoolEvaluateAutoScaleParametersMapper
 };
 
 export const timeout12: OperationQueryParameter = {
@@ -1032,9 +1032,9 @@ export const ocpDate12: OperationParameter = {
   }
 };
 
-export const poolResizeParameter: OperationParameter = {
-  parameterPath: "poolResizeParameter",
-  mapper: PoolResizeParameterMapper
+export const parameters2: OperationParameter = {
+  parameterPath: "parameters",
+  mapper: PoolResizeParametersMapper
 };
 
 export const timeout13: OperationQueryParameter = {
@@ -1252,9 +1252,9 @@ export const ocpDate15: OperationParameter = {
   }
 };
 
-export const nodeRemoveParameter: OperationParameter = {
-  parameterPath: "nodeRemoveParameter",
-  mapper: NodeRemoveParameterMapper
+export const parameters3: OperationParameter = {
+  parameterPath: "parameters",
+  mapper: NodeRemoveParametersMapper
 };
 
 export const timeout16: OperationQueryParameter = {
@@ -1734,8 +1734,8 @@ export const ifUnmodifiedSince9: OperationParameter = {
   }
 };
 
-export const jobPatchParameter: OperationParameter = {
-  parameterPath: "jobPatchParameter",
+export const jobUpdate: OperationParameter = {
+  parameterPath: "jobUpdate",
   mapper: JobUpdateMapper
 };
 
@@ -1821,9 +1821,9 @@ export const ifUnmodifiedSince10: OperationParameter = {
   }
 };
 
-export const jobUpdateParameter: OperationParameter = {
-  parameterPath: "jobUpdateParameter",
-  mapper: JobMapper
+export const job: OperationParameter = {
+  parameterPath: "job",
+  mapper: BatchJobMapper
 };
 
 export const timeout23: OperationQueryParameter = {
@@ -1908,9 +1908,9 @@ export const ifUnmodifiedSince11: OperationParameter = {
   }
 };
 
-export const jobDisableParameter: OperationParameter = {
-  parameterPath: "jobDisableParameter",
-  mapper: JobDisableParameterMapper
+export const parameters4: OperationParameter = {
+  parameterPath: "parameters",
+  mapper: JobDisableParametersMapper
 };
 
 export const timeout24: OperationQueryParameter = {
@@ -2077,9 +2077,9 @@ export const ifUnmodifiedSince13: OperationParameter = {
   }
 };
 
-export const jobTerminateParameter: OperationParameter = {
-  parameterPath: ["options", "jobTerminateParameter"],
-  mapper: JobTerminateParameterMapper
+export const parameters5: OperationParameter = {
+  parameterPath: ["options", "parameters"],
+  mapper: JobTerminateParametersMapper
 };
 
 export const timeout26: OperationQueryParameter = {
@@ -2162,11 +2162,6 @@ export const ifUnmodifiedSince14: OperationParameter = {
       name: "DateTimeRfc1123"
     }
   }
-};
-
-export const job: OperationParameter = {
-  parameterPath: "job",
-  mapper: JobMapper
 };
 
 export const timeout27: OperationQueryParameter = {
@@ -2557,7 +2552,7 @@ export const ocpDate31: OperationParameter = {
 
 export const certificate: OperationParameter = {
   parameterPath: "certificate",
-  mapper: CertificateAddParameterMapper
+  mapper: CertificateMapper
 };
 
 export const timeout32: OperationQueryParameter = {
@@ -3744,8 +3739,8 @@ export const ifUnmodifiedSince21: OperationParameter = {
   }
 };
 
-export const jobSchedulePatchParameter: OperationParameter = {
-  parameterPath: "jobSchedulePatchParameter",
+export const jobScheduleUpdate: OperationParameter = {
+  parameterPath: "jobScheduleUpdate",
   mapper: JobScheduleUpdateMapper
 };
 
@@ -3835,8 +3830,8 @@ export const ifUnmodifiedSince22: OperationParameter = {
   }
 };
 
-export const jobScheduleUpdateParameter: OperationParameter = {
-  parameterPath: "jobScheduleUpdateParameter",
+export const jobSchedule: OperationParameter = {
+  parameterPath: "jobSchedule",
   mapper: JobScheduleMapper
 };
 
@@ -4188,11 +4183,6 @@ export const ifUnmodifiedSince26: OperationParameter = {
   }
 };
 
-export const jobSchedule: OperationParameter = {
-  parameterPath: "jobSchedule",
-  mapper: JobScheduleMapper
-};
-
 export const timeout53: OperationQueryParameter = {
   parameterPath: ["options", "jobScheduleAddOptions", "timeout"],
   mapper: {
@@ -4324,7 +4314,7 @@ export const ocpDate54: OperationParameter = {
 
 export const task: OperationParameter = {
   parameterPath: "task",
-  mapper: TaskMapper
+  mapper: BatchTaskMapper
 };
 
 export const timeout55: OperationQueryParameter = {
@@ -4458,7 +4448,7 @@ export const ocpDate56: OperationParameter = {
 
 export const taskCollection: OperationParameter = {
   parameterPath: "taskCollection",
-  mapper: TaskAddCollectionParameterMapper
+  mapper: TaskCollectionMapper
 };
 
 export const timeout57: OperationQueryParameter = {
@@ -4689,11 +4679,6 @@ export const ifUnmodifiedSince28: OperationParameter = {
       name: "DateTimeRfc1123"
     }
   }
-};
-
-export const taskUpdateParameter: OperationParameter = {
-  parameterPath: "taskUpdateParameter",
-  mapper: TaskMapper
 };
 
 export const timeout60: OperationQueryParameter = {
@@ -5106,9 +5091,9 @@ export const ocpDate65: OperationParameter = {
   }
 };
 
-export const nodeUpdateUserParameter: OperationParameter = {
-  parameterPath: "nodeUpdateUserParameter",
-  mapper: NodeUpdateUserParameterMapper
+export const parameters6: OperationParameter = {
+  parameterPath: "parameters",
+  mapper: NodeUpdateUserParametersMapper
 };
 
 export const timeout66: OperationQueryParameter = {
@@ -5209,9 +5194,9 @@ export const ocpDate67: OperationParameter = {
   }
 };
 
-export const nodeRebootParameter: OperationParameter = {
-  parameterPath: ["options", "nodeRebootParameter"],
-  mapper: NodeRebootParameterMapper
+export const parameters7: OperationParameter = {
+  parameterPath: ["options", "parameters"],
+  mapper: NodeRebootParametersMapper
 };
 
 export const timeout68: OperationQueryParameter = {
@@ -5260,9 +5245,9 @@ export const ocpDate68: OperationParameter = {
   }
 };
 
-export const nodeReimageParameter: OperationParameter = {
-  parameterPath: ["options", "nodeReimageParameter"],
-  mapper: NodeReimageParameterMapper
+export const parameters8: OperationParameter = {
+  parameterPath: ["options", "parameters"],
+  mapper: NodeReimageParametersMapper
 };
 
 export const timeout69: OperationQueryParameter = {
@@ -5311,9 +5296,9 @@ export const ocpDate69: OperationParameter = {
   }
 };
 
-export const nodeDisableSchedulingParameter: OperationParameter = {
-  parameterPath: ["options", "nodeDisableSchedulingParameter"],
-  mapper: NodeDisableSchedulingParameterMapper
+export const parameters9: OperationParameter = {
+  parameterPath: ["options", "parameters"],
+  mapper: NodeDisableSchedulingParametersMapper
 };
 
 export const timeout70: OperationQueryParameter = {

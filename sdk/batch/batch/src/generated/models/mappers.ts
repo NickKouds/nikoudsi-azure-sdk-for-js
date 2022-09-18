@@ -791,76 +791,6 @@ export const JobStatistics: coreClient.CompositeMapper = {
   }
 };
 
-export const CertificateAddParameter: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "CertificateAddParameter",
-    modelProperties: {
-      thumbprint: {
-        serializedName: "thumbprint",
-        required: true,
-        type: {
-          name: "String"
-        }
-      },
-      thumbprintAlgorithm: {
-        serializedName: "thumbprintAlgorithm",
-        required: true,
-        type: {
-          name: "String"
-        }
-      },
-      data: {
-        serializedName: "data",
-        required: true,
-        type: {
-          name: "String"
-        }
-      },
-      certificateFormat: {
-        serializedName: "certificateFormat",
-        type: {
-          name: "Enum",
-          allowedValues: ["pfx", "cer"]
-        }
-      },
-      password: {
-        serializedName: "password",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-
-export const CertificateListResult: coreClient.CompositeMapper = {
-  type: {
-    name: "Composite",
-    className: "CertificateListResult",
-    modelProperties: {
-      value: {
-        serializedName: "value",
-        type: {
-          name: "Sequence",
-          element: {
-            type: {
-              name: "Composite",
-              className: "Certificate"
-            }
-          }
-        }
-      },
-      odataNextLink: {
-        serializedName: "odata\\.nextLink",
-        type: {
-          name: "String"
-        }
-      }
-    }
-  }
-};
-
 export const Certificate: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
@@ -880,12 +810,14 @@ export const Certificate: coreClient.CompositeMapper = {
       },
       url: {
         serializedName: "url",
+        readOnly: true,
         type: {
           name: "String"
         }
       },
       state: {
         serializedName: "state",
+        readOnly: true,
         type: {
           name: "Enum",
           allowedValues: ["active", "deleting", "deletefailed"]
@@ -893,12 +825,14 @@ export const Certificate: coreClient.CompositeMapper = {
       },
       stateTransitionTime: {
         serializedName: "stateTransitionTime",
+        readOnly: true,
         type: {
           name: "DateTime"
         }
       },
       previousState: {
         serializedName: "previousState",
+        readOnly: true,
         type: {
           name: "Enum",
           allowedValues: ["active", "deleting", "deletefailed"]
@@ -906,12 +840,14 @@ export const Certificate: coreClient.CompositeMapper = {
       },
       previousStateTransitionTime: {
         serializedName: "previousStateTransitionTime",
+        readOnly: true,
         type: {
           name: "DateTime"
         }
       },
       publicData: {
         serializedName: "publicData",
+        readOnly: true,
         type: {
           name: "String"
         }
@@ -921,6 +857,25 @@ export const Certificate: coreClient.CompositeMapper = {
         type: {
           name: "Composite",
           className: "DeleteCertificateError"
+        }
+      },
+      data: {
+        serializedName: "data",
+        type: {
+          name: "String"
+        }
+      },
+      certificateFormat: {
+        serializedName: "certificateFormat",
+        type: {
+          name: "Enum",
+          allowedValues: ["pfx", "cer"]
+        }
+      },
+      password: {
+        serializedName: "password",
+        type: {
+          name: "String"
         }
       }
     }
@@ -973,6 +928,33 @@ export const NameValuePair: coreClient.CompositeMapper = {
       },
       value: {
         serializedName: "value",
+        type: {
+          name: "String"
+        }
+      }
+    }
+  }
+};
+
+export const CertificateListResult: coreClient.CompositeMapper = {
+  type: {
+    name: "Composite",
+    className: "CertificateListResult",
+    modelProperties: {
+      value: {
+        serializedName: "value",
+        type: {
+          name: "Sequence",
+          element: {
+            type: {
+              name: "Composite",
+              className: "Certificate"
+            }
+          }
+        }
+      },
+      odataNextLink: {
+        serializedName: "odata\\.nextLink",
         type: {
           name: "String"
         }
@@ -3508,10 +3490,10 @@ export const JobScheduleListResult: coreClient.CompositeMapper = {
   }
 };
 
-export const Job: coreClient.CompositeMapper = {
+export const BatchJob: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
-    className: "Job",
+    className: "BatchJob",
     modelProperties: {
       id: {
         serializedName: "id",
@@ -3864,10 +3846,10 @@ export const JobUpdate: coreClient.CompositeMapper = {
   }
 };
 
-export const JobDisableParameter: coreClient.CompositeMapper = {
+export const JobDisableParameters: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
-    className: "JobDisableParameter",
+    className: "JobDisableParameters",
     modelProperties: {
       disableTasks: {
         serializedName: "disableTasks",
@@ -3881,10 +3863,10 @@ export const JobDisableParameter: coreClient.CompositeMapper = {
   }
 };
 
-export const JobTerminateParameter: coreClient.CompositeMapper = {
+export const JobTerminateParameters: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
-    className: "JobTerminateParameter",
+    className: "JobTerminateParameters",
     modelProperties: {
       terminateReason: {
         serializedName: "terminateReason",
@@ -3908,7 +3890,7 @@ export const JobListResult: coreClient.CompositeMapper = {
           element: {
             type: {
               name: "Composite",
-              className: "Job"
+              className: "BatchJob"
             }
           }
         }
@@ -4841,10 +4823,10 @@ export const PoolUpdate: coreClient.CompositeMapper = {
   }
 };
 
-export const PoolEnableAutoScaleParameter: coreClient.CompositeMapper = {
+export const PoolEnableAutoScaleParameters: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
-    className: "PoolEnableAutoScaleParameter",
+    className: "PoolEnableAutoScaleParameters",
     modelProperties: {
       autoScaleFormula: {
         serializedName: "autoScaleFormula",
@@ -4862,10 +4844,10 @@ export const PoolEnableAutoScaleParameter: coreClient.CompositeMapper = {
   }
 };
 
-export const PoolEvaluateAutoScaleParameter: coreClient.CompositeMapper = {
+export const PoolEvaluateAutoScaleParameters: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
-    className: "PoolEvaluateAutoScaleParameter",
+    className: "PoolEvaluateAutoScaleParameters",
     modelProperties: {
       autoScaleFormula: {
         serializedName: "autoScaleFormula",
@@ -4878,10 +4860,10 @@ export const PoolEvaluateAutoScaleParameter: coreClient.CompositeMapper = {
   }
 };
 
-export const PoolResizeParameter: coreClient.CompositeMapper = {
+export const PoolResizeParameters: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
-    className: "PoolResizeParameter",
+    className: "PoolResizeParameters",
     modelProperties: {
       targetDedicatedNodes: {
         serializedName: "targetDedicatedNodes",
@@ -4917,10 +4899,10 @@ export const PoolResizeParameter: coreClient.CompositeMapper = {
   }
 };
 
-export const NodeRemoveParameter: coreClient.CompositeMapper = {
+export const NodeRemoveParameters: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
-    className: "NodeRemoveParameter",
+    className: "NodeRemoveParameters",
     modelProperties: {
       nodeList: {
         constraints: {
@@ -4959,10 +4941,10 @@ export const NodeRemoveParameter: coreClient.CompositeMapper = {
   }
 };
 
-export const Task: coreClient.CompositeMapper = {
+export const BatchTask: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
-    className: "Task",
+    className: "BatchTask",
     modelProperties: {
       id: {
         serializedName: "id",
@@ -5627,7 +5609,7 @@ export const TaskListResult: coreClient.CompositeMapper = {
           element: {
             type: {
               name: "Composite",
-              className: "Task"
+              className: "BatchTask"
             }
           }
         }
@@ -5642,10 +5624,10 @@ export const TaskListResult: coreClient.CompositeMapper = {
   }
 };
 
-export const TaskAddCollectionParameter: coreClient.CompositeMapper = {
+export const TaskCollection: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
-    className: "TaskAddCollectionParameter",
+    className: "TaskCollection",
     modelProperties: {
       value: {
         constraints: {
@@ -5658,7 +5640,7 @@ export const TaskAddCollectionParameter: coreClient.CompositeMapper = {
           element: {
             type: {
               name: "Composite",
-              className: "Task"
+              className: "BatchTask"
             }
           }
         }
@@ -5885,10 +5867,10 @@ export const ComputeNodeUser: coreClient.CompositeMapper = {
   }
 };
 
-export const NodeUpdateUserParameter: coreClient.CompositeMapper = {
+export const NodeUpdateUserParameters: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
-    className: "NodeUpdateUserParameter",
+    className: "NodeUpdateUserParameters",
     modelProperties: {
       password: {
         serializedName: "password",
@@ -6362,10 +6344,10 @@ export const VirtualMachineInfo: coreClient.CompositeMapper = {
   }
 };
 
-export const NodeRebootParameter: coreClient.CompositeMapper = {
+export const NodeRebootParameters: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
-    className: "NodeRebootParameter",
+    className: "NodeRebootParameters",
     modelProperties: {
       nodeRebootOption: {
         serializedName: "nodeRebootOption",
@@ -6383,10 +6365,10 @@ export const NodeRebootParameter: coreClient.CompositeMapper = {
   }
 };
 
-export const NodeReimageParameter: coreClient.CompositeMapper = {
+export const NodeReimageParameters: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
-    className: "NodeReimageParameter",
+    className: "NodeReimageParameters",
     modelProperties: {
       nodeReimageOption: {
         serializedName: "nodeReimageOption",
@@ -6404,10 +6386,10 @@ export const NodeReimageParameter: coreClient.CompositeMapper = {
   }
 };
 
-export const NodeDisableSchedulingParameter: coreClient.CompositeMapper = {
+export const NodeDisableSchedulingParameters: coreClient.CompositeMapper = {
   type: {
     name: "Composite",
-    className: "NodeDisableSchedulingParameter",
+    className: "NodeDisableSchedulingParameters",
     modelProperties: {
       nodeDisableSchedulingOption: {
         serializedName: "nodeDisableSchedulingOption",

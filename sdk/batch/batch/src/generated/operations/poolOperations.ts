@@ -36,20 +36,20 @@ import {
   PoolPatchResponse,
   PoolDisableAutoScaleOptionalParams,
   PoolDisableAutoScaleResponse,
-  PoolEnableAutoScaleParameter,
+  PoolEnableAutoScaleParameters,
   PoolEnableAutoScaleOptionalParams,
   PoolEnableAutoScaleResponse,
-  PoolEvaluateAutoScaleParameter,
+  PoolEvaluateAutoScaleParameters,
   PoolEvaluateAutoScaleOptionalParams,
   PoolEvaluateAutoScaleResponse,
-  PoolResizeParameter,
+  PoolResizeParameters,
   PoolResizeOptionalParams,
   PoolResizeResponse,
   PoolStopResizeOptionalParams,
   PoolStopResizeResponse,
   PoolUpdatePropertiesOptionalParams,
   PoolUpdatePropertiesResponse,
-  NodeRemoveParameter,
+  NodeRemoveParameters,
   PoolRemoveNodesOptionalParams,
   PoolRemoveNodesResponse,
   PoolListUsageMetricsNextResponse,
@@ -269,16 +269,16 @@ export class PoolOperationsImpl implements PoolOperations {
    * StartTask associated with it, and a request does not specify a StartTask element, then the Pool
    * keeps the existing StartTask.
    * @param poolId The ID of the Pool to update.
-   * @param poolPatchParameter The parameters for the request.
+   * @param poolUpdate The parameters for the request.
    * @param options The options parameters.
    */
   patch(
     poolId: string,
-    poolPatchParameter: PoolUpdate,
+    poolUpdate: PoolUpdate,
     options?: PoolPatchOptionalParams
   ): Promise<PoolPatchResponse> {
     return this.client.sendOperationRequest(
-      { poolId, poolPatchParameter, options },
+      { poolId, poolUpdate, options },
       patchOperationSpec
     );
   }
@@ -305,16 +305,16 @@ export class PoolOperationsImpl implements PoolOperations {
    * autoscale formula and/or a new evaluation interval. You cannot call this API for the same Pool more
    * than once every 30 seconds.
    * @param poolId The ID of the Pool on which to enable automatic scaling.
-   * @param poolEnableAutoScaleParameter The parameters for the request.
+   * @param parameters The parameters for the request.
    * @param options The options parameters.
    */
   enableAutoScale(
     poolId: string,
-    poolEnableAutoScaleParameter: PoolEnableAutoScaleParameter,
+    parameters: PoolEnableAutoScaleParameters,
     options?: PoolEnableAutoScaleOptionalParams
   ): Promise<PoolEnableAutoScaleResponse> {
     return this.client.sendOperationRequest(
-      { poolId, poolEnableAutoScaleParameter, options },
+      { poolId, parameters, options },
       enableAutoScaleOperationSpec
     );
   }
@@ -324,16 +324,16 @@ export class PoolOperationsImpl implements PoolOperations {
    * applying the formula to the Pool. The Pool must have auto scaling enabled in order to evaluate a
    * formula.
    * @param poolId The ID of the Pool on which to evaluate the automatic scaling formula.
-   * @param poolEvaluateAutoScaleParameter The parameters for the request.
+   * @param parameters The parameters for the request.
    * @param options The options parameters.
    */
   evaluateAutoScale(
     poolId: string,
-    poolEvaluateAutoScaleParameter: PoolEvaluateAutoScaleParameter,
+    parameters: PoolEvaluateAutoScaleParameters,
     options?: PoolEvaluateAutoScaleOptionalParams
   ): Promise<PoolEvaluateAutoScaleResponse> {
     return this.client.sendOperationRequest(
-      { poolId, poolEvaluateAutoScaleParameter, options },
+      { poolId, parameters, options },
       evaluateAutoScaleOperationSpec
     );
   }
@@ -346,16 +346,16 @@ export class PoolOperationsImpl implements PoolOperations {
    * service chooses which Compute Nodes to remove. To remove specific Compute Nodes, use the Pool remove
    * Compute Nodes API instead.
    * @param poolId The ID of the Pool to resize.
-   * @param poolResizeParameter The parameters for the request.
+   * @param parameters The parameters for the request.
    * @param options The options parameters.
    */
   resize(
     poolId: string,
-    poolResizeParameter: PoolResizeParameter,
+    parameters: PoolResizeParameters,
     options?: PoolResizeOptionalParams
   ): Promise<PoolResizeResponse> {
     return this.client.sendOperationRequest(
-      { poolId, poolResizeParameter, options },
+      { poolId, parameters, options },
       resizeOperationSpec
     );
   }
@@ -403,16 +403,16 @@ export class PoolOperationsImpl implements PoolOperations {
    * This operation can only run when the allocation state of the Pool is steady. When this operation
    * runs, the allocation state changes from steady to resizing. Each request may remove up to 100 nodes.
    * @param poolId The ID of the Pool from which you want to remove Compute Nodes.
-   * @param nodeRemoveParameter The parameters for the request.
+   * @param parameters The parameters for the request.
    * @param options The options parameters.
    */
   removeNodes(
     poolId: string,
-    nodeRemoveParameter: NodeRemoveParameter,
+    parameters: NodeRemoveParameters,
     options?: PoolRemoveNodesOptionalParams
   ): Promise<PoolRemoveNodesResponse> {
     return this.client.sendOperationRequest(
-      { poolId, nodeRemoveParameter, options },
+      { poolId, parameters, options },
       removeNodesOperationSpec
     );
   }
@@ -647,7 +647,7 @@ const patchOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.BatchError
     }
   },
-  requestBody: Parameters.poolPatchParameter,
+  requestBody: Parameters.poolUpdate,
   queryParameters: [Parameters.apiVersion, Parameters.timeout9],
   urlParameters: [Parameters.batchUrl, Parameters.poolId],
   headerParameters: [
@@ -696,7 +696,7 @@ const enableAutoScaleOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.BatchError
     }
   },
-  requestBody: Parameters.poolEnableAutoScaleParameter,
+  requestBody: Parameters.parameters,
   queryParameters: [Parameters.apiVersion, Parameters.timeout11],
   urlParameters: [Parameters.batchUrl, Parameters.poolId],
   headerParameters: [
@@ -725,7 +725,7 @@ const evaluateAutoScaleOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.BatchError
     }
   },
-  requestBody: Parameters.poolEvaluateAutoScaleParameter,
+  requestBody: Parameters.parameters1,
   queryParameters: [Parameters.apiVersion, Parameters.timeout12],
   urlParameters: [Parameters.batchUrl, Parameters.poolId],
   headerParameters: [
@@ -749,7 +749,7 @@ const resizeOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.BatchError
     }
   },
-  requestBody: Parameters.poolResizeParameter,
+  requestBody: Parameters.parameters2,
   queryParameters: [Parameters.apiVersion, Parameters.timeout13],
   urlParameters: [Parameters.batchUrl, Parameters.poolId],
   headerParameters: [
@@ -826,7 +826,7 @@ const removeNodesOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.BatchError
     }
   },
-  requestBody: Parameters.nodeRemoveParameter,
+  requestBody: Parameters.parameters3,
   queryParameters: [Parameters.apiVersion, Parameters.timeout16],
   urlParameters: [Parameters.batchUrl, Parameters.poolId],
   headerParameters: [
