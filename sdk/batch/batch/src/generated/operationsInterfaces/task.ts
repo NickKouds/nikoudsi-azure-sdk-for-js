@@ -8,11 +8,11 @@
 
 import { PagedAsyncIterableIterator } from "@azure/core-paging";
 import {
-  Task,
+  BatchTask,
   TaskListOptionalParams,
   TaskAddOptionalParams,
   TaskAddResponse,
-  TaskAddCollectionParameter,
+  TaskCollection,
   TaskAddCollectionOptionalParams,
   TaskAddCollectionResponse,
   TaskDeleteOptionalParams,
@@ -30,8 +30,8 @@ import {
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Interface representing a TaskOperations. */
-export interface TaskOperations {
+/** Interface representing a Task. */
+export interface Task {
   /**
    * For multi-instance Tasks, information such as affinityId, executionInfo and nodeInfo refer to the
    * primary Task. Use the list subtasks API to retrieve information about subtasks.
@@ -41,7 +41,7 @@ export interface TaskOperations {
   list(
     jobId: string,
     options?: TaskListOptionalParams
-  ): PagedAsyncIterableIterator<Task>;
+  ): PagedAsyncIterableIterator<BatchTask>;
   /**
    * The maximum lifetime of a Task from addition to completion is 180 days. If a Task has not completed
    * within 180 days of being added it will be terminated by the Batch service and left in whatever state
@@ -52,7 +52,7 @@ export interface TaskOperations {
    */
   add(
     jobId: string,
-    task: Task,
+    task: BatchTask,
     options?: TaskAddOptionalParams
   ): Promise<TaskAddResponse>;
   /**
@@ -73,7 +73,7 @@ export interface TaskOperations {
    */
   addCollection(
     jobId: string,
-    taskCollection: TaskAddCollectionParameter,
+    taskCollection: TaskCollection,
     options?: TaskAddCollectionOptionalParams
   ): Promise<TaskAddCollectionResponse>;
   /**
@@ -106,13 +106,13 @@ export interface TaskOperations {
    * Updates the properties of the specified Task.
    * @param jobId The ID of the Job containing the Task.
    * @param taskId The ID of the Task to update.
-   * @param taskUpdateParameter The parameters for the request.
+   * @param task The parameters for the request.
    * @param options The options parameters.
    */
   update(
     jobId: string,
     taskId: string,
-    taskUpdateParameter: Task,
+    task: BatchTask,
     options?: TaskUpdateOptionalParams
   ): Promise<TaskUpdateResponse>;
   /**

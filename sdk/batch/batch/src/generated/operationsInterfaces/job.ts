@@ -8,7 +8,7 @@
 
 import { PagedAsyncIterableIterator } from "@azure/core-paging";
 import {
-  Job,
+  BatchJob,
   JobListOptionalParams,
   JobListFromJobScheduleOptionalParams,
   JobPreparationAndReleaseTaskExecutionInformation,
@@ -24,7 +24,7 @@ import {
   JobPatchResponse,
   JobUpdateOptionalParams,
   JobUpdateResponse,
-  JobDisableParameter,
+  JobDisableParameters,
   JobDisableOptionalParams,
   JobDisableResponse,
   JobEnableOptionalParams,
@@ -38,13 +38,13 @@ import {
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Interface representing a JobOperations. */
-export interface JobOperations {
+/** Interface representing a Job. */
+export interface Job {
   /**
    * Lists all of the Jobs in the specified Account.
    * @param options The options parameters.
    */
-  list(options?: JobListOptionalParams): PagedAsyncIterableIterator<Job>;
+  list(options?: JobListOptionalParams): PagedAsyncIterableIterator<BatchJob>;
   /**
    * Lists the Jobs that have been created under the specified Job Schedule.
    * @param jobScheduleId The ID of the Job Schedule from which you want to get a list of Jobs.
@@ -53,7 +53,7 @@ export interface JobOperations {
   listFromJobSchedule(
     jobScheduleId: string,
     options?: JobListFromJobScheduleOptionalParams
-  ): PagedAsyncIterableIterator<Job>;
+  ): PagedAsyncIterableIterator<BatchJob>;
   /**
    * This API returns the Job Preparation and Job Release Task status on all Compute Nodes that have run
    * the Job Preparation or Job Release Task. This includes Compute Nodes which have since been removed
@@ -103,12 +103,12 @@ export interface JobOperations {
    * constraints, and a request does not specify the constraints element, then the Job keeps the existing
    * constraints.
    * @param jobId The ID of the Job whose properties you want to update.
-   * @param jobPatchParameter The parameters for the request.
+   * @param jobUpdate The parameters for the request.
    * @param options The options parameters.
    */
   patch(
     jobId: string,
-    jobPatchParameter: JobUpdate,
+    jobUpdate: JobUpdate,
     options?: JobPatchOptionalParams
   ): Promise<JobPatchResponse>;
   /**
@@ -116,12 +116,12 @@ export interface JobOperations {
    * associated with it and if constraints is not specified with this request, then the Batch service
    * will remove the existing constraints.
    * @param jobId The ID of the Job whose properties you want to update.
-   * @param jobUpdateParameter The parameters for the request.
+   * @param job The parameters for the request.
    * @param options The options parameters.
    */
   update(
     jobId: string,
-    jobUpdateParameter: Job,
+    job: BatchJob,
     options?: JobUpdateOptionalParams
   ): Promise<JobUpdateResponse>;
   /**
@@ -132,12 +132,12 @@ export interface JobOperations {
    * started under the Job until it moves back to active state. If you try to disable a Job that is in
    * any state other than active, disabling, or disabled, the request fails with status code 409.
    * @param jobId The ID of the Job to disable.
-   * @param jobDisableParameter The parameters for the request.
+   * @param parameters The parameters for the request.
    * @param options The options parameters.
    */
   disable(
     jobId: string,
-    jobDisableParameter: JobDisableParameter,
+    parameters: JobDisableParameters,
     options?: JobDisableOptionalParams
   ): Promise<JobDisableResponse>;
   /**
@@ -177,7 +177,7 @@ export interface JobOperations {
    * @param job The Job to be added.
    * @param options The options parameters.
    */
-  add(job: Job, options?: JobAddOptionalParams): Promise<JobAddResponse>;
+  add(job: BatchJob, options?: JobAddOptionalParams): Promise<JobAddResponse>;
   /**
    * Task counts provide a count of the Tasks by active, running or completed Task state, and a count of
    * Tasks which succeeded or failed. Tasks in the preparing state are counted as running. Note that the

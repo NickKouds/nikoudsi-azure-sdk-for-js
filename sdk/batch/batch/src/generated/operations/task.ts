@@ -7,19 +7,19 @@
  */
 
 import { PagedAsyncIterableIterator } from "@azure/core-paging";
-import { TaskOperations } from "../operationsInterfaces";
+import { Task } from "../operationsInterfaces";
 import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
 import { GeneratedClient } from "../generatedClient";
 import {
-  Task,
+  BatchTask,
   TaskListNextOptionalParams,
   TaskListOptionalParams,
   TaskAddOptionalParams,
   TaskAddResponse,
   TaskListResponse,
-  TaskAddCollectionParameter,
+  TaskCollection,
   TaskAddCollectionOptionalParams,
   TaskAddCollectionResponse,
   TaskDeleteOptionalParams,
@@ -38,12 +38,12 @@ import {
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Class containing TaskOperations operations. */
-export class TaskOperationsImpl implements TaskOperations {
+/** Class containing Task operations. */
+export class TaskImpl implements Task {
   private readonly client: GeneratedClient;
 
   /**
-   * Initialize a new instance of the class TaskOperations class.
+   * Initialize a new instance of the class Task class.
    * @param client Reference to the service client
    */
   constructor(client: GeneratedClient) {
@@ -59,7 +59,7 @@ export class TaskOperationsImpl implements TaskOperations {
   public list(
     jobId: string,
     options?: TaskListOptionalParams
-  ): PagedAsyncIterableIterator<Task> {
+  ): PagedAsyncIterableIterator<BatchTask> {
     const iter = this.listPagingAll(jobId, options);
     return {
       next() {
@@ -77,7 +77,7 @@ export class TaskOperationsImpl implements TaskOperations {
   private async *listPagingPage(
     jobId: string,
     options?: TaskListOptionalParams
-  ): AsyncIterableIterator<Task[]> {
+  ): AsyncIterableIterator<BatchTask[]> {
     let result = await this._list(jobId, options);
     yield result.value || [];
     let continuationToken = result.odataNextLink;
@@ -91,7 +91,7 @@ export class TaskOperationsImpl implements TaskOperations {
   private async *listPagingAll(
     jobId: string,
     options?: TaskListOptionalParams
-  ): AsyncIterableIterator<Task> {
+  ): AsyncIterableIterator<BatchTask> {
     for await (const page of this.listPagingPage(jobId, options)) {
       yield* page;
     }
@@ -107,7 +107,7 @@ export class TaskOperationsImpl implements TaskOperations {
    */
   add(
     jobId: string,
-    task: Task,
+    task: BatchTask,
     options?: TaskAddOptionalParams
   ): Promise<TaskAddResponse> {
     return this.client.sendOperationRequest(
@@ -150,7 +150,7 @@ export class TaskOperationsImpl implements TaskOperations {
    */
   addCollection(
     jobId: string,
-    taskCollection: TaskAddCollectionParameter,
+    taskCollection: TaskCollection,
     options?: TaskAddCollectionOptionalParams
   ): Promise<TaskAddCollectionResponse> {
     return this.client.sendOperationRequest(
@@ -201,17 +201,17 @@ export class TaskOperationsImpl implements TaskOperations {
    * Updates the properties of the specified Task.
    * @param jobId The ID of the Job containing the Task.
    * @param taskId The ID of the Task to update.
-   * @param taskUpdateParameter The parameters for the request.
+   * @param task The parameters for the request.
    * @param options The options parameters.
    */
   update(
     jobId: string,
     taskId: string,
-    taskUpdateParameter: Task,
+    task: BatchTask,
     options?: TaskUpdateOptionalParams
   ): Promise<TaskUpdateResponse> {
     return this.client.sendOperationRequest(
-      { jobId, taskId, taskUpdateParameter, options },
+      { jobId, taskId, task, options },
       updateOperationSpec
     );
   }
@@ -402,7 +402,7 @@ const getOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.Task,
+      bodyMapper: Mappers.BatchTask,
       headersMapper: Mappers.TaskGetHeaders
     },
     default: {
@@ -439,7 +439,7 @@ const updateOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.BatchError
     }
   },
-  requestBody: Parameters.taskUpdateParameter,
+  requestBody: Parameters.task,
   queryParameters: [Parameters.apiVersion, Parameters.timeout60],
   urlParameters: [Parameters.batchUrl, Parameters.jobId, Parameters.taskId],
   headerParameters: [

@@ -7,13 +7,13 @@
  */
 
 import { PagedAsyncIterableIterator } from "@azure/core-paging";
-import { JobOperations } from "../operationsInterfaces";
+import { Job } from "../operationsInterfaces";
 import * as coreClient from "@azure/core-client";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
 import { GeneratedClient } from "../generatedClient";
 import {
-  Job,
+  BatchJob,
   JobListNextOptionalParams,
   JobListOptionalParams,
   JobListFromJobScheduleNextOptionalParams,
@@ -32,7 +32,7 @@ import {
   JobPatchResponse,
   JobUpdateOptionalParams,
   JobUpdateResponse,
-  JobDisableParameter,
+  JobDisableParameters,
   JobDisableOptionalParams,
   JobDisableResponse,
   JobEnableOptionalParams,
@@ -52,12 +52,12 @@ import {
 } from "../models";
 
 /// <reference lib="esnext.asynciterable" />
-/** Class containing JobOperations operations. */
-export class JobOperationsImpl implements JobOperations {
+/** Class containing Job operations. */
+export class JobImpl implements Job {
   private readonly client: GeneratedClient;
 
   /**
-   * Initialize a new instance of the class JobOperations class.
+   * Initialize a new instance of the class Job class.
    * @param client Reference to the service client
    */
   constructor(client: GeneratedClient) {
@@ -70,7 +70,7 @@ export class JobOperationsImpl implements JobOperations {
    */
   public list(
     options?: JobListOptionalParams
-  ): PagedAsyncIterableIterator<Job> {
+  ): PagedAsyncIterableIterator<BatchJob> {
     const iter = this.listPagingAll(options);
     return {
       next() {
@@ -87,7 +87,7 @@ export class JobOperationsImpl implements JobOperations {
 
   private async *listPagingPage(
     options?: JobListOptionalParams
-  ): AsyncIterableIterator<Job[]> {
+  ): AsyncIterableIterator<BatchJob[]> {
     let result = await this._list(options);
     yield result.value || [];
     let continuationToken = result.odataNextLink;
@@ -100,7 +100,7 @@ export class JobOperationsImpl implements JobOperations {
 
   private async *listPagingAll(
     options?: JobListOptionalParams
-  ): AsyncIterableIterator<Job> {
+  ): AsyncIterableIterator<BatchJob> {
     for await (const page of this.listPagingPage(options)) {
       yield* page;
     }
@@ -114,7 +114,7 @@ export class JobOperationsImpl implements JobOperations {
   public listFromJobSchedule(
     jobScheduleId: string,
     options?: JobListFromJobScheduleOptionalParams
-  ): PagedAsyncIterableIterator<Job> {
+  ): PagedAsyncIterableIterator<BatchJob> {
     const iter = this.listFromJobSchedulePagingAll(jobScheduleId, options);
     return {
       next() {
@@ -132,7 +132,7 @@ export class JobOperationsImpl implements JobOperations {
   private async *listFromJobSchedulePagingPage(
     jobScheduleId: string,
     options?: JobListFromJobScheduleOptionalParams
-  ): AsyncIterableIterator<Job[]> {
+  ): AsyncIterableIterator<BatchJob[]> {
     let result = await this._listFromJobSchedule(jobScheduleId, options);
     yield result.value || [];
     let continuationToken = result.odataNextLink;
@@ -150,7 +150,7 @@ export class JobOperationsImpl implements JobOperations {
   private async *listFromJobSchedulePagingAll(
     jobScheduleId: string,
     options?: JobListFromJobScheduleOptionalParams
-  ): AsyncIterableIterator<Job> {
+  ): AsyncIterableIterator<BatchJob> {
     for await (const page of this.listFromJobSchedulePagingPage(
       jobScheduleId,
       options
@@ -279,16 +279,16 @@ export class JobOperationsImpl implements JobOperations {
    * constraints, and a request does not specify the constraints element, then the Job keeps the existing
    * constraints.
    * @param jobId The ID of the Job whose properties you want to update.
-   * @param jobPatchParameter The parameters for the request.
+   * @param jobUpdate The parameters for the request.
    * @param options The options parameters.
    */
   patch(
     jobId: string,
-    jobPatchParameter: JobUpdate,
+    jobUpdate: JobUpdate,
     options?: JobPatchOptionalParams
   ): Promise<JobPatchResponse> {
     return this.client.sendOperationRequest(
-      { jobId, jobPatchParameter, options },
+      { jobId, jobUpdate, options },
       patchOperationSpec
     );
   }
@@ -298,16 +298,16 @@ export class JobOperationsImpl implements JobOperations {
    * associated with it and if constraints is not specified with this request, then the Batch service
    * will remove the existing constraints.
    * @param jobId The ID of the Job whose properties you want to update.
-   * @param jobUpdateParameter The parameters for the request.
+   * @param job The parameters for the request.
    * @param options The options parameters.
    */
   update(
     jobId: string,
-    jobUpdateParameter: Job,
+    job: BatchJob,
     options?: JobUpdateOptionalParams
   ): Promise<JobUpdateResponse> {
     return this.client.sendOperationRequest(
-      { jobId, jobUpdateParameter, options },
+      { jobId, job, options },
       updateOperationSpec
     );
   }
@@ -320,16 +320,16 @@ export class JobOperationsImpl implements JobOperations {
    * started under the Job until it moves back to active state. If you try to disable a Job that is in
    * any state other than active, disabling, or disabled, the request fails with status code 409.
    * @param jobId The ID of the Job to disable.
-   * @param jobDisableParameter The parameters for the request.
+   * @param parameters The parameters for the request.
    * @param options The options parameters.
    */
   disable(
     jobId: string,
-    jobDisableParameter: JobDisableParameter,
+    parameters: JobDisableParameters,
     options?: JobDisableOptionalParams
   ): Promise<JobDisableResponse> {
     return this.client.sendOperationRequest(
-      { jobId, jobDisableParameter, options },
+      { jobId, parameters, options },
       disableOperationSpec
     );
   }
@@ -383,7 +383,7 @@ export class JobOperationsImpl implements JobOperations {
    * @param job The Job to be added.
    * @param options The options parameters.
    */
-  add(job: Job, options?: JobAddOptionalParams): Promise<JobAddResponse> {
+  add(job: BatchJob, options?: JobAddOptionalParams): Promise<JobAddResponse> {
     return this.client.sendOperationRequest({ job, options }, addOperationSpec);
   }
 
@@ -551,7 +551,7 @@ const getOperationSpec: coreClient.OperationSpec = {
   httpMethod: "GET",
   responses: {
     200: {
-      bodyMapper: Mappers.Job,
+      bodyMapper: Mappers.BatchJob,
       headersMapper: Mappers.JobGetHeaders
     },
     default: {
@@ -588,7 +588,7 @@ const patchOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.BatchError
     }
   },
-  requestBody: Parameters.jobPatchParameter,
+  requestBody: Parameters.jobUpdate,
   queryParameters: [Parameters.apiVersion, Parameters.timeout22],
   urlParameters: [Parameters.batchUrl, Parameters.jobId],
   headerParameters: [
@@ -616,7 +616,7 @@ const updateOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.BatchError
     }
   },
-  requestBody: Parameters.jobUpdateParameter,
+  requestBody: Parameters.job,
   queryParameters: [Parameters.apiVersion, Parameters.timeout23],
   urlParameters: [Parameters.batchUrl, Parameters.jobId],
   headerParameters: [
@@ -644,7 +644,7 @@ const disableOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.BatchError
     }
   },
-  requestBody: Parameters.jobDisableParameter,
+  requestBody: Parameters.parameters4,
   queryParameters: [Parameters.apiVersion, Parameters.timeout24],
   urlParameters: [Parameters.batchUrl, Parameters.jobId],
   headerParameters: [
@@ -697,7 +697,7 @@ const terminateOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.BatchError
     }
   },
-  requestBody: Parameters.jobTerminateParameter,
+  requestBody: Parameters.parameters5,
   queryParameters: [Parameters.apiVersion, Parameters.timeout26],
   urlParameters: [Parameters.batchUrl, Parameters.jobId],
   headerParameters: [
