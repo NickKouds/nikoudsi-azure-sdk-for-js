@@ -19,11 +19,13 @@ import { createRecorder, createClient } from "./utils/recordedClient"
 import { assert } from "chai";
 import { BatchServiceClient } from "../../src/batchServiceClient";
 import { wait } from "./utils/wait";
-import { Pool, CertificateAddParameter, PoolGetOptionalParams, PoolUpdate, JobSchedule, Job, Task, TaskGetResponse, NodeRemoveParameter } from "../../src/generated/models";
+import { Pool, Certificate, PoolGetOptionalParams, PoolUpdate, JobSchedule, BatchJob, BatchTask, TaskGetResponse, NodeRemoveParameters, PoolEnableAutoScaleParameters, UploadBatchServiceLogsConfiguration } from "../../src/generated/models";
 import { duration } from "moment";
 import moment from "moment";
 import { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { Console } from "console";
+import { resourceLimits } from "worker_threads";
+import { errorMonitor } from "events";
 
 //const wait = (timeout = 1000) => new Promise((resolve) => setTimeout(() => resolve(null), timeout));
 
@@ -42,22 +44,14 @@ async function getListObj(objIterator: PagedAsyncIterableIterator<any>): Promise
 
 }
 
-async function getListPagedCount(objIterator: PagedAsyncIterableIterator<any>): Promise<number> {
-  let objCounter = 0;
-
-  for await (const obj of objIterator) {
-    ++objCounter;
-  }
-
-  return objCounter;
-}
 
 function getPoolName(type: string) {
   return `jssdktest-${type}-${_SUFFIX}`;
 }
 
-const BASIC_POOL = getPoolName("basic");
 const ENDPOINT_POOL = getPoolName("endpoint");
+const BASIC_POOL = getPoolName("basic");
+const TEST_POOL3 = getPoolName("3");
 const VNET_POOL = getPoolName("vnet");
 const IMAGE_POOL = getPoolName("image");
 const DISK_POOL = getPoolName("datadisk");
@@ -86,7 +80,7 @@ describe("Batch Service Test", () => {
 
   let certThumb: string = "cff2ab63c8c955aaf71989efa641b906558d9fb7";
   let nonAdminPoolUser: string = "nonAdminUser";
-  let compute_nodes: string[];
+  let computeNodes: string[];
 
   const readStreamToBuffer = function (
     strm: NodeJS.ReadableStream,
@@ -124,7 +118,7 @@ describe("Batch Service Test", () => {
     });
 
     it("should add new certificate successfully", async () => {
-      const cert: CertificateAddParameter = {
+      const cert: Certificate = {
         thumbprint: certThumb,
         thumbprintAlgorithm: "sha1",
         password: "nodesdk",
@@ -440,27 +434,342 @@ describe("Batch Service Test", () => {
 
     it("should get pool node counts successfully", async () => {
       let result;
+      let endpointPool;
       while (true) {
         let listResult = await client.account.listPoolNodeCounts();
         result = await getListObj(listResult);
-        if (result.length > 0 && result[0].dedicated!.idle > 0) {
-          break;
+        if (result.length > 0) {
+          endpointPool = result.filter(pool => pool.poolId == ENDPOINT_POOL);
+          if (endpointPool.length > 0 && endpointPool[0].dedicated!.idle > 0) {
+            break;
+          }
         } else {
           await wait(POLLING_INTERVAL);
         }
       }
 
-      assert.isAtLeast(result.length, 1);
       //assert.equal(result._response.status, 200);
 
-      const endpointPoolObj = result.filter(pool => pool.poolId == ENDPOINT_POOL);
+      // const endpointPoolObj = result.filter(pool => pool.poolId == ENDPOINT_POOL);
 
-      assert.isAbove(endpointPoolObj.length, 0, `Pool with Pool Id ${ENDPOINT_POOL} not found`);
+      // assert.isAbove(endpointPoolObj.length, 0, `Pool with Pool Id ${ENDPOINT_POOL} not found`);
 
-      assert.equal(endpointPoolObj[0].dedicated!.idle, 1);
-      assert.equal(endpointPoolObj[0].lowPriority!.total, 0);
+      // assert.equal(endpointPoolObj[0].dedicated!.idle, 1);
+      assert.equal(endpointPool[0].lowPriority!.total, 0);
 
     }).timeout(LONG_TEST_TIMEOUT);
+  });
+
+  describe("Compute node operations", async () => {
+    it("should list compute nodes successfully", async () => {
+      let listResult;
+      let nodeCounter = 0;
+      let singleNode;
+      listResult = await client.computeNode.list(BASIC_POOL);
+
+      for await (const node of listResult) {
+        nodeCounter += 1;
+      }
+
+      assert.equal(nodeCounter, BASIC_POOL_NUM_VMS);
+
+      let nodesProvisioning: Boolean = true;
+      while (nodesProvisioning) {
+        listResult = await client.computeNode.list(BASIC_POOL);
+        for await (const node of listResult) {
+          if (node.state === "starting") {
+            await wait(POLLING_INTERVAL);
+            break;
+          }
+          else {
+            nodesProvisioning = false;
+            listResult = await client.computeNode.list(BASIC_POOL);
+            const nodeList = await getListObj(listResult);
+            computeNodes = nodeList.map(function (x) {
+              return x.id!;
+            });
+            assert.equal(node.state, "idle");
+            assert.equal(node.schedulingState, "enabled");
+            assert.isTrue(node.isDedicated);
+            break;
+          }
+        }
+
+      }
+
+    }).timeout(LONG_TEST_TIMEOUT);
+
+    it("should get a compute node reference", async () => {
+      const result = await client.computeNode.get(BASIC_POOL, computeNodes[0]);
+      assert.equal(result.id, computeNodes[0]);
+      assert.equal(result.state, "idle");
+      assert.equal(result.schedulingState, "enabled");
+      //assert.equal(result._response.status, 200);
+    });
+
+    it("should add a user to a compute node successfully", async () => {
+      const options = { name: TEST_USER, isAdmin: false, password: "kt#_gahr!@aGERDXA" };
+      const result = await client.computeNode.addUser(BASIC_POOL, computeNodes[0], options);
+
+      //assert.equal(result._response.status, 201);
+    });
+
+    it("should update a compute node user successfully", async () => {
+      const options = { password: "liilef#$DdRGSa_ewkjh" };
+      const result = await client.computeNode.updateUser(
+        BASIC_POOL,
+        computeNodes[0],
+        TEST_USER,
+        options
+      );
+
+      //assert.equal(result._response.status, 200);
+    });
+
+    it("should get a remote desktop file successfully", (done) => {
+      client.computeNode
+        .getRemoteDesktop(BASIC_POOL, computeNodes[0])
+        .then((result) => {
+          //assert.equal(result._response.status, 200);
+          readStreamToBuffer(result.readableStreamBody!, function (_err, buff) {
+            assert.isAtLeast(buff.length, 1);
+            done();
+          });
+        })
+        .catch((error) => {
+          assert.fail(error);
+        });
+    });
+
+    it("should delete a compute node user successfully", async () => {
+      const result = await client.computeNode.deleteUser(BASIC_POOL, computeNodes[0], TEST_USER);
+
+      //assert.equal(result._response.status, 200);
+    });
+
+    it("should disable scheduling on a compute node successfully", async () => {
+      while (true) {
+        try {
+          const result = await client.computeNode.disableScheduling(BASIC_POOL, computeNodes[1]);
+          //assert.equal(result._response.status, 200);
+          break;
+        } catch (e: any) {
+          if (e.code === "NodeNotReady") {
+            await wait(POLLING_INTERVAL);
+          } else {
+            throw e;
+          }
+        }
+      }
+    });
+
+    it("should enable scheduling on a compute node successfully", async () => {
+      const result = await client.computeNode.enableScheduling(BASIC_POOL, computeNodes[1]);
+
+      //assert.equal(result._response.status, 200);
+    });
+
+    it("should reboot a compute node successfully", async () => {
+      const result = await client.computeNode.reboot(BASIC_POOL, computeNodes[0]);
+
+      //assert.equal(result._response.status, 202);
+    });
+
+    it("should reimage a compute node successfully", async () => {
+      const result = await client.computeNode.reimage(BASIC_POOL, computeNodes[1]);
+
+      //assert.equal(result._response.status, 202);
+    });
+
+    it("should upload pool node logs at paas pool", async () => {
+      const container = "https://teststorage.blob.core.windows.net/fakecontainer";
+      const config: UploadBatchServiceLogsConfiguration = {
+        containerUrl: container,
+        startTime: new Date("2018-02-25T00:00:00.00")
+      };
+      const result = await client.computeNode.uploadBatchServiceLogs(
+        BASIC_POOL,
+        computeNodes[2],
+        config
+      );
+
+      //assert.equal(result._response.status, 200);
+      assert.isAtLeast(result.numberOfFilesUploaded, 1);
+    });
+  });
+
+  describe("Autoscale operations", async () => {
+    it("should enable autoscale successfully", async () => {
+      const model: PoolEnableAutoScaleParameters = {
+        autoScaleFormula: "$TargetDedicatedNodes=2",
+        autoScaleEvaluationInterval: duration({ minutes: 6 }).toISOString()
+      };
+
+      const result = await client.pool.enableAutoScale(BASIC_POOL, model);
+
+      //assert.equal(result._response.status, 200);
+    });
+
+    it("should evaluate pool autoscale successfully", async () => {
+      const result = await client.pool.evaluateAutoScale(BASIC_POOL, { autoScaleFormula: "$TargetDedicatedNodes=3" });
+
+      assert.equal(
+        result.results,
+        "$TargetDedicatedNodes=3;$TargetLowPriorityNodes=0;$NodeDeallocationOption=requeue"
+      );
+      //assert.equal(result._response.status, 200);
+    });
+
+    it("should fail to evaluate invalid autoscale formula", async () => {
+      const result = await client.pool.evaluateAutoScale(BASIC_POOL, { autoScaleFormula: "something_useless" });
+
+      assert.equal(
+        result.results,
+        "$TargetDedicatedNodes=2;$TargetLowPriorityNodes=0;$NodeDeallocationOption=requeue"
+      );
+      //assert.equal(result._response.status, 200);
+    });
+
+    it("should disable autoscale successfully", async () => {
+      const result = await client.pool.disableAutoScale(BASIC_POOL);
+
+      //assert.equal(result._response.status, 200);
+    });
+  });
+
+  describe("Pool operations (advanced)", async () => {
+    it("should create a second pool successfully", async () => {
+      const pool = {
+        id: TEST_POOL3,
+        vmSize: VMSIZE_SMALL,
+        cloudServiceConfiguration: { osFamily: "4" }
+      };
+      const result = await client.pool.add(pool);
+      //assert.equal(result._response.status, 201);
+    });
+
+    it("should list pools without filters", async () => {
+      const listResult = await client.pool.list();
+      const poolCount = await (await getListObj(listResult)).length;
+
+      assert.isAtLeast(poolCount, 2);
+      //assert.equal(result._response.status, 200);
+    });
+
+    it.skip("should list a maximum number of pools", async () => {
+      try {
+        const options = { poolListOptions: { maxResults: 1 } };
+        let listResultIterator = await client.pool.list(options);
+
+        let poolCounter = 0;
+        for await (const pool of listResultIterator) {
+          ++poolCounter;
+        }
+
+
+        assert.equal(poolCounter, 1);
+      }
+      catch (error) {
+        console.log(error);
+      }
+
+
+      //assert.equal(result._response.status, 200);
+      //result = await client.pool.listNext(result.odatanextLink!);
+
+      // assert.lengthOf(result, 1);
+      // assert.equal(result._response.status, 200);
+    });
+
+    it("should fail to list pools with invalid max", async () => {
+      const options = { poolListOptions: { maxResults: -5 } };
+      try {
+        await client.pool.list(options);
+      }
+      catch (error) {
+        console.log(error);
+        assert.equal(error.message, '"options.poolListOptions.maxResults" with value "-5" should satisfy the constraint "InclusiveMinimum": 1.')
+      }
+
+    });
+
+    it("should list pools according to filter", async () => {
+      const options = {
+        poolListOptions: {
+          filter: `startswith(id,'${BASIC_POOL}')`,
+          select: "id,state",
+          expand: "stats"
+        }
+      };
+      const resultListIterator = await client.pool.list(options);
+      const listOfPools = await getListObj(resultListIterator);
+
+      assert.lengthOf(listOfPools, 1);
+      assert.equal(listOfPools[0].id, BASIC_POOL);
+      assert.equal(listOfPools[0].state, "active");
+      assert.isUndefined(listOfPools[0].allocationState);
+      assert.isUndefined(listOfPools[0].vmSize);
+      //assert.equal(result._response.status, 200);
+    });
+
+    it("should check that pool exists successfully", async () => {
+      const result = await client.pool.exists(BASIC_POOL);
+
+    });
+
+    it("should start pool resizing successfully", async () => {
+      try {
+        let poolResizing = true;
+        let poolResult;
+        while (poolResizing) {
+          poolResult = await client.pool.get(TEST_POOL3);
+          if (poolResult.allocationState === "steady") {
+            //poolResizing = false;
+            break;
+          }
+          else {
+            await wait(POLLING_INTERVAL * 2);
+          }
+        }
+
+        const options = { targetDedicatedNodes: 3, targetLowPriorityNodes: 2 };
+        const result = await client.pool.resize(TEST_POOL3, options);
+
+      }
+      catch (error) {
+        console.log(error);
+      }
+
+      //assert.equal(result._response.status, 202);
+    });
+
+    it("should stop pool resizing successfully", async () => {
+      try {
+        const result = await client.pool.stopResize(TEST_POOL3);
+      }
+      catch (error) {
+        console.log(error);
+      }
+
+
+      //assert.equal(result._response.status, 202);
+    });
+
+    it("should get pool lifetime statistics", async () => {
+      const result = await client.pool.getAllLifetimeStatistics();
+
+      assert.isDefined(result.usageStats);
+      assert.isDefined(result.resourceStats);
+      //assert.equal(result._response.status, 200);
+    });
+
+    it("should list pools usage metrics", async () => {
+      const listUsageIterator = await client.pool.listUsageMetrics();
+      const poolUsageList = await getListObj(listUsageIterator);
+
+      assert.isAtLeast(poolUsageList.length, 1);
+      //assert.equal(result._response.status, 200);
+    });
   });
 
   describe("Job operations (basic)", async () => {
@@ -530,7 +839,7 @@ describe("Batch Service Test", () => {
 
       const jobId = "JobWithAutoComplete";
       const taskId = "TaskWithAutoComplete";
-      const job: Job = {
+      const job: BatchJob = {
         id: jobId,
         poolInfo: {
           poolId: "dummypool"
@@ -543,7 +852,7 @@ describe("Batch Service Test", () => {
       try {
         const result1 = await client.job.add(job);
 
-        const task: Task = {
+        const task: BatchTask = {
           id: taskId,
           commandLine: "echo Hello World",
           exitConditions: {
@@ -677,7 +986,7 @@ describe("Batch Service Test", () => {
     it("should create a task with authentication token settings successfully", async () => {
       const jobId = JOB_NAME;
       const taskId = "TaskWithAuthTokenSettings";
-      const task: Task = {
+      const task: BatchTask = {
         id: taskId,
         commandLine: "cmd /c echo Hello World",
         authenticationTokenSettings: {
@@ -695,7 +1004,7 @@ describe("Batch Service Test", () => {
       assert.equal(result2.authenticationTokenSettings!.access![0], "job");
     });
 
-    it.skip("should create a task with a user identity successfully", async () => {
+    it("should create a task with a user identity successfully", async () => {
       const jobId = JOB_NAME;
       const taskId = "TaskWithUserIdentity";
       const task = {
@@ -756,8 +1065,8 @@ describe("Batch Service Test", () => {
         }
 
         const result2 = await client.file.listFromTask(JOB_NAME, TASK2_NAME);
-        var fileCount = await getListPagedCount(result2);
-        assert.isAtLeast(fileCount, 1);
+        var fileCountList = await getListObj(result2);
+        assert.isAtLeast(fileCountList.length, 1);
       }
       catch (error) {
         console.log(error);
@@ -780,20 +1089,20 @@ describe("Batch Service Test", () => {
       //assert.equal(result._response.status, 200);
     });
 
-    // it("should get file from task successfully", (done) => {
-    //   client.file
-    //     .getFromTask(JOB_NAME, TASK2_NAME, "stdout.txt")
-    //     .then((result) => {
-    //       //assert.equal(result._response.status, 200);
-    //       readStreamToBuffer(result.readableStreamBody!, function (_err, buff) {
-    //         assert.isAtLeast(buff.length, 1);
-    //         done();
-    //       });
-    //     })
-    //     .catch((error) => {
-    //       assert.fail(error);
-    //     });
-    // });
+    it("should get file from task successfully", (done) => {
+      client.file
+        .getFromTask(JOB_NAME, TASK2_NAME, "stdout.txt")
+        .then((result) => {
+          //assert.equal(result._response.status, 200);
+          readStreamToBuffer(result.readableStreamBody!, function (_err, buff) {
+            assert.isAtLeast(buff.length, 1);
+            done();
+          });
+        })
+        .catch((error) => {
+          assert.fail(error);
+        });
+    });
 
     it("should delete file from task successfully", async () => {
       try {
@@ -819,7 +1128,7 @@ describe("Batch Service Test", () => {
 
       assert.isAtLeast(nodeList.length, 1);
 
-      compute_nodes = nodeList.map(function (x) {
+      computeNodes = nodeList.map(function (x) {
         return x.id!;
       });
       //wait(100000);
@@ -835,7 +1144,7 @@ describe("Batch Service Test", () => {
 
     it("should list files from compute node successfully", async () => {
       try {
-        let computeNodeToQuery = compute_nodes[1];
+        let computeNodeToQuery = computeNodes[1];
         let computeNodeStatusResult;
         while (true) {
           computeNodeStatusResult = await client.computeNode.get(BASIC_POOL, computeNodeToQuery)
@@ -860,7 +1169,7 @@ describe("Batch Service Test", () => {
       try {
         const result = await client.file.getPropertiesFromComputeNode(
           BASIC_POOL,
-          compute_nodes[1],
+          computeNodes[1],
           "startup/wd/hello.txt"
         );
       }
@@ -873,26 +1182,26 @@ describe("Batch Service Test", () => {
       //assert.equal(result._response.status, 200);
     });
 
-    // it("should get file from node successfully", (done) => {
-    //   client.file
-    //     .getFromComputeNode(BASIC_POOL, computeNodes[1], "startup/wd/hello.txt")
-    //     .then((result) => {
-    //       //assert.equal(result._response.status, 200);
-    //       readStreamToBuffer(result.readableStreamBody!, function (_err, buff) {
-    //         assert.isAtLeast(buff.length, 1);
-    //         done();
-    //       });
-    //     })
-    //     .catch((error) => {
-    //       assert.fail(error);
-    //     });
-    // });
+    it("should get file from node successfully", (done) => {
+      client.file
+        .getFromComputeNode(BASIC_POOL, computeNodes[1], "startup/wd/hello.txt")
+        .then((result) => {
+          //assert.equal(result._response.status, 200);
+          readStreamToBuffer(result.readableStreamBody!, function (_err, buff) {
+            assert.isAtLeast(buff.length, 1);
+            done();
+          });
+        })
+        .catch((error) => {
+          assert.fail(error);
+        });
+    });
 
     it("should delete file from node successfully", async () => {
       try {
         const result = await client.file.deleteFromComputeNode(
           BASIC_POOL,
-          compute_nodes[1],
+          computeNodes[1],
           "startup/wd/hello.txt"
         );
       }
@@ -906,187 +1215,6 @@ describe("Batch Service Test", () => {
     });
   });
 
-  // describe("Compute node operations", async () => {
-  //   it("should list compute nodes successfully", async () => {
-  //     let listResult;
-  //     let nodeCounter = 0;
-  //     let singleNode;
-  //     listResult = await client.computeNode.list(BASIC_POOL);
-
-  //     for await (const node of listResult) {
-  //       nodeCounter += 1;
-  //     }
-
-  //     assert.equal(nodeCounter, BASIC_POOL_NUM_VMS);
-
-  //     let nodesProvisioning: Boolean = true;
-  //     while (nodesProvisioning) {
-  //       listResult = await client.computeNode.list(BASIC_POOL);
-  //       for await (const node of listResult) {
-  //         if (node.state === "starting") {
-  //           await wait(POLLING_INTERVAL);
-  //           break;
-  //         }
-  //         else {
-  //           compute_nodes.push(node.id!);
-  //           nodesProvisioning = false;
-  //           assert.equal(node.state, "idle");
-  //           assert.equal(node.schedulingState, "enabled");
-  //           assert.isTrue(node.isDedicated);
-  //           break;
-  //         }
-  //       }
-
-  //     }
-
-  //   }).timeout(LONG_TEST_TIMEOUT);
-
-  //   it("should get a compute node reference", async () => {
-  //     const result = await client.computeNode.get(BASIC_POOL, compute_nodes[0]);
-  //     assert.equal(result.id, compute_nodes[0]);
-  //     assert.equal(result.state, "idle");
-  //     assert.equal(result.schedulingState, "enabled");
-  //     assert.equal(result._response.status, 200);
-  //   });
-
-  //   it("should get a compute node reference", async () => {
-  //     const result = await client.computeNode.get(BASIC_POOL, compute_nodes[0]);
-
-  //     assert.equal(result.id, compute_nodes[0]);
-  //     assert.equal(result.state, "idle");
-  //     assert.equal(result.schedulingState, "enabled");
-  //     assert.equal(result._response.status, 200);
-  //   });
-
-  //   it("should add a user to a compute node successfully", async () => {
-  //     const options = { name: TEST_USER, isAdmin: false, password: "kt#_gahr!@aGERDXA" };
-  //     const result = await client.computeNode.addUser(BASIC_POOL, compute_nodes[0], options);
-
-  //     assert.equal(result._response.status, 201);
-  //   });
-
-  //   it("should update a compute node user successfully", async () => {
-  //     const options = { password: "liilef#$DdRGSa_ewkjh" };
-  //     const result = await client.computeNode.updateUser(
-  //       BASIC_POOL,
-  //       compute_nodes[0],
-  //       TEST_USER,
-  //       options
-  //     );
-
-  //     assert.equal(result._response.status, 200);
-  //   });
-
-  //   it("should get a remote desktop file successfully", (done) => {
-  //     client.computeNode
-  //       .getRemoteDesktop(BASIC_POOL, compute_nodes[0])
-  //       .then((result) => {
-  //         assert.equal(result._response.status, 200);
-  //         readStreamToBuffer(result.readableStreamBody!, function (_err, buff) {
-  //           assert.isAtLeast(buff.length, 1);
-  //           done();
-  //         });
-  //       })
-  //       .catch((error) => {
-  //         assert.fail(error);
-  //       });
-  //   });
-
-  //   it("should delete a compute node user successfully", async () => {
-  //     const result = await client.computeNode.deleteUser(BASIC_POOL, compute_nodes[0], TEST_USER);
-
-  //     assert.equal(result._response.status, 200);
-  //   });
-
-  //   it("should disable scheduling on a compute node successfully", async () => {
-  //     while (true) {
-  //       try {
-  //         const result = await client.computeNode.disableScheduling(BASIC_POOL, compute_nodes[1]);
-  //         assert.equal(result._response.status, 200);
-  //         break;
-  //       } catch (e: any) {
-  //         if (e.code === "NodeNotReady") {
-  //           await wait(POLLING_INTERVAL);
-  //         } else {
-  //           throw e;
-  //         }
-  //       }
-  //     }
-  //   });
-
-  //   it("should enable scheduling on a compute node successfully", async () => {
-  //     const result = await client.computeNode.enableScheduling(BASIC_POOL, compute_nodes[1]);
-
-  //     assert.equal(result._response.status, 200);
-  //   });
-
-  //   it("should reboot a compute node successfully", async () => {
-  //     const result = await client.computeNode.reboot(BASIC_POOL, compute_nodes[0]);
-
-  //     assert.equal(result._response.status, 202);
-  //   });
-
-  //   it("should reimage a compute node successfully", async () => {
-  //     const result = await client.computeNode.reimage(BASIC_POOL, compute_nodes[1]);
-
-  //     assert.equal(result._response.status, 202);
-  //   });
-
-  //   it("should upload pool node logs at paas pool", async () => {
-  //     const container = "https://teststorage.blob.core.windows.net/fakecontainer";
-  //     const config: BatchServiceModels.UploadBatchServiceLogsConfiguration = {
-  //       containerUrl: container,
-  //       startTime: new Date("2018-02-25T00:00:00.00")
-  //     };
-  //     const result = await client.computeNode.uploadBatchServiceLogs(
-  //       BASIC_POOL,
-  //       compute_nodes[2],
-  //       config
-  //     );
-
-  //     assert.equal(result._response.status, 200);
-  //     assert.isAtLeast(result.numberOfFilesUploaded, 1);
-  //   });
-  // });
-
-  describe("Autoscale operations", async () => {
-    it("should enable autoscale successfully", async () => {
-      const model: BatchServiceModels.PoolEnableAutoScaleParameter = {
-        autoScaleFormula: "$TargetDedicatedNodes=2",
-        autoScaleEvaluationInterval: duration({ minutes: 6 }).toISOString()
-      };
-
-      const result = await client.pool.enableAutoScale(BASIC_POOL, model);
-
-      assert.equal(result._response.status, 200);
-    });
-
-    it("should evaluate pool autoscale successfully", async () => {
-      const result = await client.pool.evaluateAutoScale(BASIC_POOL, "$TargetDedicatedNodes=3");
-
-      assert.equal(
-        result.results,
-        "$TargetDedicatedNodes=3;$TargetLowPriorityNodes=0;$NodeDeallocationOption=requeue"
-      );
-      assert.equal(result._response.status, 200);
-    });
-
-    it("should fail to evaluate invalid autoscale formula", async () => {
-      const result = await client.pool.evaluateAutoScale(BASIC_POOL, "something_useless");
-
-      assert.equal(
-        result.results,
-        "$TargetDedicatedNodes=2;$TargetLowPriorityNodes=0;$NodeDeallocationOption=requeue"
-      );
-      assert.equal(result._response.status, 200);
-    });
-
-    it("should disable autoscale successfully", async () => {
-      const result = await client.pool.disableAutoScale(BASIC_POOL);
-
-      assert.equal(result._response.status, 200);
-    });
-  });
 
   describe("Task cleanup", async () => {
     it("should delete a task successfully", async () => {
@@ -1133,8 +1261,8 @@ describe("Batch Service Test", () => {
 
     it("should list jobs successfully", async () => {
       const result = await client.job.list();
-      const jobCount = await getListPagedCount(result);
-      assert.isAtLeast(jobCount, 1);
+      const jobList = await getListObj(result);
+      assert.isAtLeast(jobList.length, 1);
       //assert.equal(result._response.status, 200);
     });
 
@@ -1201,14 +1329,14 @@ describe("Batch Service Test", () => {
 
     it("should list job schedules successfully", async () => {
       const result = await client.jobSchedule.list();
-      const jobScheduleCount = await getListPagedCount(result);
-      assert.equal(jobScheduleCount, 1);
+      const jobScheduleList = await getListObj(result);
+      assert.equal(jobScheduleList.length, 1);
     });
 
     it("should list jobs from job schedule successfully", async () => {
       const result = await client.job.listFromJobSchedule(SCHEDULE);
-      const jobCount = await getListPagedCount(result);
-      assert.equal(jobCount, 0);
+      const jobList = await getListObj(result);
+      assert.equal(jobList.length, 0);
     });
 
     it("should check if a job schedule exists successfully", async () => {
@@ -1274,17 +1402,36 @@ describe("Batch Service Test", () => {
 
   describe("Resource cleanup", () => {
     it("should remove nodes in pool successfully", async () => {
-      const options: NodeRemoveParameter = {
-        nodeList: compute_nodes,
+      const options: NodeRemoveParameters = {
+        nodeList: computeNodes,
         nodeDeallocationOption: "terminate"
       };
-      const result = await client.pool.removeNodes(BASIC_POOL, options);
+      const result = await client.pool.removeNodes(BASIC_POOL, options, {
+        onResponse: function (rawResponse, flatResponse, error) {
+          if (error != null) {
+            console.log(error);
+            throw error;
+          }
+          else {
+            assert.equal(rawResponse.status, 202);
+          }
+        }
+      });
 
-      //assert.equal(result._response.status, 202);
     });
 
     it("should delete a pool successfully", async function () {
       await client.pool.delete(BASIC_POOL);
+    });
+
+    it("should delete a second pool successfully", async () => {
+      await client.pool.delete(TEST_POOL3);
+    })
+
+    it("should delete a third pool successfully", async () => {
+      const result = await client.pool.delete(ENDPOINT_POOL);
+
+      //assert.equal(result._response.status, 202);
     });
 
     it("should fail to delete a non-existent pool", async () => {
@@ -1295,15 +1442,17 @@ describe("Batch Service Test", () => {
       }
     });
 
-    it("should delete the endpoint pool successfully", async () => {
-      const result = await client.pool.delete(ENDPOINT_POOL);
-
-      //assert.equal(result._response.status, 202);
-    });
-
     it("should delete a certificate successfully", async function () {
       const result = await client.certificate.delete("sha1", certThumb);
     })
+
+    it("should fail to cancel deleting a certificate", async () => {
+      try {
+        await client.certificate.cancelDeletion("sha1", certThumb);
+      } catch (error: any) {
+        assert.equal(error.code, "CertificateBeingDeleted");
+      }
+    });
   })
 
 
