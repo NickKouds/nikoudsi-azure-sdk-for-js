@@ -12,12 +12,12 @@ generate-metadata: false
 license-header: MICROSOFT_MIT_NO_VERSION
 output-folder: ../
 source-code-folder-path: ./src/generated
-input-file: https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/batch/data-plane/Microsoft.Batch/stable/2022-01-01.15.0/BatchService.json
+input-file: Track2BatchService.json
 add-credentials: false
 package-version: 11.0.0-beta.1
 v3: true
 use-extension:
-  "@autorest/typescript": "latest"
+  "@autorest/typescript": "6.0.0-rc.1"
 hide-clients: true
 ```
 
