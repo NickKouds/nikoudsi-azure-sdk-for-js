@@ -1,9 +1,9 @@
 import {
   Recorder,
-  RecorderEnvironmentSetup,
+  RecorderStartOptions,
   env,
   isLiveMode,
-  record,
+  assertEnvironmentVariable
 } from "@azure-tools/test-recorder";
 // import { createXhrHttpClient, isNode } from "@azure/test-utils";
 
@@ -12,38 +12,72 @@ import { BatchServiceClient } from "../../../src";
 import { BatchServiceClientOptions } from "../../../src/batchServiceClient";
 import { BatchSharedKeyCredentials } from "../../../src/credentials/batchSharedKeyCredentials";
 import { ClientSecretCredential, TokenCredential } from "@azure/identity";
-import { Context } from "mocha";
+import { Context, Test } from "mocha";
+import { AdditionalPolicyConfig } from "@azure/core-client";
 
-const recorderEnvSetup: RecorderEnvironmentSetup = {
-  replaceableVariables: {
-    AZURE_BATCH_ENDPOINT: "batch_endpoint",
-    AZURE_CLIENT_ID: "azure_client_id",
-    AZURE_CLIENT_SECRET: "azure_client_secret",
-    AZURE_TENANT_ID: "azure_tenant_id",
-    AZURE_BATCH_ACCOUNT: "batch_account_name",
-    AZURE_BATCH_ACCESS_KEY: "batch_account_key"
+export interface RecordedBatchClient {
+  batchClient: BatchServiceClient,
+  recorder: Recorder
+}
+
+// const recorderEnvSetup: RecorderEnvironmentSetup = {
+//   replaceableVariables: {
+//     AZURE_BATCH_ENDPOINT: "batch_endpoint",
+//     AZURE_CLIENT_ID: "azure_client_id",
+//     AZURE_CLIENT_SECRET: "azure_client_secret",
+//     AZURE_TENANT_ID: "azure_tenant_id",
+//     AZURE_BATCH_ACCOUNT: "batch_account_name",
+//     AZURE_BATCH_ACCESS_KEY: "batch_account_key"
+//   },
+//   customizationsOnRecordings: [
+//     (recording: string): string =>
+//       recording.replace(/"access_token"\s?:\s?"[^"]*"/g, `"access_token":"access_token"`),
+//     // If we put ENDPOINT in replaceableVariables above, it will not capture
+//     // the endpoint string used with nock, which will be expanded to
+//     // https://<endpoint>:443/ and therefore will not match, so we have to do
+//     // this instead.
+//     (recording: string): string => {
+//       const replaced = recording.replace("endpoint:443", "endpoint");
+//       return replaced;
+//     },
+//   ],
+//   queryParametersToSkip: []
+// };
+
+const recorderOptions: RecorderStartOptions = {
+  envSetupForPlayback: {
+    AZURE_BATCH_ENDPOINT: "https://fakebatchaccount.westus.batch.azure.com",
+    AZURE_CLIENT_ID: "fake_azure_client_id",
+    AZURE_CLIENT_SECRET: "fake_azure_client_secret",
+    AZURE_TENANT_ID: "fake_azure_tenant_id",
+    AZURE_BATCH_ACCOUNT: "fake_batch_account_name",
+    AZURE_BATCH_ACCESS_KEY: "fake_batch_account_key"
   },
-  customizationsOnRecordings: [
-    (recording: string): string =>
-      recording.replace(/"access_token"\s?:\s?"[^"]*"/g, `"access_token":"access_token"`),
-    // If we put ENDPOINT in replaceableVariables above, it will not capture
-    // the endpoint string used with nock, which will be expanded to
-    // https://<endpoint>:443/ and therefore will not match, so we have to do
-    // this instead.
-    (recording: string): string => {
-      const replaced = recording.replace("endpoint:443", "endpoint");
-      return replaced;
-    },
-  ],
-  queryParametersToSkip: []
+  // sanitizerOptions: {
+  //   bodySanitizers: [
+  //     {
+  //       target: encodeURIComponent(env.TABLES_URL ?? ""),
+  //       value: encodeURIComponent(`https://fakeaccount.table.core.windows.net`),
+  //     },
+  //   ],
+  // },
 };
 
 export type AuthMethod = "APIKey" | "AAD" | "DummyAPIKey";
 
-export function createClient(
+async function createRecorder(context: Test | undefined) {
+  const recorder = new Recorder(context);
+  await recorder.start(recorderOptions);
+  return recorder;
+}
+
+export async function createClient(
+  context: Test | undefined,
   authMethod: AuthMethod,
-  options?: BatchServiceClientOptions
-): BatchServiceClient {
+  options: BatchServiceClientOptions = {},
+): Promise<RecordedBatchClient> {
+  const recorder = await createRecorder(context);
+
   let credential: TokenCredential | BatchSharedKeyCredentials;
   switch (authMethod) {
     case "APIKey": {
@@ -69,18 +103,13 @@ export function createClient(
       throw Error(`Unsupported authentication method: ${authMethod}`);
     }
   }
-  return new BatchServiceClient(
-    credential,
-    env.AZURE_BATCH_ENDPOINT || "https://dummy.eastus.batch.azure.com",
-    options
-  );
-}
+  return {
+    batchClient: new BatchServiceClient(credential,
+      env.AZURE_BATCH_ENDPOINT || "https://dummy.eastus.batch.azure.com",
+      recorder.configureClientOptions({})),
 
-/**
- * creates the recorder and reads the environment variables from the `.env` file.
- * Should be called first in the test suite to make sure environment variables are
- * read before they are being used.
- */
-export function createRecorder(context: Context): Recorder {
-  return record(context, recorderEnvSetup);
+    recorder: recorder
+
+  }
+    ;
 }
