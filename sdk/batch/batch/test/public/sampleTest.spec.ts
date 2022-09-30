@@ -23,6 +23,7 @@ import { duration } from "moment";
 import moment from "moment";
 import { PagedAsyncIterableIterator } from "@azure/core-paging";
 import { errorMonitor } from "events";
+import { pool } from "../../src/generated/models/parameters";
 
 const _SUFFIX = Math.random()
   .toString(16)
@@ -41,7 +42,7 @@ async function getListObj(objIterator: PagedAsyncIterableIterator<any>): Promise
 
 
 function getPoolName(type: string) {
-  return `jssdktest-${type}-${_SUFFIX}`;
+  return `testjssdk-${type}-${_SUFFIX}`;
 }
 
 const ENDPOINT_POOL = getPoolName("endpoint");
@@ -58,8 +59,6 @@ const TASK_UPDATE_OPTIONS = {
   constraints: { maxTaskRetryCount: 3 }
 };
 const TASK2_NAME = `${JOB_NAME}-task2`;
-const TASK3_NAME = `${JOB_NAME}-task3`;
-const TASK_APPPACK_NAME = `${JOB_NAME}-Task-AppPackage`;
 const SCHEDULE = "JSSDKTestSchedule";
 const TEST_USER = "JSSDKTestSchedule";
 const VMSIZE_A1 = "Standard_A1_v2";
@@ -91,7 +90,7 @@ describe("Batch Service Test", () => {
   };
 
   beforeEach(async function () {
-    ({ batchClient, recorder } = await createClient(this.currentTest, "APIKey"));
+    ({ batchClient, recorder } = await createClient(this.currentTest, "AAD"));
 
   });
 
@@ -111,7 +110,7 @@ describe("Batch Service Test", () => {
 
     });
 
-    it("should add new certificate successfully", async () => {
+    it.only("should add new certificate successfully", async () => {
       const cert: Certificate = {
         thumbprint: certThumb,
         thumbprintAlgorithm: "sha1",
@@ -159,10 +158,11 @@ describe("Batch Service Test", () => {
   // })
 
   describe("Basic Pool operations", () => {
-    it("Create Batch Pool successfully", async function () {
+    it.only("Create Batch Pool successfully", async function () {
       // Use assert to test your assumptions
+
       const poolParams: Pool = {
-        id: BASIC_POOL,
+        id: recorder.variable("BASIC_POOL", BASIC_POOL),
         vmSize: VMSIZE_D1,
         cloudServiceConfiguration: { osFamily: "4" },
         targetDedicatedNodes: BASIC_POOL_NUM_VMS,
@@ -173,7 +173,7 @@ describe("Batch Service Test", () => {
         userAccounts: [
           {
             name: nonAdminPoolUser,
-            password: uuid(),
+            password: recorder.variable("POOL_USER_ACCOUNT_PASSWORD", "dummyPlaceHolderPassword"),
             elevationLevel: "nonadmin"
           }
         ]
@@ -184,6 +184,7 @@ describe("Batch Service Test", () => {
       }
       catch (error) {
         console.log(error);
+        throw error;
       }
 
       await wait(20000);
@@ -201,10 +202,11 @@ describe("Batch Service Test", () => {
         ]
       };
 
+      const poolId = recorder.variable("BASIC_POOL", BASIC_POOL);
       try {
-        await batchClient.pool.patch(BASIC_POOL, options);
-        const result = await batchClient.pool.get(BASIC_POOL);
-        assert.equal(result.id, BASIC_POOL);
+        await batchClient.pool.patch(poolId, options);
+        const result = await batchClient.pool.get(poolId);
+        assert.equal(result.id, poolId);
         assert.equal(result.state, "active");
 
         for (let index = 0; index < options.metadata!.length; index++) {
@@ -214,6 +216,7 @@ describe("Batch Service Test", () => {
       }
       catch (error) {
         console.log(error);
+        throw error;
       }
 
 
@@ -222,10 +225,11 @@ describe("Batch Service Test", () => {
     it("should get a pool reference successfully", async () => {
       let result: any;
       let metadata: any;
+      const poolId = recorder.variable("BASIC_POOL", BASIC_POOL);
 
       const promise = new Promise<void>((resolve) => {
         const timeout = setInterval(async () => {
-          result = await batchClient.pool.get(BASIC_POOL);
+          result = await batchClient.pool.get(poolId);
           metadata = result.metadata![0];
           if (result.allocationState === "steady") {
             resolve();
@@ -236,7 +240,7 @@ describe("Batch Service Test", () => {
 
       await promise;
 
-      assert.equal(result.id, BASIC_POOL);
+      assert.equal(result.id, poolId);
       assert.equal(result.state, "active");
       assert.equal(result.allocationState, "steady");
       assert.isDefined(result.cloudServiceConfiguration);
@@ -256,9 +260,10 @@ describe("Batch Service Test", () => {
 
     it("Get Batch Pool Info", async function () {
       // Use assert to test your assumptions
-      const result = await batchClient.pool.get(BASIC_POOL)
+      const poolId = recorder.variable("BASIC_POOL", BASIC_POOL);
+      const result = await batchClient.pool.get(poolId)
 
-      assert.equal(result.id, BASIC_POOL);
+      assert.equal(result.id, poolId);
       assert.equal(result.state, "active");
       assert.isDefined(result.cloudServiceConfiguration);
       assert.equal(result.targetDedicatedNodes, BASIC_POOL_NUM_VMS);
@@ -276,7 +281,7 @@ describe("Batch Service Test", () => {
         startTask: { commandLine: "cmd /c echo hello > hello.txt" }
       };
 
-      const result = await batchClient.pool.updateProperties(BASIC_POOL, options);
+      const result = await batchClient.pool.updateProperties(recorder.variable("BASIC_POOL", BASIC_POOL), options);
     });
 
     it("should get a pool reference with odata successfully", async () => {
@@ -284,8 +289,10 @@ describe("Batch Service Test", () => {
         poolGetOptions: { select: "id,state", expand: "stats" }
       };
 
-      const result = await batchClient.pool.get(BASIC_POOL, options);
-      assert.equal(result.id, BASIC_POOL);
+      const poolId = recorder.variable("BASIC_POOL", BASIC_POOL);
+
+      const result = await batchClient.pool.get(poolId, options);
+      assert.equal(result.id, poolId);
       assert.equal(result.state, "active");
       assert.isUndefined(result.allocationState);
       assert.isUndefined(result.vmSize);
@@ -293,7 +300,7 @@ describe("Batch Service Test", () => {
 
     it("should add a pool with vnet and get expected error", async () => {
       const pool: Pool = {
-        id: VNET_POOL,
+        id: recorder.variable("VNET_POOL", VNET_POOL),
         vmSize: VMSIZE_A1,
         cloudServiceConfiguration: { osFamily: "4" },
         targetDedicatedNodes: 0,
@@ -314,7 +321,7 @@ describe("Batch Service Test", () => {
 
     it("should add a pool with a custom image and get expected error", async () => {
       const pool: Pool = {
-        id: IMAGE_POOL,
+        id: recorder.variable("IMAGE_POOL", IMAGE_POOL),
         vmSize: VMSIZE_A1,
         virtualMachineConfiguration: {
           imageReference: {
@@ -338,7 +345,7 @@ describe("Batch Service Test", () => {
 
     it("should add a pool with a Data Disk", async () => {
       const pool: Pool = {
-        id: DISK_POOL,
+        id: recorder.variable("DISK_POOL", DISK_POOL),
         vmSize: VMSIZE_A1,
         virtualMachineConfiguration: {
           imageReference: {
@@ -373,7 +380,7 @@ describe("Batch Service Test", () => {
   describe("Pool with endpoint configuration", async () => {
     it("should add a pool with inbound endpoint configuration successfully", async () => {
       const pool: Pool = {
-        id: ENDPOINT_POOL,
+        id: recorder.variable("ENDPOINT_POOL", ENDPOINT_POOL),
         vmSize: VMSIZE_A1,
         networkConfiguration: {
           endpointConfiguration: {
@@ -413,8 +420,9 @@ describe("Batch Service Test", () => {
 
     it("should get the details of a pool with endpoint configuration successfully", async () => {
       let result;
+      const poolId = recorder.variable("ENDPOINT_POOL", ENDPOINT_POOL)
       while (true) {
-        let listResult = await batchClient.computeNode.list(ENDPOINT_POOL);
+        let listResult = await batchClient.computeNode.list(poolId);
         result = await getListObj(listResult)
         if (result.length > 0) {
           break;
@@ -435,11 +443,12 @@ describe("Batch Service Test", () => {
     it("should get pool node counts successfully", async () => {
       let result;
       let endpointPool;
+      const poolId = recorder.variable("ENDPOINT_POOL", ENDPOINT_POOL);
       while (true) {
         let listResult = await batchClient.account.listPoolNodeCounts();
         result = await getListObj(listResult);
         if (result.length > 0) {
-          endpointPool = result.filter(pool => pool.poolId == ENDPOINT_POOL);
+          endpointPool = result.filter(pool => pool.poolId == poolId);
           if (endpointPool.length > 0 && endpointPool[0].dedicated!.idle > 0) {
             break;
           }
@@ -465,7 +474,8 @@ describe("Batch Service Test", () => {
       let listResult;
       let nodeCounter = 0;
       let singleNode;
-      listResult = await batchClient.computeNode.list(BASIC_POOL);
+      const poolId = recorder.variable("BASIC_POOL", BASIC_POOL);
+      listResult = await batchClient.computeNode.list(poolId);
 
       for await (const node of listResult) {
         nodeCounter += 1;
@@ -475,15 +485,15 @@ describe("Batch Service Test", () => {
 
       let nodesProvisioning: Boolean = true;
       while (nodesProvisioning) {
-        listResult = await batchClient.computeNode.list(BASIC_POOL);
+        listResult = await batchClient.computeNode.list(poolId);
         for await (const node of listResult) {
-          if (node.state === "starting") {
+          if (node.state === "starting" || node.state == "waitingforstarttask") {
             await wait(POLLING_INTERVAL);
             break;
           }
           else {
             nodesProvisioning = false;
-            listResult = await batchClient.computeNode.list(BASIC_POOL);
+            listResult = await batchClient.computeNode.list(poolId);
             const nodeList = await getListObj(listResult);
             computeNodes = nodeList.map(function (x) {
               return x.id!;
@@ -500,7 +510,7 @@ describe("Batch Service Test", () => {
     }).timeout(LONG_TEST_TIMEOUT);
 
     it("should get a compute node reference", async () => {
-      const result = await batchClient.computeNode.get(BASIC_POOL, computeNodes[0]);
+      const result = await batchClient.computeNode.get(recorder.variable("BASIC_POOL", BASIC_POOL), computeNodes[0]);
       assert.equal(result.id, computeNodes[0]);
       assert.equal(result.state, "idle");
       assert.equal(result.schedulingState, "enabled");
@@ -509,7 +519,7 @@ describe("Batch Service Test", () => {
 
     it("should add a user to a compute node successfully", async () => {
       const options = { name: TEST_USER, isAdmin: false, password: "kt#_gahr!@aGERDXA" };
-      const result = await batchClient.computeNode.addUser(BASIC_POOL, computeNodes[0], options);
+      const result = await batchClient.computeNode.addUser(recorder.variable("BASIC_POOL", BASIC_POOL), computeNodes[0], options);
 
       //assert.equal(result._response.status, 201);
     });
@@ -517,7 +527,7 @@ describe("Batch Service Test", () => {
     it("should update a compute node user successfully", async () => {
       const options = { password: "liilef#$DdRGSa_ewkjh" };
       const result = await batchClient.computeNode.updateUser(
-        BASIC_POOL,
+        recorder.variable("BASIC_POOL", BASIC_POOL),
         computeNodes[0],
         TEST_USER,
         options
@@ -528,7 +538,7 @@ describe("Batch Service Test", () => {
 
     it("should get a remote desktop file successfully", (done) => {
       batchClient.computeNode
-        .getRemoteDesktop(BASIC_POOL, computeNodes[0])
+        .getRemoteDesktop(recorder.variable("BASIC_POOL", BASIC_POOL), computeNodes[0])
         .then((result) => {
           //assert.equal(result._response.status, 200);
           readStreamToBuffer(result.readableStreamBody!, function (_err, buff) {
@@ -542,7 +552,7 @@ describe("Batch Service Test", () => {
     });
 
     it("should delete a compute node user successfully", async () => {
-      const result = await batchClient.computeNode.deleteUser(BASIC_POOL, computeNodes[0], TEST_USER);
+      const result = await batchClient.computeNode.deleteUser(recorder.variable("BASIC_POOL", BASIC_POOL), computeNodes[0], TEST_USER);
 
       //assert.equal(result._response.status, 200);
     });
@@ -550,7 +560,7 @@ describe("Batch Service Test", () => {
     it("should disable scheduling on a compute node successfully", async () => {
       while (true) {
         try {
-          const result = await batchClient.computeNode.disableScheduling(BASIC_POOL, computeNodes[1]);
+          const result = await batchClient.computeNode.disableScheduling(recorder.variable("BASIC_POOL", BASIC_POOL), computeNodes[1]);
           //assert.equal(result._response.status, 200);
           break;
         } catch (e: any) {
@@ -564,19 +574,19 @@ describe("Batch Service Test", () => {
     });
 
     it("should enable scheduling on a compute node successfully", async () => {
-      const result = await batchClient.computeNode.enableScheduling(BASIC_POOL, computeNodes[1]);
+      const result = await batchClient.computeNode.enableScheduling(recorder.variable("BASIC_POOL", BASIC_POOL), computeNodes[1]);
 
       //assert.equal(result._response.status, 200);
     });
 
     it("should reboot a compute node successfully", async () => {
-      const result = await batchClient.computeNode.reboot(BASIC_POOL, computeNodes[0]);
+      const result = await batchClient.computeNode.reboot(recorder.variable("BASIC_POOL", BASIC_POOL), computeNodes[0]);
 
       //assert.equal(result._response.status, 202);
     });
 
     it("should reimage a compute node successfully", async () => {
-      const result = await batchClient.computeNode.reimage(BASIC_POOL, computeNodes[1]);
+      const result = await batchClient.computeNode.reimage(recorder.variable("BASIC_POOL", BASIC_POOL), computeNodes[1]);
 
       //assert.equal(result._response.status, 202);
     });
@@ -588,7 +598,7 @@ describe("Batch Service Test", () => {
         startTime: new Date("2018-02-25T00:00:00.00")
       };
       const result = await batchClient.computeNode.uploadBatchServiceLogs(
-        BASIC_POOL,
+        recorder.variable("BASIC_POOL", BASIC_POOL),
         computeNodes[2],
         config
       );
@@ -598,20 +608,20 @@ describe("Batch Service Test", () => {
     });
   });
 
-  describe("Autoscale operations", async () => {
+  describe.skip("Autoscale operations", async () => {
     it("should enable autoscale successfully", async () => {
       const model: PoolEnableAutoScaleParameters = {
         autoScaleFormula: "$TargetDedicatedNodes=2",
         autoScaleEvaluationInterval: duration({ minutes: 6 }).toISOString()
       };
 
-      const result = await batchClient.pool.enableAutoScale(BASIC_POOL, model);
+      const result = await batchClient.pool.enableAutoScale(recorder.variable("BASIC_POOL", BASIC_POOL), model);
 
       //assert.equal(result._response.status, 200);
     });
 
     it("should evaluate pool autoscale successfully", async () => {
-      const result = await batchClient.pool.evaluateAutoScale(BASIC_POOL, { autoScaleFormula: "$TargetDedicatedNodes=3" });
+      const result = await batchClient.pool.evaluateAutoScale(recorder.variable("BASIC_POOL", BASIC_POOL), { autoScaleFormula: "$TargetDedicatedNodes=3" });
 
       assert.equal(
         result.results,
@@ -621,7 +631,7 @@ describe("Batch Service Test", () => {
     });
 
     it("should fail to evaluate invalid autoscale formula", async () => {
-      const result = await batchClient.pool.evaluateAutoScale(BASIC_POOL, { autoScaleFormula: "something_useless" });
+      const result = await batchClient.pool.evaluateAutoScale(recorder.variable("BASIC_POOL", BASIC_POOL), { autoScaleFormula: "something_useless" });
 
       assert.equal(
         result.results,
@@ -631,7 +641,7 @@ describe("Batch Service Test", () => {
     });
 
     it("should disable autoscale successfully", async () => {
-      const result = await batchClient.pool.disableAutoScale(BASIC_POOL);
+      const result = await batchClient.pool.disableAutoScale(recorder.variable("BASIC_POOL", BASIC_POOL));
 
       //assert.equal(result._response.status, 200);
     });
@@ -640,7 +650,7 @@ describe("Batch Service Test", () => {
   describe("Pool operations (advanced)", async () => {
     it("should create a second pool successfully", async () => {
       const pool = {
-        id: TEST_POOL3,
+        id: recorder.variable("TEST_POOL3", TEST_POOL3),
         vmSize: VMSIZE_SMALL,
         cloudServiceConfiguration: { osFamily: "4" }
       };
@@ -671,6 +681,7 @@ describe("Batch Service Test", () => {
       }
       catch (error) {
         console.log(error);
+        throw error;
       }
 
 
@@ -694,9 +705,10 @@ describe("Batch Service Test", () => {
     });
 
     it("should list pools according to filter", async () => {
+      const poolId = recorder.variable("BASIC_POOL", BASIC_POOL)
       const options = {
         poolListOptions: {
-          filter: `startswith(id,'${BASIC_POOL}')`,
+          filter: `startswith(id,'${poolId}')`,
           select: "id,state",
           expand: "stats"
         }
@@ -705,7 +717,7 @@ describe("Batch Service Test", () => {
       const listOfPools = await getListObj(resultListIterator);
 
       assert.lengthOf(listOfPools, 1);
-      assert.equal(listOfPools[0].id, BASIC_POOL);
+      assert.equal(listOfPools[0].id, poolId);
       assert.equal(listOfPools[0].state, "active");
       assert.isUndefined(listOfPools[0].allocationState);
       assert.isUndefined(listOfPools[0].vmSize);
@@ -713,16 +725,17 @@ describe("Batch Service Test", () => {
     });
 
     it("should check that pool exists successfully", async () => {
-      const result = await batchClient.pool.exists(BASIC_POOL);
+      const result = await batchClient.pool.exists(recorder.variable("BASIC_POOL", BASIC_POOL));
 
     });
 
     it("should start pool resizing successfully", async () => {
       try {
+        const poolId = recorder.variable("TEST_POOL3", TEST_POOL3);
         let poolResizing = true;
         let poolResult;
         while (poolResizing) {
-          poolResult = await batchClient.pool.get(TEST_POOL3);
+          poolResult = await batchClient.pool.get(poolId);
           if (poolResult.allocationState === "steady") {
             //poolResizing = false;
             break;
@@ -733,11 +746,12 @@ describe("Batch Service Test", () => {
         }
 
         const options = { targetDedicatedNodes: 3, targetLowPriorityNodes: 2 };
-        const result = await batchClient.pool.resize(TEST_POOL3, options);
+        const result = await batchClient.pool.resize(poolId, options);
 
       }
       catch (error) {
         console.log(error);
+        throw error;
       }
 
       //assert.equal(result._response.status, 202);
@@ -745,10 +759,11 @@ describe("Batch Service Test", () => {
 
     it("should stop pool resizing successfully", async () => {
       try {
-        const result = await batchClient.pool.stopResize(TEST_POOL3);
+        const result = await batchClient.pool.stopResize(recorder.variable("TEST_POOL3", TEST_POOL3));
       }
       catch (error) {
         console.log(error);
+        throw error;
       }
 
 
@@ -774,12 +789,14 @@ describe("Batch Service Test", () => {
 
   describe("Job operations (basic)", async () => {
     it("should create a job successfully", async () => {
-      const options = { id: JOB_NAME, poolInfo: { poolId: BASIC_POOL } };
+      const jobId = recorder.variable("JOB_NAME", JOB_NAME);
+      const poolId = recorder.variable("BASIC_POOL", BASIC_POOL);
+      const options = { id: jobId, poolInfo: { poolId: poolId } };
       const result = await batchClient.job.add(options);
 
-      const getResult = await batchClient.job.get(JOB_NAME);
+      const getResult = await batchClient.job.get(jobId);
       assert.equal(getResult.state, "active");
-      assert.equal(getResult.poolInfo?.poolId, BASIC_POOL);
+      assert.equal(getResult.poolInfo?.poolId, poolId);
       assert.equal(getResult.allowTaskPreemption, false);
 
     });
@@ -788,11 +805,11 @@ describe("Batch Service Test", () => {
       const options = {
         priority: 500,
         constraints: { maxTaskRetryCount: 3 },
-        poolInfo: { poolId: BASIC_POOL }
+        poolInfo: { poolId: recorder.variable("BASIC_POOL", BASIC_POOL) }
       };
 
       try {
-        const result = await batchClient.job.update(JOB_NAME, options);
+        const result = await batchClient.job.update(recorder.variable("JOB_NAME", JOB_NAME), options);
       }
       catch (error) {
         console.log(error);
@@ -805,9 +822,9 @@ describe("Batch Service Test", () => {
       const options = {
         priority: 600,
         constraints: { maxTaskRetryCount: 3 },
-        poolInfo: { poolId: BASIC_POOL }
+        poolInfo: { poolId: recorder.variable("BASIC_POOL", BASIC_POOL) }
       };
-      const result = await batchClient.job.update(JOB_NAME, options);
+      const result = await batchClient.job.update(recorder.variable("JOB_NAME", JOB_NAME), options);
 
       //assert.equal(result._response.status, 200);
     });
@@ -816,21 +833,24 @@ describe("Batch Service Test", () => {
 
   describe("Task operations", async () => {
     it("should create a task with container settings successfully", async () => {
+      const jobId = recorder.variable("JOB_NAME", JOB_NAME);
+
       const taskSettings = {
-        id: TASK3_NAME,
+        id: "taskWithContainerSettings",
         commandLine: "cat /etc/centos-release",
         containerSettings: { imageName: "centos" }
       };
       try {
-        const result2 = await batchClient.task.add(JOB_NAME, taskSettings);
-        const getResult = await batchClient.task.get(JOB_NAME, taskSettings.id);
+        const result2 = await batchClient.task.add(jobId, taskSettings);
+        const getResult = await batchClient.task.get(jobId, taskSettings.id);
         assert.equal(getResult.containerSettings?.imageName, taskSettings.containerSettings.imageName);
         assert.equal(getResult.commandLine, taskSettings.commandLine);
 
-        await batchClient.task.delete(JOB_NAME, TASK3_NAME);
+        await batchClient.task.delete(jobId, taskSettings.id);
       }
       catch (error) {
-        console.log(error)
+        console.log(error);
+        throw error;
       }
 
     });
@@ -895,14 +915,14 @@ describe("Batch Service Test", () => {
 
     it("should create a task successfully", async () => {
       const task = {
-        id: TASK_NAME,
+        id: recorder.variable("TASK_NAME", TASK_NAME),
         commandLine: "cmd /c echo hello > taskHello.txt"
       };
-      const result = await batchClient.task.add(JOB_NAME, task);
+      const result = await batchClient.task.add(recorder.variable("JOB_NAME", JOB_NAME), task);
     });
 
     it("should terminate a task successfully", async () => {
-      const result = await batchClient.task.terminate(JOB_NAME, TASK_NAME);
+      const result = await batchClient.task.terminate(recorder.variable("JOB_NAME", JOB_NAME), recorder.variable("TASK_NAME", TASK_NAME));
     });
 
     it("should create a second task with output files successfully", async () => {
@@ -924,26 +944,27 @@ describe("Batch Service Test", () => {
           uploadOptions: { uploadCondition: "taskFailure" }
         }
       ];
+
       const options = {
-        id: TASK2_NAME,
+        id: recorder.variable("TASK2_NAME", TASK2_NAME),
         commandLine: "cmd /c echo hello world",
         output_files: outputs
       };
 
-      const result = await batchClient.task.add(JOB_NAME, options);
+      const result = await batchClient.task.add(recorder.variable("JOB_NAME", JOB_NAME), options);
 
     });
 
     it("should reactivate a task successfully", async () => {
-      const result = await batchClient.task.reactivate(JOB_NAME, TASK_NAME);
+      const result = await batchClient.task.reactivate(recorder.variable("JOB_NAME", JOB_NAME), recorder.variable("TASK_NAME", TASK_NAME));
     });
 
     it("should update a task successfully", async () => {
-      const result = await batchClient.task.update(JOB_NAME, TASK2_NAME, TASK_UPDATE_OPTIONS);
+      const result = await batchClient.task.update(recorder.variable("JOB_NAME", JOB_NAME), recorder.variable("TASK2_NAME", TASK2_NAME), TASK_UPDATE_OPTIONS);
     });
 
     it("should list all tasks successfully", async () => {
-      const result = await batchClient.task.list(JOB_NAME);
+      const result = await batchClient.task.list(recorder.variable("JOB_NAME", JOB_NAME));
       var taskCounter = 0;
 
       for await (const item of result) {
@@ -955,16 +976,18 @@ describe("Batch Service Test", () => {
     });
 
     it("should get task reference successfully", async () => {
-      const result = await batchClient.task.get(JOB_NAME, TASK_NAME);
+      const taskId = recorder.variable("TASK_NAME", TASK_NAME)
+      const result = await batchClient.task.get(recorder.variable("JOB_NAME", JOB_NAME), taskId);
 
-      assert.equal(result.id, TASK_NAME);
+      assert.equal(result.id, taskId);
       assert.equal(result.constraints?.maxTaskRetryCount, TASK_UPDATE_OPTIONS.constraints.maxTaskRetryCount);
 
     });
 
     it("should add a task with an application package reference successfully", async () => {
+      const jobId = recorder.variable("JOB_NAME", JOB_NAME);
       const task = {
-        id: TASK_APPPACK_NAME,
+        id: "Task-AppPackage",
         commandLine: "cmd /c echo hello world",
         applicationPackageReferences: [
           {
@@ -973,18 +996,19 @@ describe("Batch Service Test", () => {
         ]
       };
       try {
-        const result1 = await batchClient.task.add(JOB_NAME, task);
-        const result2 = await batchClient.task.get(JOB_NAME, TASK_APPPACK_NAME);
+        const result1 = await batchClient.task.add(jobId, task);
+        const result2 = await batchClient.task.get(jobId, task.id);
         assert.isDefined(result2.applicationPackageReferences);
       }
       catch (error) {
-        console.log(error)
+        console.log(error);
+        throw error;
       }
 
     });
 
     it("should create a task with authentication token settings successfully", async () => {
-      const jobId = JOB_NAME;
+      const jobId = recorder.variable("JOB_NAME", JOB_NAME);
       const taskId = "TaskWithAuthTokenSettings";
       const task: BatchTask = {
         id: taskId,
@@ -1005,7 +1029,7 @@ describe("Batch Service Test", () => {
     });
 
     it("should create a task with a user identity successfully", async () => {
-      const jobId = JOB_NAME;
+      const jobId = recorder.variable("JOB_NAME", JOB_NAME);
       const taskId = "TaskWithUserIdentity";
       const task = {
         id: taskId,
@@ -1035,8 +1059,7 @@ describe("Batch Service Test", () => {
     }).timeout(LONG_TEST_TIMEOUT);
 
     it("should count tasks sucessfully", async () => {
-      const jobId = JOB_NAME;
-      const result = await batchClient.job.getTaskCounts(jobId);
+      const result = await batchClient.job.getTaskCounts(recorder.variable("JOB_NAME", JOB_NAME));
 
       assert.isDefined(result.taskCounts.active);
       assert.isDefined(result.taskCounts.completed);
@@ -1051,12 +1074,14 @@ describe("Batch Service Test", () => {
 
   });
 
-  describe("File operations", async () => {
+  describe.skip("File operations", async () => {
     it("should list files from task successfully", async () => {
       try {
         let result: TaskGetResponse;
+        const jobId = recorder.variable("JOB_NAME", JOB_NAME);
+        const taskId = recorder.variable("TASK2_NAME", TASK2_NAME);
         while (true) {
-          result = await batchClient.task.get(JOB_NAME, TASK2_NAME);
+          result = await batchClient.task.get(jobId, taskId);
           if (result.executionInfo !== undefined && result.executionInfo.result != undefined) {
             break;
           } else {
@@ -1064,7 +1089,7 @@ describe("Batch Service Test", () => {
           }
         }
 
-        const result2 = await batchClient.file.listFromTask(JOB_NAME, TASK2_NAME);
+        const result2 = await batchClient.file.listFromTask(jobId, taskId);
         var fileCountList = await getListObj(result2);
         assert.isAtLeast(fileCountList.length, 1);
       }
@@ -1078,7 +1103,7 @@ describe("Batch Service Test", () => {
 
     it("should get file properties from task successfully", async () => {
       try {
-        const result = await batchClient.file.getPropertiesFromTask(JOB_NAME, TASK2_NAME, "stderr.txt");
+        const result = await batchClient.file.getPropertiesFromTask(recorder.variable("JOB_NAME", JOB_NAME), recorder.variable("TASK2_NAME", TASK2_NAME), "stderr.txt");
       }
       catch (error) {
         console.log(error);
@@ -1091,7 +1116,7 @@ describe("Batch Service Test", () => {
 
     it("should get file from task successfully", (done) => {
       batchClient.file
-        .getFromTask(JOB_NAME, TASK2_NAME, "stdout.txt")
+        .getFromTask(recorder.variable("JOB_NAME", JOB_NAME), recorder.variable("TASK2_NAME", TASK2_NAME), "stdout.txt")
         .then((result) => {
           //assert.equal(result._response.status, 200);
           readStreamToBuffer(result.readableStreamBody!, function (_err, buff) {
@@ -1106,7 +1131,7 @@ describe("Batch Service Test", () => {
 
     it("should delete file from task successfully", async () => {
       try {
-        const result = await batchClient.file.deleteFromTask(JOB_NAME, TASK2_NAME, "stderr.txt");
+        const result = await batchClient.file.deleteFromTask(recorder.variable("JOB_NAME", JOB_NAME), recorder.variable("TASK2_NAME", TASK2_NAME), "stderr.txt");
       }
       catch (error) {
         console.log(error);
@@ -1118,7 +1143,7 @@ describe("Batch Service Test", () => {
     });
 
     it("should re-list compute nodes successfully", async () => {
-      const result = await batchClient.computeNode.list(BASIC_POOL);
+      const result = await batchClient.computeNode.list(recorder.variable("BASIC_POOL", BASIC_POOL));
 
       let nodeList = [];
 
@@ -1216,7 +1241,7 @@ describe("Batch Service Test", () => {
   });
 
 
-  describe("Task cleanup", async () => {
+  describe.skip("Task cleanup", async () => {
     it("should delete a task successfully", async () => {
       const result = await batchClient.task.delete(JOB_NAME, TASK_NAME);
     });
@@ -1244,6 +1269,7 @@ describe("Batch Service Test", () => {
       }
       catch (error) {
         console.log(error);
+        throw error;
       }
 
     });
@@ -1251,11 +1277,12 @@ describe("Batch Service Test", () => {
 
   describe("Job operations (advanced)", async () => {
     it("should get a job reference successfully", async () => {
-      const result = await batchClient.job.get(JOB_NAME);
+      const jobId = recorder.variable("JOB_NAME", JOB_NAME);
+      const result = await batchClient.job.get(jobId);
 
-      assert.equal(result.id, JOB_NAME);
+      assert.equal(result.id, jobId);
       assert.equal(result.state, "active");
-      assert.equal(result.poolInfo!.poolId, BASIC_POOL);
+      assert.equal(result.poolInfo!.poolId, recorder.variable("BASIC_POOL", BASIC_POOL));
       //assert.equal(result._response.status, 200);
     });
 
@@ -1268,7 +1295,7 @@ describe("Batch Service Test", () => {
 
     it("should fail to job prep+release status", async () => {
       try {
-        const result = await batchClient.job.listPreparationAndReleaseTaskStatus(JOB_NAME).next();
+        const result = await batchClient.job.listPreparationAndReleaseTaskStatus(recorder.variable("JOB_NAME", JOB_NAME)).next();
         assert.fail("Expected error to be thrown");
       } catch (error) {
         assert.equal(error.code, "JobPreparationTaskOrReleaseTaskNotSpecified");
@@ -1276,25 +1303,25 @@ describe("Batch Service Test", () => {
     });
 
     it("should disable a job successfully", async () => {
-      const result = await batchClient.job.disable(JOB_NAME, { disableTasks: "requeue" });
+      const result = await batchClient.job.disable(recorder.variable("JOB_NAME", JOB_NAME), { disableTasks: "requeue" });
 
       //assert.equal(result._response.status, 202);
     });
 
     it("should enable a job successfully", async () => {
-      const result = await batchClient.job.enable(JOB_NAME);
+      const result = await batchClient.job.enable(recorder.variable("JOB_NAME", JOB_NAME));
 
       //assert.equal(result._response.status, 202);
     });
 
     it("should terminate a job successfully", async () => {
-      const result = await batchClient.job.terminate(JOB_NAME);
+      const result = await batchClient.job.terminate(recorder.variable("JOB_NAME", JOB_NAME));
 
       //assert.equal(result._response.status, 202);
     });
 
     it("should delete a job successfully", async function () {
-      const result = await batchClient.job.delete(JOB_NAME);
+      const result = await batchClient.job.delete(recorder.variable("JOB_NAME", JOB_NAME));
 
       //assert.equal(result._response.status, 202);
     })
@@ -1308,7 +1335,7 @@ describe("Batch Service Test", () => {
     });
   });
 
-  describe("Job schedules", async () => {
+  describe.skip("Job schedules", async () => {
     it("should create a job schedule successfully", async () => {
       const options: JobSchedule = {
         id: SCHEDULE,
@@ -1406,7 +1433,7 @@ describe("Batch Service Test", () => {
         nodeList: computeNodes,
         nodeDeallocationOption: "terminate"
       };
-      const result = await batchClient.pool.removeNodes(BASIC_POOL, options, {
+      const result = await batchClient.pool.removeNodes(recorder.variable("BASIC_POOL", BASIC_POOL), options, {
         onResponse: function (rawResponse, flatResponse, error) {
           if (error != null) {
             console.log(error);
@@ -1420,29 +1447,29 @@ describe("Batch Service Test", () => {
 
     });
 
-    it("should delete a pool successfully", async function () {
-      await batchClient.pool.delete(BASIC_POOL);
+    it.only("should delete a pool successfully", async function () {
+      await batchClient.pool.delete(recorder.variable("BASIC_POOL", BASIC_POOL));
     });
 
     it("should delete a second pool successfully", async () => {
-      await batchClient.pool.delete(TEST_POOL3);
+      await batchClient.pool.delete(recorder.variable("TEST_POOL3", TEST_POOL3));
     })
 
     it("should delete a third pool successfully", async () => {
-      const result = await batchClient.pool.delete(ENDPOINT_POOL);
+      const result = await batchClient.pool.delete(recorder.variable("ENDPOINT_POOL", ENDPOINT_POOL));
 
       //assert.equal(result._response.status, 202);
     });
 
     it("should fail to delete a non-existent pool", async () => {
       try {
-        await batchClient.pool.delete(BASIC_POOL);
+        await batchClient.pool.delete(recorder.variable("BASIC_POOL", BASIC_POOL));
       } catch (error: any) {
         assert.equal(error.code, "PoolBeingDeleted");
       }
     });
 
-    it("should delete a certificate successfully", async function () {
+    it.only("should delete a certificate successfully", async function () {
       const result = await batchClient.certificate.delete("sha1", certThumb);
     })
 

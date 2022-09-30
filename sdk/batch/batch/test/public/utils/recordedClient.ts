@@ -5,15 +5,14 @@ import {
   isLiveMode,
   assertEnvironmentVariable
 } from "@azure-tools/test-recorder";
-// import { createXhrHttpClient, isNode } from "@azure/test-utils";
 
-// import { ClientOptions } from "@azure-rest/core-client";
 import { BatchServiceClient } from "../../../src";
 import { BatchServiceClientOptions } from "../../../src/batchServiceClient";
 import { BatchSharedKeyCredentials } from "../../../src/credentials/batchSharedKeyCredentials";
-import { ClientSecretCredential, TokenCredential } from "@azure/identity";
-import { Context, Test } from "mocha";
-import { AdditionalPolicyConfig } from "@azure/core-client";
+import { createTestCredential } from "@azure-tools/test-credential";
+import { Test } from "mocha";
+
+const FAKE_PASSWORD = "fake_password_value";
 
 export interface RecordedBatchClient {
   batchClient: BatchServiceClient,
@@ -46,21 +45,26 @@ export interface RecordedBatchClient {
 
 const recorderOptions: RecorderStartOptions = {
   envSetupForPlayback: {
-    AZURE_BATCH_ENDPOINT: "https://fakebatchaccount.westus.batch.azure.com",
+    AZURE_BATCH_ENDPOINT: "https://dummybatchaccount",
     AZURE_CLIENT_ID: "fake_azure_client_id",
     AZURE_CLIENT_SECRET: "fake_azure_client_secret",
     AZURE_TENANT_ID: "fake_azure_tenant_id",
     AZURE_BATCH_ACCOUNT: "fake_batch_account_name",
     AZURE_BATCH_ACCESS_KEY: "fake_batch_account_key"
   },
-  // sanitizerOptions: {
-  //   bodySanitizers: [
-  //     {
-  //       target: encodeURIComponent(env.TABLES_URL ?? ""),
-  //       value: encodeURIComponent(`https://fakeaccount.table.core.windows.net`),
-  //     },
-  //   ],
-  // },
+  sanitizerOptions: {
+    bodyKeySanitizers: [
+      {
+        jsonPath: "$.userAccounts[0].password",
+        value: FAKE_PASSWORD,
+      },
+      {
+        jsonPath: "$.password",
+        value: FAKE_PASSWORD
+      },
+
+    ],
+  },
 };
 
 export type AuthMethod = "APIKey" | "AAD" | "DummyAPIKey";
@@ -78,7 +82,7 @@ export async function createClient(
 ): Promise<RecordedBatchClient> {
   const recorder = await createRecorder(context);
 
-  let credential: TokenCredential | BatchSharedKeyCredentials;
+  let credential;
   switch (authMethod) {
     case "APIKey": {
       credential = new BatchSharedKeyCredentials(
@@ -88,11 +92,7 @@ export async function createClient(
       break;
     }
     case "AAD": {
-      credential = new ClientSecretCredential(
-        env.AZURE_TENANT_ID!,
-        env.AZURE_CLIENT_ID!,
-        env.AZURE_CLIENT_SECRET!
-      );
+      credential = createTestCredential();
       break;
     }
     // case "DummyAPIKey": {
