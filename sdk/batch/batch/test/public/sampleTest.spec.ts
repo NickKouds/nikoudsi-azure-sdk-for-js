@@ -7,28 +7,28 @@
  */
 
 import {
-  env,
   Recorder,
-  delay,
-  isPlaybackMode,
-  RecorderStartOptions
+  isPlaybackMode
 } from "@azure-tools/test-recorder";
+import { isNode } from "@azure/test-utils";
 import { v4 as uuid } from "uuid";
-import { createClient } from "./utils/recordedClient"
+import { createClient, FAKE_PASSWORD } from "./utils/recordedClient"
 import { assert } from "chai";
-import { BatchServiceClient, BatchServiceClientOptions } from "../../src/batchServiceClient";
+import { BatchServiceClient } from "../../src/batchServiceClient";
 import { wait } from "./utils/wait";
 import { Pool, Certificate, PoolGetOptionalParams, PoolUpdate, JobSchedule, BatchJob, BatchTask, TaskGetResponse, NodeRemoveParameters, PoolEnableAutoScaleParameters, UploadBatchServiceLogsConfiguration } from "../../src/generated/models";
 import { duration } from "moment";
 import moment from "moment";
 import { PagedAsyncIterableIterator } from "@azure/core-paging";
-import { errorMonitor } from "events";
-import { pool } from "../../src/generated/models/parameters";
+
 
 const _SUFFIX = Math.random()
   .toString(16)
   .substr(2, 4);
 
+/**
+ * Helper function to iterate through an AsyncIterable of any model type i.e. Pool, Jobs to append to an array and return
+ */
 async function getListObj(objIterator: PagedAsyncIterableIterator<any>): Promise<Array<any>> {
   let objList = [];
 
@@ -51,7 +51,6 @@ const TEST_POOL3 = getPoolName("3");
 const VNET_POOL = getPoolName("vnet");
 const IMAGE_POOL = getPoolName("image");
 const DISK_POOL = getPoolName("datadisk");
-const ADVANCED_POOL = getPoolName("Advanced");
 const BASIC_POOL_NUM_VMS = 4;
 const JOB_NAME = `JSSDKTestJob-${_SUFFIX}`;
 const TASK_NAME = `${JOB_NAME}-task1`;
@@ -59,11 +58,11 @@ const TASK_UPDATE_OPTIONS = {
   constraints: { maxTaskRetryCount: 3 }
 };
 const TASK2_NAME = `${JOB_NAME}-task2`;
-const SCHEDULE = "JSSDKTestSchedule";
-const TEST_USER = "JSSDKTestSchedule";
+const JOB_SCHEDULE = `JSSDKTestJobSchedule-${_SUFFIX}`;
+const TEST_USER = "JSSDKTestUser";
 const VMSIZE_A1 = "Standard_A1_v2";
 const VMSIZE_D1 = "Standard_D1_v2";
-const VMSIZE_SMALL = "Small";
+const VMSIZE_SMALL = "small";
 
 const POLLING_INTERVAL = 5000;
 const LONG_TEST_TIMEOUT = 1000000;
@@ -110,11 +109,11 @@ describe("Batch Service Test", () => {
 
     });
 
-    it.only("should add new certificate successfully", async () => {
+    it("should add new certificate successfully", async () => {
       const cert: Certificate = {
         thumbprint: certThumb,
         thumbprintAlgorithm: "sha1",
-        password: "nodesdk",
+        password: isPlaybackMode() ? FAKE_PASSWORD : "nodesdk",
         certificateFormat: "pfx",
         data:
           "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"
@@ -158,7 +157,7 @@ describe("Batch Service Test", () => {
   // })
 
   describe("Basic Pool operations", () => {
-    it.only("Create Batch Pool successfully", async function () {
+    it("Create Batch Pool successfully", async function () {
       // Use assert to test your assumptions
 
       const poolParams: Pool = {
@@ -173,11 +172,12 @@ describe("Batch Service Test", () => {
         userAccounts: [
           {
             name: nonAdminPoolUser,
-            password: recorder.variable("POOL_USER_ACCOUNT_PASSWORD", "dummyPlaceHolderPassword"),
+            password: isPlaybackMode() ? FAKE_PASSWORD : uuid(),
             elevationLevel: "nonadmin"
           }
         ]
       }
+      //recorder.variable("POOL_USER_ACCOUNT_PASSWORD", "dummyPlaceHolderPassword"
 
       try {
         const result = await batchClient.pool.add(poolParams);
@@ -413,9 +413,17 @@ describe("Batch Service Test", () => {
         targetDedicatedNodes: 1
       };
 
-      const result = await batchClient.pool.add(pool);
+      const result = await batchClient.pool.add(pool, {
+        onResponse: function (rawResponse, flatResponse, error) {
+          if (error != null) {
+            throw error;
+          }
+          else {
+            assert.equal(rawResponse.status, 201);
+          }
+        }
+      });
 
-      //assert.equal(result._response.status, 201);
     });
 
     it("should get the details of a pool with endpoint configuration successfully", async () => {
@@ -457,13 +465,9 @@ describe("Batch Service Test", () => {
         }
       }
 
-      //assert.equal(result._response.status, 200);
-
-      // const endpointPoolObj = result.filter(pool => pool.poolId == ENDPOINT_POOL);
-
-      // assert.isAbove(endpointPoolObj.length, 0, `Pool with Pool Id ${ENDPOINT_POOL} not found`);
-
-      // assert.equal(endpointPoolObj[0].dedicated!.idle, 1);
+      const endpointPoolObj = result.filter(pool => pool.poolId == ENDPOINT_POOL);
+      assert.isAbove(endpointPoolObj.length, 0, `Pool with Pool Id ${ENDPOINT_POOL} not found`);
+      assert.equal(endpointPoolObj[0].dedicated!.idle, 1);
       assert.equal(endpointPool[0].lowPriority!.total, 0);
 
     }).timeout(LONG_TEST_TIMEOUT);
@@ -510,37 +514,64 @@ describe("Batch Service Test", () => {
     }).timeout(LONG_TEST_TIMEOUT);
 
     it("should get a compute node reference", async () => {
-      const result = await batchClient.computeNode.get(recorder.variable("BASIC_POOL", BASIC_POOL), computeNodes[0]);
+      const result = await batchClient.computeNode.get(recorder.variable("BASIC_POOL", BASIC_POOL), computeNodes[0], {
+        onResponse: function (rawResponse, flatResponse, error) {
+          if (error != null) {
+            throw error;
+          }
+          else {
+            assert.equal(rawResponse.status, 200);
+          }
+        }
+      });
       assert.equal(result.id, computeNodes[0]);
       assert.equal(result.state, "idle");
       assert.equal(result.schedulingState, "enabled");
-      //assert.equal(result._response.status, 200);
     });
 
     it("should add a user to a compute node successfully", async () => {
-      const options = { name: TEST_USER, isAdmin: false, password: "kt#_gahr!@aGERDXA" };
-      const result = await batchClient.computeNode.addUser(recorder.variable("BASIC_POOL", BASIC_POOL), computeNodes[0], options);
+      const options = { name: TEST_USER, isAdmin: false, password: isPlaybackMode() ? FAKE_PASSWORD : uuid() };
+      const result = await batchClient.computeNode.addUser(recorder.variable("BASIC_POOL", BASIC_POOL), computeNodes[0], options, {
+        onResponse: function (rawResponse, flatResponse, error) {
+          if (error != null) {
+            throw error;
+          }
+          else {
+            assert.equal(rawResponse.status, 201);
+          }
+        }
+      });
 
-      //assert.equal(result._response.status, 201);
     });
 
     it("should update a compute node user successfully", async () => {
-      const options = { password: "liilef#$DdRGSa_ewkjh" };
+      const options = { password: isPlaybackMode() ? FAKE_PASSWORD : uuid() };
       const result = await batchClient.computeNode.updateUser(
         recorder.variable("BASIC_POOL", BASIC_POOL),
         computeNodes[0],
         TEST_USER,
-        options
+        options, {
+        onResponse: function (rawResponse, flatResponse, error) {
+          if (error != null) {
+            throw error;
+          }
+          else {
+            assert.equal(rawResponse.status, 200);
+          }
+        }
+      }
       );
 
-      //assert.equal(result._response.status, 200);
     });
 
-    it("should get a remote desktop file successfully", (done) => {
+    it("should get a remote desktop file successfully", (done: Mocha.Done) => {
+      if (!isNode) {
+        done();   //If this test is ran through the browser, mark as done as since the intention is to extract from a NODE.js readable stream
+      }
+
       batchClient.computeNode
         .getRemoteDesktop(recorder.variable("BASIC_POOL", BASIC_POOL), computeNodes[0])
         .then((result) => {
-          //assert.equal(result._response.status, 200);
           readStreamToBuffer(result.readableStreamBody!, function (_err, buff) {
             assert.isAtLeast(buff.length, 1);
             done();
@@ -552,16 +583,32 @@ describe("Batch Service Test", () => {
     });
 
     it("should delete a compute node user successfully", async () => {
-      const result = await batchClient.computeNode.deleteUser(recorder.variable("BASIC_POOL", BASIC_POOL), computeNodes[0], TEST_USER);
+      const result = await batchClient.computeNode.deleteUser(recorder.variable("BASIC_POOL", BASIC_POOL), computeNodes[0], TEST_USER, {
+        onResponse: function (rawResponse, flatResponse, error) {
+          if (error != null) {
+            throw error;
+          }
+          else {
+            assert.equal(rawResponse.status, 200);
+          }
+        }
+      });
 
-      //assert.equal(result._response.status, 200);
     });
 
     it("should disable scheduling on a compute node successfully", async () => {
       while (true) {
         try {
-          const result = await batchClient.computeNode.disableScheduling(recorder.variable("BASIC_POOL", BASIC_POOL), computeNodes[1]);
-          //assert.equal(result._response.status, 200);
+          const result = await batchClient.computeNode.disableScheduling(recorder.variable("BASIC_POOL", BASIC_POOL), computeNodes[1], {
+            onResponse: function (rawResponse, flatResponse, error) {
+              if (error != null) {
+                throw error;
+              }
+              else {
+                assert.equal(rawResponse.status, 200);
+              }
+            }
+          });
           break;
         } catch (e: any) {
           if (e.code === "NodeNotReady") {
@@ -574,21 +621,45 @@ describe("Batch Service Test", () => {
     });
 
     it("should enable scheduling on a compute node successfully", async () => {
-      const result = await batchClient.computeNode.enableScheduling(recorder.variable("BASIC_POOL", BASIC_POOL), computeNodes[1]);
+      const result = await batchClient.computeNode.enableScheduling(recorder.variable("BASIC_POOL", BASIC_POOL), computeNodes[1], {
+        onResponse: function (rawResponse, flatResponse, error) {
+          if (error != null) {
+            throw error;
+          }
+          else {
+            assert.equal(rawResponse.status, 200);
+          }
+        }
+      });
 
-      //assert.equal(result._response.status, 200);
     });
 
     it("should reboot a compute node successfully", async () => {
-      const result = await batchClient.computeNode.reboot(recorder.variable("BASIC_POOL", BASIC_POOL), computeNodes[0]);
+      const result = await batchClient.computeNode.reboot(recorder.variable("BASIC_POOL", BASIC_POOL), computeNodes[0], {
+        onResponse: function (rawResponse, flatResponse, error) {
+          if (error != null) {
+            throw error;
+          }
+          else {
+            assert.equal(rawResponse.status, 202);
+          }
+        }
+      });
 
-      //assert.equal(result._response.status, 202);
     });
 
     it("should reimage a compute node successfully", async () => {
-      const result = await batchClient.computeNode.reimage(recorder.variable("BASIC_POOL", BASIC_POOL), computeNodes[1]);
+      const result = await batchClient.computeNode.reimage(recorder.variable("BASIC_POOL", BASIC_POOL), computeNodes[1], {
+        onResponse: function (rawResponse, flatResponse, error) {
+          if (error != null) {
+            throw error;
+          }
+          else {
+            assert.equal(rawResponse.status, 202);
+          }
+        }
+      });
 
-      //assert.equal(result._response.status, 202);
     });
 
     it("should upload pool node logs at paas pool", async () => {
@@ -600,50 +671,93 @@ describe("Batch Service Test", () => {
       const result = await batchClient.computeNode.uploadBatchServiceLogs(
         recorder.variable("BASIC_POOL", BASIC_POOL),
         computeNodes[2],
-        config
+        config, {
+        onResponse: function (rawResponse, flatResponse, error) {
+          if (error != null) {
+            throw error;
+          }
+          else {
+            assert.equal(rawResponse.status, 200);
+          }
+        }
+      }
       );
 
-      //assert.equal(result._response.status, 200);
       assert.isAtLeast(result.numberOfFilesUploaded, 1);
     });
   });
 
-  describe.skip("Autoscale operations", async () => {
+  describe("Autoscale operations", async () => {
     it("should enable autoscale successfully", async () => {
       const model: PoolEnableAutoScaleParameters = {
         autoScaleFormula: "$TargetDedicatedNodes=2",
         autoScaleEvaluationInterval: duration({ minutes: 6 }).toISOString()
       };
 
-      const result = await batchClient.pool.enableAutoScale(recorder.variable("BASIC_POOL", BASIC_POOL), model);
+      const result = await batchClient.pool.enableAutoScale(recorder.variable("BASIC_POOL", BASIC_POOL), model, {
+        onResponse: function (rawResponse, flatResponse, error) {
+          if (error != null) {
+            throw error;
+          }
+          else {
+            assert.equal(rawResponse.status, 200);
+          }
+        }
+      });
 
-      //assert.equal(result._response.status, 200);
     });
 
     it("should evaluate pool autoscale successfully", async () => {
-      const result = await batchClient.pool.evaluateAutoScale(recorder.variable("BASIC_POOL", BASIC_POOL), { autoScaleFormula: "$TargetDedicatedNodes=3" });
+      const result = await batchClient.pool.evaluateAutoScale(recorder.variable("BASIC_POOL", BASIC_POOL), { autoScaleFormula: "$TargetDedicatedNodes=3" }, {
+        onResponse: function (rawResponse, flatResponse, error) {
+          if (error != null) {
+            throw error;
+          }
+          else {
+            assert.equal(rawResponse.status, 200);
+          }
+        }
+      });
 
       assert.equal(
         result.results,
         "$TargetDedicatedNodes=3;$TargetLowPriorityNodes=0;$NodeDeallocationOption=requeue"
       );
-      //assert.equal(result._response.status, 200);
     });
 
     it("should fail to evaluate invalid autoscale formula", async () => {
-      const result = await batchClient.pool.evaluateAutoScale(recorder.variable("BASIC_POOL", BASIC_POOL), { autoScaleFormula: "something_useless" });
+      const result = await batchClient.pool.evaluateAutoScale(recorder.variable("BASIC_POOL", BASIC_POOL), { autoScaleFormula: "something_useless" }, {
+        onResponse: function (rawResponse, flatResponse, error) {
+          if (error != null) {
+            throw error;
+          }
+          else {
+            assert.equal(rawResponse.status, 200);
+          }
+        }
+      });
+      assert.isDefined(result.error);
+      assert.equal(result.error?.code, "AutoScalingFormulaEvaluationError");
 
       assert.equal(
         result.results,
         "$TargetDedicatedNodes=2;$TargetLowPriorityNodes=0;$NodeDeallocationOption=requeue"
       );
-      //assert.equal(result._response.status, 200);
+
     });
 
     it("should disable autoscale successfully", async () => {
-      const result = await batchClient.pool.disableAutoScale(recorder.variable("BASIC_POOL", BASIC_POOL));
+      const result = await batchClient.pool.disableAutoScale(recorder.variable("BASIC_POOL", BASIC_POOL), {
+        onResponse: function (rawResponse, flatResponse, error) {
+          if (error != null) {
+            throw error;
+          }
+          else {
+            assert.equal(rawResponse.status, 200);
+          }
+        }
+      });
 
-      //assert.equal(result._response.status, 200);
     });
   });
 
@@ -654,42 +768,47 @@ describe("Batch Service Test", () => {
         vmSize: VMSIZE_SMALL,
         cloudServiceConfiguration: { osFamily: "4" }
       };
-      const result = await batchClient.pool.add(pool);
-      //assert.equal(result._response.status, 201);
+      const result = await batchClient.pool.add(pool, {
+        onResponse: function (rawResponse, flatResponse, error) {
+          if (error != null) {
+            throw error;
+          }
+          else {
+            assert.equal(rawResponse.status, 201);
+          }
+        }
+      });
+
     });
 
     it("should list pools without filters", async () => {
-      const listResult = await batchClient.pool.list();
+      const listResult = await batchClient.pool.list({
+        onResponse: function (rawResponse, flatResponse, error) {
+          if (error != null) {
+            throw error;
+          }
+          else {
+            assert.equal(rawResponse.status, 200);
+          }
+        }
+      });
       const poolCount = await (await getListObj(listResult)).length;
 
       assert.isAtLeast(poolCount, 2);
-      //assert.equal(result._response.status, 200);
     });
 
-    it.skip("should list a maximum number of pools", async () => {
-      try {
-        const options = { poolListOptions: { maxResults: 1 } };
-        let listResultIterator = await batchClient.pool.list(options);
+    it.only("should list a maximum number of pools", async () => {
+      const options = { poolListOptions: { maxResults: 1 } };
+      let listResultIterator = await batchClient.pool.list(options);
 
-        let poolCounter = 0;
-        for await (const pool of listResultIterator) {
-          ++poolCounter;
-        }
-
-
-        assert.equal(poolCounter, 1);
-      }
-      catch (error) {
-        console.log(error);
-        throw error;
+      let poolCounter = 0;
+      for await (const pool of listResultIterator) {
+        ++poolCounter;
+        //if (poolCounter == options.poolListOptions.maxResults) break;
       }
 
+      assert.equal(poolCounter, options.poolListOptions.maxResults);
 
-      //assert.equal(result._response.status, 200);
-      //result = await client.pool.listNext(result.odatanextLink!);
-
-      // assert.lengthOf(result, 1);
-      // assert.equal(result._response.status, 200);
     });
 
     it("should fail to list pools with invalid max", async () => {
@@ -711,6 +830,13 @@ describe("Batch Service Test", () => {
           filter: `startswith(id,'${poolId}')`,
           select: "id,state",
           expand: "stats"
+        }, onResponse: function (rawResponse: any, flatResponse: any, error: any) {
+          if (error != null) {
+            throw error;
+          }
+          else {
+            assert.equal(rawResponse.status, 200);
+          }
         }
       };
       const resultListIterator = await batchClient.pool.list(options);
@@ -721,7 +847,6 @@ describe("Batch Service Test", () => {
       assert.equal(listOfPools[0].state, "active");
       assert.isUndefined(listOfPools[0].allocationState);
       assert.isUndefined(listOfPools[0].vmSize);
-      //assert.equal(result._response.status, 200);
     });
 
     it("should check that pool exists successfully", async () => {
@@ -746,7 +871,16 @@ describe("Batch Service Test", () => {
         }
 
         const options = { targetDedicatedNodes: 3, targetLowPriorityNodes: 2 };
-        const result = await batchClient.pool.resize(poolId, options);
+        const result = await batchClient.pool.resize(poolId, options, {
+          onResponse: function (rawResponse, flatResponse, error) {
+            if (error != null) {
+              throw error;
+            }
+            else {
+              assert.equal(rawResponse.status, 202);
+            }
+          }
+        });
 
       }
       catch (error) {
@@ -754,36 +888,51 @@ describe("Batch Service Test", () => {
         throw error;
       }
 
-      //assert.equal(result._response.status, 202);
     });
 
     it("should stop pool resizing successfully", async () => {
-      try {
-        const result = await batchClient.pool.stopResize(recorder.variable("TEST_POOL3", TEST_POOL3));
-      }
-      catch (error) {
-        console.log(error);
-        throw error;
-      }
-
-
-      //assert.equal(result._response.status, 202);
+      const result = await batchClient.pool.stopResize(recorder.variable("TEST_POOL3", TEST_POOL3), {
+        onResponse: function (rawResponse, flatResponse, error) {
+          if (error != null) {
+            throw error;
+          }
+          else {
+            assert.equal(rawResponse.status, 202);
+          }
+        }
+      });
     });
 
     it("should get pool lifetime statistics", async () => {
-      const result = await batchClient.pool.getAllLifetimeStatistics();
+      const result = await batchClient.pool.getAllLifetimeStatistics({
+        onResponse: function (rawResponse, flatResponse, error) {
+          if (error != null) {
+            throw error;
+          }
+          else {
+            assert.equal(rawResponse.status, 200);
+          }
+        }
+      });
 
       assert.isDefined(result.usageStats);
       assert.isDefined(result.resourceStats);
-      //assert.equal(result._response.status, 200);
     });
 
     it("should list pools usage metrics", async () => {
-      const listUsageIterator = await batchClient.pool.listUsageMetrics();
+      const listUsageIterator = await batchClient.pool.listUsageMetrics({
+        onResponse: function (rawResponse, flatResponse, error) {
+          if (error != null) {
+            throw error;
+          }
+          else {
+            assert.equal(rawResponse.status, 200);
+          }
+        }
+      });
       const poolUsageList = await getListObj(listUsageIterator);
 
       assert.isAtLeast(poolUsageList.length, 1);
-      //assert.equal(result._response.status, 200);
     });
   });
 
@@ -792,7 +941,16 @@ describe("Batch Service Test", () => {
       const jobId = recorder.variable("JOB_NAME", JOB_NAME);
       const poolId = recorder.variable("BASIC_POOL", BASIC_POOL);
       const options = { id: jobId, poolInfo: { poolId: poolId } };
-      const result = await batchClient.job.add(options);
+      const result = await batchClient.job.add(options, {
+        onResponse: function (rawResponse, flatResponse, error) {
+          if (error != null) {
+            throw error;
+          }
+          else {
+            assert.equal(rawResponse.status, 201);
+          }
+        }
+      });
 
       const getResult = await batchClient.job.get(jobId);
       assert.equal(getResult.state, "active");
@@ -808,13 +966,7 @@ describe("Batch Service Test", () => {
         poolInfo: { poolId: recorder.variable("BASIC_POOL", BASIC_POOL) }
       };
 
-      try {
-        const result = await batchClient.job.update(recorder.variable("JOB_NAME", JOB_NAME), options);
-      }
-      catch (error) {
-        console.log(error);
-        throw error
-      }
+      const result = await batchClient.job.update(recorder.variable("JOB_NAME", JOB_NAME), options);
 
     });
 
@@ -824,9 +976,17 @@ describe("Batch Service Test", () => {
         constraints: { maxTaskRetryCount: 3 },
         poolInfo: { poolId: recorder.variable("BASIC_POOL", BASIC_POOL) }
       };
-      const result = await batchClient.job.update(recorder.variable("JOB_NAME", JOB_NAME), options);
+      const result = await batchClient.job.update(recorder.variable("JOB_NAME", JOB_NAME), options, {
+        onResponse: function (rawResponse, flatResponse, error) {
+          if (error != null) {
+            throw error;
+          }
+          else {
+            assert.equal(rawResponse.status, 200);
+          }
+        }
+      });
 
-      //assert.equal(result._response.status, 200);
     });
 
   });
@@ -840,18 +1000,23 @@ describe("Batch Service Test", () => {
         commandLine: "cat /etc/centos-release",
         containerSettings: { imageName: "centos" }
       };
-      try {
-        const result2 = await batchClient.task.add(jobId, taskSettings);
-        const getResult = await batchClient.task.get(jobId, taskSettings.id);
-        assert.equal(getResult.containerSettings?.imageName, taskSettings.containerSettings.imageName);
-        assert.equal(getResult.commandLine, taskSettings.commandLine);
 
-        await batchClient.task.delete(jobId, taskSettings.id);
-      }
-      catch (error) {
-        console.log(error);
-        throw error;
-      }
+      const result2 = await batchClient.task.add(jobId, taskSettings, {
+        onResponse: function (rawResponse, flatResponse, error) {
+          if (error != null) {
+            throw error;
+          }
+          else {
+            assert.equal(rawResponse.status, 201);
+          }
+        }
+      });
+
+      const getResult = await batchClient.task.get(jobId, taskSettings.id);
+      assert.equal(getResult.containerSettings?.imageName, taskSettings.containerSettings.imageName);
+      assert.equal(getResult.commandLine, taskSettings.commandLine);
+
+      await batchClient.task.delete(jobId, taskSettings.id);
 
     });
 
@@ -903,7 +1068,6 @@ describe("Batch Service Test", () => {
         assert.equal(result3.exitConditions!.exitCodes![0].exitOptions.dependencyAction, "block");
       }
       catch (error) {
-        console.log(error);
         throw error;
       }
       finally {
@@ -918,7 +1082,16 @@ describe("Batch Service Test", () => {
         id: recorder.variable("TASK_NAME", TASK_NAME),
         commandLine: "cmd /c echo hello > taskHello.txt"
       };
-      const result = await batchClient.task.add(recorder.variable("JOB_NAME", JOB_NAME), task);
+      const result = await batchClient.task.add(recorder.variable("JOB_NAME", JOB_NAME), task, {
+        onResponse: function (rawResponse, flatResponse, error) {
+          if (error != null) {
+            throw error;
+          }
+          else {
+            assert.equal(rawResponse.status, 201);
+          }
+        }
+      });
     });
 
     it("should terminate a task successfully", async () => {
@@ -964,7 +1137,16 @@ describe("Batch Service Test", () => {
     });
 
     it("should list all tasks successfully", async () => {
-      const result = await batchClient.task.list(recorder.variable("JOB_NAME", JOB_NAME));
+      const result = await batchClient.task.list(recorder.variable("JOB_NAME", JOB_NAME), {
+        onResponse: function (rawResponse, flatResponse, error) {
+          if (error != null) {
+            throw error;
+          }
+          else {
+            assert.equal(rawResponse.status, 200);
+          }
+        }
+      });
       var taskCounter = 0;
 
       for await (const item of result) {
@@ -995,16 +1177,10 @@ describe("Batch Service Test", () => {
           }
         ]
       };
-      try {
-        const result1 = await batchClient.task.add(jobId, task);
-        const result2 = await batchClient.task.get(jobId, task.id);
-        assert.isDefined(result2.applicationPackageReferences);
-      }
-      catch (error) {
-        console.log(error);
-        throw error;
-      }
 
+      const result1 = await batchClient.task.add(jobId, task);
+      const result2 = await batchClient.task.get(jobId, task.id);
+      assert.isDefined(result2.applicationPackageReferences);
     });
 
     it("should create a task with authentication token settings successfully", async () => {
@@ -1074,51 +1250,58 @@ describe("Batch Service Test", () => {
 
   });
 
-  describe.skip("File operations", async () => {
+  describe("File operations", async () => {
     it("should list files from task successfully", async () => {
-      try {
-        let result: TaskGetResponse;
-        const jobId = recorder.variable("JOB_NAME", JOB_NAME);
-        const taskId = recorder.variable("TASK2_NAME", TASK2_NAME);
-        while (true) {
-          result = await batchClient.task.get(jobId, taskId);
-          if (result.executionInfo !== undefined && result.executionInfo.result != undefined) {
-            break;
-          } else {
-            await wait(POLLING_INTERVAL * 2);
+      let result: TaskGetResponse;
+      const jobId = recorder.variable("JOB_NAME", JOB_NAME);
+      const taskId = recorder.variable("TASK2_NAME", TASK2_NAME);
+      while (true) {
+        result = await batchClient.task.get(jobId, taskId, {
+          onResponse: function (rawResponse, flatResponse, error) {
+            if (error != null) {
+              throw error;
+            }
+            else {
+              assert.equal(rawResponse.status, 200);
+            }
           }
+        });
+        if (result.executionInfo !== undefined && result.executionInfo.result != undefined) {
+          break;
+        } else {
+          await wait(POLLING_INTERVAL * 2);
         }
-
-        const result2 = await batchClient.file.listFromTask(jobId, taskId);
-        var fileCountList = await getListObj(result2);
-        assert.isAtLeast(fileCountList.length, 1);
-      }
-      catch (error) {
-        console.log(error);
-        throw error;
       }
 
-      //assert.equal(result._response.status, 200);
+      const result2 = await batchClient.file.listFromTask(jobId, taskId);
+      var fileCountList = await getListObj(result2);
+      assert.isAtLeast(fileCountList.length, 1);
+
     });
 
     it("should get file properties from task successfully", async () => {
-      try {
-        const result = await batchClient.file.getPropertiesFromTask(recorder.variable("JOB_NAME", JOB_NAME), recorder.variable("TASK2_NAME", TASK2_NAME), "stderr.txt");
-      }
-      catch (error) {
-        console.log(error);
-        throw error;
-      }
 
+      const result = await batchClient.file.getPropertiesFromTask(recorder.variable("JOB_NAME", JOB_NAME), recorder.variable("TASK2_NAME", TASK2_NAME), "stderr.txt", {
+        onResponse: function (rawResponse, flatResponse, error) {
+          if (error != null) {
+            throw error;
+          }
+          else {
+            assert.equal(rawResponse.status, 200);
+          }
+        }
+      });
 
-      //assert.equal(result._response.status, 200);
     });
 
     it("should get file from task successfully", (done) => {
+      if (!isNode) {
+        done();     //If this test is ran through the browser, mark as done as since the intention is to extract from a NODE.js readable stream
+      }
+
       batchClient.file
         .getFromTask(recorder.variable("JOB_NAME", JOB_NAME), recorder.variable("TASK2_NAME", TASK2_NAME), "stdout.txt")
         .then((result) => {
-          //assert.equal(result._response.status, 200);
           readStreamToBuffer(result.readableStreamBody!, function (_err, buff) {
             assert.isAtLeast(buff.length, 1);
             done();
@@ -1130,16 +1313,16 @@ describe("Batch Service Test", () => {
     });
 
     it("should delete file from task successfully", async () => {
-      try {
-        const result = await batchClient.file.deleteFromTask(recorder.variable("JOB_NAME", JOB_NAME), recorder.variable("TASK2_NAME", TASK2_NAME), "stderr.txt");
-      }
-      catch (error) {
-        console.log(error);
-        throw error;
-      }
-
-
-      //assert.equal(result._response.status, 200);
+      const result = await batchClient.file.deleteFromTask(recorder.variable("JOB_NAME", JOB_NAME), recorder.variable("TASK2_NAME", TASK2_NAME), "stderr.txt", {
+        onResponse: function (rawResponse, flatResponse, error) {
+          if (error != null) {
+            throw error;
+          }
+          else {
+            assert.equal(rawResponse.status, 200);
+          }
+        }
+      });
     });
 
     it("should re-list compute nodes successfully", async () => {
@@ -1171,47 +1354,61 @@ describe("Batch Service Test", () => {
       try {
         let computeNodeToQuery = computeNodes[1];
         let computeNodeStatusResult;
+        const poolId = recorder.variable("BASIC_POOL", BASIC_POOL);
         while (true) {
-          computeNodeStatusResult = await batchClient.computeNode.get(BASIC_POOL, computeNodeToQuery)
+          computeNodeStatusResult = await batchClient.computeNode.get(poolId, computeNodeToQuery, {
+            onResponse: function (rawResponse, flatResponse, error) {
+              if (error != null) {
+                throw error;
+              }
+              else {
+                assert.equal(rawResponse.status, 200);
+              }
+            }
+          })
+
           if (computeNodeStatusResult.state === "idle") {
             break;
           } else {
             await wait(POLLING_INTERVAL * 2);
           }
         }
-        const result = await batchClient.file.listFromComputeNode(BASIC_POOL, computeNodeToQuery);
+        const result = await batchClient.file.listFromComputeNode(poolId, computeNodeToQuery);
         const fileList = await getListObj(result);
         assert.isAtLeast(fileList.length, 1);
       }
       catch (exception) {
-        console.log(exception);
         throw exception;
       }
-      //assert.equal(result._response.status, 200);
     }).timeout(LONG_TEST_TIMEOUT);
 
     it("should get file properties from node successfully", async () => {
-      try {
-        const result = await batchClient.file.getPropertiesFromComputeNode(
-          BASIC_POOL,
-          computeNodes[1],
-          "startup/wd/hello.txt"
-        );
-      }
-      catch (exception) {
-        console.log(exception);
-        throw exception;
-      }
 
+      const result = await batchClient.file.getPropertiesFromComputeNode(
+        recorder.variable("BASIC_POOL", BASIC_POOL),
+        computeNodes[1],
+        "startup/wd/hello.txt", {
+        onResponse: function (rawResponse, flatResponse, error) {
+          if (error != null) {
+            throw error;
+          }
+          else {
+            assert.equal(rawResponse.status, 200);
+          }
+        }
+      }
+      );
 
-      //assert.equal(result._response.status, 200);
     });
 
     it("should get file from node successfully", (done) => {
+      if (!isNode) {
+        done();     //If this test is ran through the browser, mark as done as since the intention is to extract from a NODE.js readable stream
+      }
+
       batchClient.file
-        .getFromComputeNode(BASIC_POOL, computeNodes[1], "startup/wd/hello.txt")
+        .getFromComputeNode(recorder.variable("BASIC_POOL", BASIC_POOL), computeNodes[1], "startup/wd/hello.txt")
         .then((result) => {
-          //assert.equal(result._response.status, 200);
           readStreamToBuffer(result.readableStreamBody!, function (_err, buff) {
             assert.isAtLeast(buff.length, 1);
             done();
@@ -1223,31 +1420,34 @@ describe("Batch Service Test", () => {
     });
 
     it("should delete file from node successfully", async () => {
-      try {
-        const result = await batchClient.file.deleteFromComputeNode(
-          BASIC_POOL,
-          computeNodes[1],
-          "startup/wd/hello.txt"
-        );
-      }
-      catch (exception) {
-        console.log(exception);
-        throw exception;
-      }
 
+      const result = await batchClient.file.deleteFromComputeNode(
+        recorder.variable("BASIC_POOL", BASIC_POOL),
+        computeNodes[1],
+        "startup/wd/hello.txt", {
+        onResponse: function (rawResponse, flatResponse, error) {
+          if (error != null) {
+            throw error;
+          }
+          else {
+            assert.equal(rawResponse.status, 200);
+          }
+        }
+      }
+      );
 
-      //assert.equal(result._response.status, 200);
     });
   });
 
 
-  describe.skip("Task cleanup", async () => {
+  describe("Task cleanup", async () => {
     it("should delete a task successfully", async () => {
-      const result = await batchClient.task.delete(JOB_NAME, TASK_NAME);
+      const result = await batchClient.task.delete(recorder.variable("JOB_NAME", JOB_NAME), recorder.variable("TASK_NAME", TASK_NAME));
     });
 
     it("should add a task with an application package reference successfully", async () => {
       const taskId = "ApplicationPacakgeReferenceTask";
+      const jobId = recorder.variable("JOB_NAME", JOB_NAME);
       const task = {
         id: taskId,
         commandLine: "cmd /c echo hello world",
@@ -1257,40 +1457,50 @@ describe("Batch Service Test", () => {
           }
         ]
       };
-      const result1 = await batchClient.task.add(JOB_NAME, task);
+      const result1 = await batchClient.task.add(jobId, task);
 
-      const result2 = await batchClient.task.get(JOB_NAME, taskId);
+      const result2 = await batchClient.task.get(jobId, taskId);
       assert.isDefined(result2.applicationPackageReferences);
     });
 
     it("should delete a second task successfully", async () => {
-      try {
-        const result = await batchClient.task.delete(JOB_NAME, TASK2_NAME);
-      }
-      catch (error) {
-        console.log(error);
-        throw error;
-      }
-
+      const result = await batchClient.task.delete(recorder.variable("JOB_NAME", JOB_NAME), recorder.variable("TASK2_NAME", TASK2_NAME));
     });
   });
 
   describe("Job operations (advanced)", async () => {
     it("should get a job reference successfully", async () => {
       const jobId = recorder.variable("JOB_NAME", JOB_NAME);
-      const result = await batchClient.job.get(jobId);
+      const result = await batchClient.job.get(jobId, {
+        onResponse: function (rawResponse, flatResponse, error) {
+          if (error != null) {
+            throw error;
+          }
+          else {
+            assert.equal(rawResponse.status, 200);
+          }
+        }
+      });
 
       assert.equal(result.id, jobId);
       assert.equal(result.state, "active");
       assert.equal(result.poolInfo!.poolId, recorder.variable("BASIC_POOL", BASIC_POOL));
-      //assert.equal(result._response.status, 200);
     });
 
     it("should list jobs successfully", async () => {
-      const result = await batchClient.job.list();
+      const result = await batchClient.job.list({
+        onResponse: function (rawResponse, flatResponse, error) {
+          if (error != null) {
+            throw error;
+          }
+          else {
+            assert.equal(rawResponse.status, 200);
+          }
+        }
+      });
+
       const jobList = await getListObj(result);
       assert.isAtLeast(jobList.length, 1);
-      //assert.equal(result._response.status, 200);
     });
 
     it("should fail to job prep+release status", async () => {
@@ -1303,55 +1513,98 @@ describe("Batch Service Test", () => {
     });
 
     it("should disable a job successfully", async () => {
-      const result = await batchClient.job.disable(recorder.variable("JOB_NAME", JOB_NAME), { disableTasks: "requeue" });
-
-      //assert.equal(result._response.status, 202);
+      const result = await batchClient.job.disable(recorder.variable("JOB_NAME", JOB_NAME), { disableTasks: "requeue" }, {
+        onResponse: function (rawResponse, flatResponse, error) {
+          if (error != null) {
+            throw error;
+          }
+          else {
+            assert.equal(rawResponse.status, 202);
+          }
+        }
+      });
     });
 
     it("should enable a job successfully", async () => {
-      const result = await batchClient.job.enable(recorder.variable("JOB_NAME", JOB_NAME));
-
-      //assert.equal(result._response.status, 202);
+      const result = await batchClient.job.enable(recorder.variable("JOB_NAME", JOB_NAME), {
+        onResponse: function (rawResponse, flatResponse, error) {
+          if (error != null) {
+            throw error;
+          }
+          else {
+            assert.equal(rawResponse.status, 202);
+          }
+        }
+      });
     });
 
     it("should terminate a job successfully", async () => {
-      const result = await batchClient.job.terminate(recorder.variable("JOB_NAME", JOB_NAME));
-
-      //assert.equal(result._response.status, 202);
+      const result = await batchClient.job.terminate(recorder.variable("JOB_NAME", JOB_NAME), {
+        onResponse: function (rawResponse, flatResponse, error) {
+          if (error != null) {
+            throw error;
+          }
+          else {
+            assert.equal(rawResponse.status, 202);
+          }
+        }
+      });
     });
 
     it("should delete a job successfully", async function () {
-      const result = await batchClient.job.delete(recorder.variable("JOB_NAME", JOB_NAME));
-
-      //assert.equal(result._response.status, 202);
+      const result = await batchClient.job.delete(recorder.variable("JOB_NAME", JOB_NAME), {
+        onResponse: function (rawResponse, flatResponse, error) {
+          if (error != null) {
+            throw error;
+          }
+          else {
+            assert.equal(rawResponse.status, 202);
+          }
+        }
+      });
     })
 
     it("should get all job statistics successfully", async () => {
-      const result = await batchClient.job.getAllLifetimeStatistics();
+      const result = await batchClient.job.getAllLifetimeStatistics({
+        onResponse: function (rawResponse, flatResponse, error) {
+          if (error != null) {
+            throw error;
+          }
+          else {
+            assert.equal(rawResponse.status, 200);
+          }
+        }
+      });
 
       assert.isDefined(result.userCPUTime);
       assert.isDefined(result.kernelCPUTime);
-      //assert.equal(result._response.status, 200);
     });
   });
 
-  describe.skip("Job schedules", async () => {
+  describe("Job schedules", async () => {
     it("should create a job schedule successfully", async () => {
       const options: JobSchedule = {
-        id: SCHEDULE,
+        id: recorder.variable("JOB_SCHEDULE", JOB_SCHEDULE),
         jobSpecification: {
-          displayName: JOB_NAME,
-          poolInfo: { poolId: BASIC_POOL }
+          displayName: recorder.variable("JOB_NAME", JOB_NAME),
+          poolInfo: { poolId: recorder.variable("BASIC_POOL", BASIC_POOL) }
         },
         schedule: {
-          doNotRunUntil: moment().add(3, "days").toDate(),
+          doNotRunUntil: new Date(recorder.variable("JOB_SCHEDULE_RUN_DATE", moment().add(3, "days").toISOString())),
           startWindow: duration({ minutes: 6 }).toISOString()
         }
       };
 
-      const result = await batchClient.jobSchedule.add(options);
-
-      //assert.equal(result._response.status, 201);
+      const result = await batchClient.jobSchedule.add(options, {
+        onResponse: function (rawResponse, flatResponse, error) {
+          if (error != null) {
+            throw error;
+          }
+          else {
+            assert.equal(rawResponse.status, 201);
+          }
+        }
+      });
     });
 
     it("should list job schedules successfully", async () => {
@@ -1361,32 +1614,40 @@ describe("Batch Service Test", () => {
     });
 
     it("should list jobs from job schedule successfully", async () => {
-      const result = await batchClient.job.listFromJobSchedule(SCHEDULE);
+      const result = await batchClient.job.listFromJobSchedule(recorder.variable("JOB_SCHEDULE", JOB_SCHEDULE));
       const jobList = await getListObj(result);
       assert.equal(jobList.length, 0);
     });
 
     it("should check if a job schedule exists successfully", async () => {
-      const result = await batchClient.jobSchedule.exists(SCHEDULE);
+      const result = await batchClient.jobSchedule.exists(recorder.variable("JOB_SCHEDULE", JOB_SCHEDULE));
     });
 
     it("should get a job schedule reference successfully", async () => {
-      const result = await batchClient.jobSchedule.get(SCHEDULE);
+      const jobScheduleId = recorder.variable("JOB_SCHEDULE", JOB_SCHEDULE);
+      const result = await batchClient.jobSchedule.get(jobScheduleId)
 
-      assert.equal(result.id, SCHEDULE);
+      assert.equal(result.id, jobScheduleId);
       assert.equal(result.state, "active");
-      assert.equal(result.jobSpecification?.displayName, JOB_NAME);
+      assert.equal(result.jobSpecification?.displayName, recorder.variable("JOB_NAME", JOB_NAME));
     });
 
     it("should update a job schedule successfully", async () => {
       const options: JobSchedule = {
         schedule: { recurrenceInterval: duration({ hours: 6 }).toISOString() },
-        jobSpecification: { poolInfo: { poolId: ADVANCED_POOL } }
+        jobSpecification: { poolInfo: { poolId: recorder.variable("BASIC_POOL", BASIC_POOL) } }
       };
 
-      const result = await batchClient.jobSchedule.update(SCHEDULE, options);
-
-      //assert.equal(result._response.status, 200);
+      const result = await batchClient.jobSchedule.update(recorder.variable("JOB_SCHEDULE", JOB_SCHEDULE), options, {
+        onResponse: function (rawResponse, flatResponse, error) {
+          if (error != null) {
+            throw error;
+          }
+          else {
+            assert.equal(rawResponse.status, 200);
+          }
+        }
+      });
     });
 
     it("should patch a job schedule successfully", async () => {
@@ -1397,33 +1658,68 @@ describe("Batch Service Test", () => {
         }
       };
 
-      const result = await batchClient.jobSchedule.patch(SCHEDULE, options);
-
-      //assert.equal(result._response.status, 200);
+      const result = await batchClient.jobSchedule.patch(recorder.variable("JOB_SCHEDULE", JOB_SCHEDULE), options, {
+        onResponse: function (rawResponse, flatResponse, error) {
+          if (error != null) {
+            throw error;
+          }
+          else {
+            assert.equal(rawResponse.status, 200);
+          }
+        }
+      });
     });
 
     it("should disable a job schedule successfully", async () => {
-      const result = await batchClient.jobSchedule.disable(SCHEDULE);
-
-      //assert.equal(result._response.status, 204);
+      const result = await batchClient.jobSchedule.disable(recorder.variable("JOB_SCHEDULE", JOB_SCHEDULE), {
+        onResponse: function (rawResponse, flatResponse, error) {
+          if (error != null) {
+            throw error;
+          }
+          else {
+            assert.equal(rawResponse.status, 204);
+          }
+        }
+      });
     });
 
     it("should enable a job schedule successfully", async () => {
-      const result = await batchClient.jobSchedule.enable(SCHEDULE);
-
-      //assert.equal(result._response.status, 204);
+      const result = await batchClient.jobSchedule.enable(recorder.variable("JOB_SCHEDULE", JOB_SCHEDULE), {
+        onResponse: function (rawResponse, flatResponse, error) {
+          if (error != null) {
+            throw error;
+          }
+          else {
+            assert.equal(rawResponse.status, 204);
+          }
+        }
+      });
     });
 
     it("should terminate a job schedule successfully", async () => {
-      const result = await batchClient.jobSchedule.terminate(SCHEDULE);
-
-      // assert.equal(result._response.status, 202);
+      const result = await batchClient.jobSchedule.terminate(recorder.variable("JOB_SCHEDULE", JOB_SCHEDULE), {
+        onResponse: function (rawResponse, flatResponse, error) {
+          if (error != null) {
+            throw error;
+          }
+          else {
+            assert.equal(rawResponse.status, 202);
+          }
+        }
+      });
     });
 
     it("should delete a job schedule successfully", async () => {
-      const result = await batchClient.jobSchedule.delete(SCHEDULE);
-
-      // assert.equal(result._response.status, 202);
+      const result = await batchClient.jobSchedule.delete(recorder.variable("JOB_SCHEDULE", JOB_SCHEDULE), {
+        onResponse: function (rawResponse, flatResponse, error) {
+          if (error != null) {
+            throw error;
+          }
+          else {
+            assert.equal(rawResponse.status, 202);
+          }
+        }
+      });
     });
   });
 
@@ -1447,7 +1743,7 @@ describe("Batch Service Test", () => {
 
     });
 
-    it.only("should delete a pool successfully", async function () {
+    it("should delete a pool successfully", async function () {
       await batchClient.pool.delete(recorder.variable("BASIC_POOL", BASIC_POOL));
     });
 
@@ -1456,9 +1752,16 @@ describe("Batch Service Test", () => {
     })
 
     it("should delete a third pool successfully", async () => {
-      const result = await batchClient.pool.delete(recorder.variable("ENDPOINT_POOL", ENDPOINT_POOL));
-
-      //assert.equal(result._response.status, 202);
+      const result = await batchClient.pool.delete(recorder.variable("ENDPOINT_POOL", ENDPOINT_POOL), {
+        onResponse: function (rawResponse, flatResponse, error) {
+          if (error != null) {
+            throw error;
+          }
+          else {
+            assert.equal(rawResponse.status, 202);
+          }
+        }
+      });
     });
 
     it("should fail to delete a non-existent pool", async () => {
@@ -1469,7 +1772,7 @@ describe("Batch Service Test", () => {
       }
     });
 
-    it.only("should delete a certificate successfully", async function () {
+    it("should delete a certificate successfully", async function () {
       const result = await batchClient.certificate.delete("sha1", certThumb);
     })
 

@@ -1,5 +1,6 @@
 {
   "name": "@azure/batch",
+  "sdk-type": "client",
   "author": "Microsoft Corporation",
   "description": "A generated SDK for BatchServiceClient.",
   "version": "11.0.0-beta.1",
@@ -30,6 +31,7 @@
   },
   "devDependencies": {
     "@azure-tools/test-recorder": "2.0.0",
+    "@azure/test-utils": "1.0.0",
     "@azure/dev-tool": "^1.0.0",
     "@azure/eslint-plugin-azure-sdk": "^3.0.0",
     "@microsoft/api-extractor": "^7.18.11",
@@ -53,8 +55,6 @@
     "karma-env-preprocessor": "^0.1.1",
     "karma-firefox-launcher": "^1.1.0",
     "karma-ie-launcher": "^1.0.0",
-    "karma-json-preprocessor": "^0.3.3",
-    "karma-json-to-file-reporter": "^1.0.1",
     "karma-junit-reporter": "^2.0.1",
     "karma-mocha": "^2.0.1",
     "karma-mocha-reporter": "^2.2.5",
@@ -120,10 +120,10 @@
     "test:node": "npm run clean && npm run build:test && npm run unit-test:node",
     "test:browser": "npm run clean && npm run build:test && npm run unit-test:browser",
     "unit-test": "npm run unit-test:node && npm run unit-test:browser",
-    "unit-test:node": "dev-tool run test:node-ts-input -- --timeout 1500000 --exclude 'test/**/browser/*.spec.ts' 'test/public/sampleTest.spec.ts'",
-    "unit-test:browser": "karma start --single-run",
-    "integration-test:browser": "karma start --single-run",
-    "integration-test:node": "nyc mocha -r esm --require source-map-support/register --reporter ../../../common/tools/mocha-multi-reporter.js --timeout 5000000 --full-trace \"dist-esm/test/{,!(browser)/**/}*.spec.js\"",
+    "unit-test:node": "dev-tool run test:node-ts-input -- --timeout 1200000 --exclude 'test/**/browser/*.spec.ts' 'test/**/*.spec.ts'",
+    "unit-test:browser": "dev-tool run test:browser",
+    "integration-test:browser": "dev-tool run test:browser",
+    "integration-test:node": "dev-tool run test:node-js-input -- --timeout 5000000 'dist-esm/test/**/*.spec.js'",
     "integration-test": "npm run integration-test:node && npm run integration-test:browser",
     "docs": "echo skipped"
   },

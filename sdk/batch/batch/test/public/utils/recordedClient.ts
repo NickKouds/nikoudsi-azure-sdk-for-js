@@ -12,7 +12,7 @@ import { BatchSharedKeyCredentials } from "../../../src/credentials/batchSharedK
 import { createTestCredential } from "@azure-tools/test-credential";
 import { Test } from "mocha";
 
-const FAKE_PASSWORD = "fake_password_value";
+export const FAKE_PASSWORD = "fake_password_value";
 
 export interface RecordedBatchClient {
   batchClient: BatchServiceClient,
@@ -45,12 +45,12 @@ export interface RecordedBatchClient {
 
 const recorderOptions: RecorderStartOptions = {
   envSetupForPlayback: {
-    AZURE_BATCH_ENDPOINT: "https://dummybatchaccount",
-    AZURE_CLIENT_ID: "fake_azure_client_id",
-    AZURE_CLIENT_SECRET: "fake_azure_client_secret",
-    AZURE_TENANT_ID: "fake_azure_tenant_id",
-    AZURE_BATCH_ACCOUNT: "fake_batch_account_name",
-    AZURE_BATCH_ACCESS_KEY: "fake_batch_account_key"
+    AZURE_BATCH_ENDPOINT: "https://endpoint",
+    AZURE_CLIENT_ID: "azure_client_id",
+    AZURE_CLIENT_SECRET: "azure_client_secret",
+    AZURE_TENANT_ID: "88888888-8888-8888-8888-888888888888",
+    AZURE_BATCH_ACCOUNT: "batch_account",
+    AZURE_BATCH_ACCESS_KEY: "api_key"
   },
   sanitizerOptions: {
     bodyKeySanitizers: [
@@ -105,7 +105,7 @@ export async function createClient(
   }
   return {
     batchClient: new BatchServiceClient(credential,
-      env.AZURE_BATCH_ENDPOINT || "https://dummy.eastus.batch.azure.com",
+      env.AZURE_BATCH_ENDPOINT! || "https://dummy.eastus.batch.azure.com",
       recorder.configureClientOptions({})),
 
     recorder: recorder
