@@ -20,6 +20,8 @@ import { Pool, Certificate, PoolGetOptionalParams, PoolUpdate, JobSchedule, Batc
 import { duration } from "moment";
 import moment from "moment";
 import { PagedAsyncIterableIterator } from "@azure/core-paging";
+import { BatchSharedKeyCredentials } from "../../src/credentials/batchSharedKeyCredentials.browser"
+import { pool } from "../../src/generated/models/parameters";
 
 
 const _SUFFIX = Math.random()
@@ -113,7 +115,7 @@ describe("Batch Service Test", () => {
       const cert: Certificate = {
         thumbprint: certThumb,
         thumbprintAlgorithm: "sha1",
-        password: isPlaybackMode() ? FAKE_PASSWORD : "nodesdk",
+        password: isPlaybackMode() ? FAKE_PASSWORD : `nodesdk`,
         certificateFormat: "pfx",
         data:
           "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"
@@ -143,18 +145,32 @@ describe("Batch Service Test", () => {
 
   })
 
-  // describe.skip("Authentication", () => {
-  //   it("Should perform AAD authentication successfully.", async function () {
-  //     const aadClient = await createClient("AAD", recorder);
-  //     const supportedImages = aadClient.account.listSupportedImages();
+  describe("Authentication", () => {
+    it.skip("Should perform AAD authentication successfully.", async function () {
+      const aadClient = await (await createClient(this.currentTest, "AAD")).batchClient;
+      const supportedImages = aadClient.account.listSupportedImages();
 
-  //     for await (const image of supportedImages) {
-  //       assert.isNotNull(image.nodeAgentSKUId);
-  //       assert.isNotNull(image.osType);
+      for await (const image of supportedImages) {
+        assert.isNotNull(image.nodeAgentSKUId);
+        assert.isNotNull(image.osType);
 
-  //     }
-  //   })
-  // })
+      }
+    });
+
+    it("should fail to authenticate BatchSharedKeyCredential in browser", async function () {
+      if (!isNode) {
+        try {
+          const errorBatchSharedKeyCredential = new BatchSharedKeyCredentials();
+          assert.fail("Expected to throw an exception instantiating a BatchSharedKeyCredential in the browser");
+        }
+        catch (error: any) {
+          assert.equal(error!.message, "BatchSharedKeyCredential is not supported in the browser.");
+        }
+      }
+    });
+
+
+  })
 
   describe("Basic Pool operations", () => {
     it("Create Batch Pool successfully", async function () {
@@ -172,12 +188,11 @@ describe("Batch Service Test", () => {
         userAccounts: [
           {
             name: nonAdminPoolUser,
-            password: isPlaybackMode() ? FAKE_PASSWORD : uuid(),
+            password: isPlaybackMode() ? FAKE_PASSWORD : uuid(),    //Recorder sanitizer options will replace password with FAKE_PASSWORD
             elevationLevel: "nonadmin"
           }
         ]
       }
-      //recorder.variable("POOL_USER_ACCOUNT_PASSWORD", "dummyPlaceHolderPassword"
 
       try {
         const result = await batchClient.pool.add(poolParams);
@@ -797,17 +812,14 @@ describe("Batch Service Test", () => {
       assert.isAtLeast(poolCount, 2);
     });
 
-    it.only("should list a maximum number of pools", async () => {
-      const options = { poolListOptions: { maxResults: 1 } };
-      let listResultIterator = await batchClient.pool.list(options);
+    it("should list a maximum number of pools", async () => {
+      const options = { poolListOptions: { maxResults: 2 } };
+      let listResultIterator = batchClient.pool.list(options);
 
-      let poolCounter = 0;
-      for await (const pool of listResultIterator) {
-        ++poolCounter;
-        //if (poolCounter == options.poolListOptions.maxResults) break;
+      for await (const pools of listResultIterator.byPage()) {
+        assert.equal(pools.length, options.poolListOptions.maxResults);
+        break;
       }
-
-      assert.equal(poolCounter, options.poolListOptions.maxResults);
 
     });
 

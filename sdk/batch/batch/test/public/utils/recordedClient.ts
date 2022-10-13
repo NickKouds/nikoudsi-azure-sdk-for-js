@@ -13,43 +13,21 @@ import { createTestCredential } from "@azure-tools/test-credential";
 import { Test } from "mocha";
 
 export const FAKE_PASSWORD = "fake_password_value";
+const FAKE_AZURE_BATCH_ACCOUNT = "batch_account";
+const FAKE_AZURE_BATCH_ENDPOINT = "https://endpoint";
 
 export interface RecordedBatchClient {
   batchClient: BatchServiceClient,
   recorder: Recorder
 }
 
-// const recorderEnvSetup: RecorderEnvironmentSetup = {
-//   replaceableVariables: {
-//     AZURE_BATCH_ENDPOINT: "batch_endpoint",
-//     AZURE_CLIENT_ID: "azure_client_id",
-//     AZURE_CLIENT_SECRET: "azure_client_secret",
-//     AZURE_TENANT_ID: "azure_tenant_id",
-//     AZURE_BATCH_ACCOUNT: "batch_account_name",
-//     AZURE_BATCH_ACCESS_KEY: "batch_account_key"
-//   },
-//   customizationsOnRecordings: [
-//     (recording: string): string =>
-//       recording.replace(/"access_token"\s?:\s?"[^"]*"/g, `"access_token":"access_token"`),
-//     // If we put ENDPOINT in replaceableVariables above, it will not capture
-//     // the endpoint string used with nock, which will be expanded to
-//     // https://<endpoint>:443/ and therefore will not match, so we have to do
-//     // this instead.
-//     (recording: string): string => {
-//       const replaced = recording.replace("endpoint:443", "endpoint");
-//       return replaced;
-//     },
-//   ],
-//   queryParametersToSkip: []
-// };
-
 const recorderOptions: RecorderStartOptions = {
   envSetupForPlayback: {
-    AZURE_BATCH_ENDPOINT: "https://endpoint",
+    AZURE_BATCH_ENDPOINT: FAKE_AZURE_BATCH_ENDPOINT,
     AZURE_CLIENT_ID: "azure_client_id",
     AZURE_CLIENT_SECRET: "azure_client_secret",
     AZURE_TENANT_ID: "88888888-8888-8888-8888-888888888888",
-    AZURE_BATCH_ACCOUNT: "batch_account",
+    AZURE_BATCH_ACCOUNT: FAKE_AZURE_BATCH_ACCOUNT,
     AZURE_BATCH_ACCESS_KEY: "api_key"
   },
   sanitizerOptions: {
@@ -64,6 +42,9 @@ const recorderOptions: RecorderStartOptions = {
       },
 
     ],
+    generalSanitizers: [{
+      regex: true, target: `https://${FAKE_AZURE_BATCH_ACCOUNT}(.*)batch.azure.com`, value: FAKE_AZURE_BATCH_ENDPOINT
+    }]
   },
 };
 
