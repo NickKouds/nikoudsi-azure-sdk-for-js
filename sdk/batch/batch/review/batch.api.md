@@ -12,11 +12,12 @@ import { PathUncheckedResponse } from '@azure-rest/core-client';
 import { RawHttpHeaders } from '@azure/core-rest-pipeline';
 import { RawHttpHeadersInput } from '@azure/core-rest-pipeline';
 import { RequestParameters } from '@azure-rest/core-client';
+import { StreamableMethod } from '@azure-rest/core-client';
 import { TokenCredential } from '@azure/core-auth';
 
 // @public (undocumented)
 export interface AccountListPoolNodeCounts {
-    get(options?: AccountListPoolNodeCountsParameters): Promise<AccountListPoolNodeCounts200Response | AccountListPoolNodeCountsdefaultResponse>;
+    get(options?: AccountListPoolNodeCountsParameters): StreamableMethod<AccountListPoolNodeCounts200Response | AccountListPoolNodeCountsDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -36,11 +37,11 @@ export interface AccountListPoolNodeCounts200Response extends HttpResponse {
 }
 
 // @public
-export interface AccountListPoolNodeCountsdefaultResponse extends HttpResponse {
+export interface AccountListPoolNodeCountsDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -74,7 +75,7 @@ export interface AccountListPoolNodeCountsQueryParamProperties {
 
 // @public (undocumented)
 export interface AccountListSupportedImages {
-    get(options?: AccountListSupportedImagesParameters): Promise<AccountListSupportedImages200Response | AccountListSupportedImagesdefaultResponse>;
+    get(options?: AccountListSupportedImagesParameters): StreamableMethod<AccountListSupportedImages200Response | AccountListSupportedImagesDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -96,11 +97,11 @@ export interface AccountListSupportedImages200Response extends HttpResponse {
 }
 
 // @public
-export interface AccountListSupportedImagesdefaultResponse extends HttpResponse {
+export interface AccountListSupportedImagesDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -132,25 +133,31 @@ export interface AccountListSupportedImagesQueryParamProperties {
     timeout?: number;
 }
 
-// @public (undocumented)
+// @public
 export interface AccountListSupportedImagesResultOutput {
     "odata.nextLink"?: string;
     value?: Array<ImageInformationOutput>;
 }
 
-// @public (undocumented)
+// @public
+export interface AccountOperations {
+    listPoolNodeCounts(options?: AccountListPoolNodeCountsParameters): StreamableMethod<AccountListPoolNodeCounts200Response | AccountListPoolNodeCountsDefaultResponse>;
+    listSupportedImages(options?: AccountListSupportedImagesParameters): StreamableMethod<AccountListSupportedImages200Response | AccountListSupportedImagesDefaultResponse>;
+}
+
+// @public
 export interface AffinityInformation {
     affinityId: string;
 }
 
-// @public (undocumented)
+// @public
 export interface AffinityInformationOutput {
     affinityId: string;
 }
 
 // @public (undocumented)
 export interface ApplicationGet {
-    get(options?: ApplicationGetParameters): Promise<ApplicationGet200Response | ApplicationGetdefaultResponse>;
+    get(options?: ApplicationGetParameters): StreamableMethod<ApplicationGet200Response | ApplicationGetDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -172,11 +179,11 @@ export interface ApplicationGet200Response extends HttpResponse {
 }
 
 // @public
-export interface ApplicationGetdefaultResponse extends HttpResponse {
+export interface ApplicationGetDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -208,7 +215,7 @@ export interface ApplicationGetQueryParamProperties {
 
 // @public (undocumented)
 export interface ApplicationList {
-    get(options?: ApplicationListParameters): Promise<ApplicationList200Response | ApplicationListdefaultResponse>;
+    get(options?: ApplicationListParameters): StreamableMethod<ApplicationList200Response | ApplicationListDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -230,11 +237,11 @@ export interface ApplicationList200Response extends HttpResponse {
 }
 
 // @public
-export interface ApplicationListdefaultResponse extends HttpResponse {
+export interface ApplicationListDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -265,42 +272,48 @@ export interface ApplicationListQueryParamProperties {
     timeout?: number;
 }
 
-// @public (undocumented)
+// @public
 export interface ApplicationListResultOutput {
     "odata.nextLink"?: string;
     value?: Array<ApplicationOutput>;
 }
 
-// @public (undocumented)
+// @public
+export interface ApplicationOperations {
+    get(applicationId: string, options?: ApplicationGetParameters): StreamableMethod<ApplicationGet200Response | ApplicationGetDefaultResponse>;
+    list(options?: ApplicationListParameters): StreamableMethod<ApplicationList200Response | ApplicationListDefaultResponse>;
+}
+
+// @public
 export interface ApplicationOutput {
     displayName: string;
     id: string;
     versions: Array<string>;
 }
 
-// @public (undocumented)
+// @public
 export interface ApplicationPackageReference {
     applicationId: string;
     version?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface ApplicationPackageReferenceOutput {
     applicationId: string;
     version?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface AuthenticationTokenSettings {
     access?: Array<"job">;
 }
 
-// @public (undocumented)
+// @public
 export interface AuthenticationTokenSettingsOutput {
     access?: Array<"job">;
 }
 
-// @public (undocumented)
+// @public
 export interface AutoPoolSpecification {
     autoPoolIdPrefix?: string;
     keepAlive?: boolean;
@@ -308,7 +321,7 @@ export interface AutoPoolSpecification {
     poolLifetimeOption: "jobschedule" | "job";
 }
 
-// @public (undocumented)
+// @public
 export interface AutoPoolSpecificationOutput {
     autoPoolIdPrefix?: string;
     keepAlive?: boolean;
@@ -316,47 +329,47 @@ export interface AutoPoolSpecificationOutput {
     poolLifetimeOption: "jobschedule" | "job";
 }
 
-// @public (undocumented)
+// @public
 export interface AutoScaleRun {
     error?: AutoScaleRunError;
     results?: string;
     timestamp: Date | string;
 }
 
-// @public (undocumented)
+// @public
 export interface AutoScaleRunError {
     code?: string;
     message?: string;
     values?: Array<NameValuePair>;
 }
 
-// @public (undocumented)
+// @public
 export interface AutoScaleRunErrorOutput {
     code?: string;
     message?: string;
     values?: Array<NameValuePairOutput>;
 }
 
-// @public (undocumented)
+// @public
 export interface AutoScaleRunOutput {
     error?: AutoScaleRunErrorOutput;
     results?: string;
     timestamp: string;
 }
 
-// @public (undocumented)
+// @public
 export interface AutoUserSpecification {
     elevationLevel?: "nonadmin" | "admin";
     scope?: "task" | "pool";
 }
 
-// @public (undocumented)
+// @public
 export interface AutoUserSpecificationOutput {
     elevationLevel?: "nonadmin" | "admin";
     scope?: "task" | "pool";
 }
 
-// @public (undocumented)
+// @public
 export interface AzureBlobFileSystemConfiguration {
     accountKey?: string;
     accountName: string;
@@ -367,7 +380,7 @@ export interface AzureBlobFileSystemConfiguration {
     sasKey?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface AzureBlobFileSystemConfigurationOutput {
     accountKey?: string;
     accountName: string;
@@ -378,7 +391,7 @@ export interface AzureBlobFileSystemConfigurationOutput {
     sasKey?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface AzureFileShareConfiguration {
     accountKey: string;
     accountName: string;
@@ -387,7 +400,7 @@ export interface AzureFileShareConfiguration {
     relativeMountPath: string;
 }
 
-// @public (undocumented)
+// @public
 export interface AzureFileShareConfigurationOutput {
     accountKey: string;
     accountName: string;
@@ -396,13 +409,13 @@ export interface AzureFileShareConfigurationOutput {
     relativeMountPath: string;
 }
 
-// @public (undocumented)
+// @public
 export interface BatchErrorDetailOutput {
     key?: string;
     value?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface BatchErrorOutput {
     code?: string;
     message?: ErrorMessageOutput;
@@ -412,24 +425,385 @@ export interface BatchErrorOutput {
 // @public (undocumented)
 export type BatchGeneratedClient = Client & {
     path: Routes;
+    application: ApplicationOperations;
+    pool: PoolOperations;
+    account: AccountOperations;
+    job: JobOperations;
+    certificate: CertificateOperations;
+    file: FileOperations;
+    jobSchedule: JobScheduleOperations;
+    task: TaskOperations;
+    computeNode: ComputeNodeOperations;
+    computeNodeExtension: ComputeNodeExtensionOperations;
 };
 
-// @public (undocumented)
+// @public
+export interface BatchJob {
+    allowTaskPreemption?: boolean;
+    commonEnvironmentSettings?: Array<EnvironmentSetting>;
+    constraints?: JobConstraints;
+    creationTime?: Date | string;
+    displayName?: string;
+    eTag?: string;
+    executionInfo?: JobExecutionInformation;
+    id?: string;
+    jobManagerTask?: JobManagerTask;
+    jobPreparationTask?: JobPreparationTask;
+    jobReleaseTask?: JobReleaseTask;
+    lastModified?: Date | string;
+    maxParallelTasks?: number;
+    metadata?: Array<MetadataItem>;
+    networkConfiguration?: JobNetworkConfiguration;
+    onAllTasksComplete?: "noaction" | "terminatejob";
+    onTaskFailure?: "noaction" | "performexitoptionsjobaction";
+    poolInfo?: PoolInformation;
+    previousState?: "active" | "disabling" | "disabled" | "enabling" | "terminating" | "completed" | "deleting";
+    previousStateTransitionTime?: Date | string;
+    priority?: number;
+    state?: "active" | "disabling" | "disabled" | "enabling" | "terminating" | "completed" | "deleting";
+    stateTransitionTime?: Date | string;
+    stats?: JobStatistics;
+    url?: string;
+    usesTaskDependencies?: boolean;
+}
+
+// @public
+export interface BatchJobDisableParameters {
+    disableTasks: "requeue" | "terminate" | "wait";
+}
+
+// @public
+export interface BatchJobListPreparationAndReleaseTaskStatusResultOutput {
+    "odata.nextLink"?: string;
+    value?: Array<JobPreparationAndReleaseTaskExecutionInformationOutput>;
+}
+
+// @public
+export interface BatchJobListResultOutput {
+    "odata.nextLink"?: string;
+    value?: Array<BatchJobOutput>;
+}
+
+// @public
+export interface BatchJobOutput {
+    allowTaskPreemption?: boolean;
+    commonEnvironmentSettings?: Array<EnvironmentSettingOutput>;
+    constraints?: JobConstraintsOutput;
+    creationTime?: string;
+    displayName?: string;
+    eTag?: string;
+    executionInfo?: JobExecutionInformationOutput;
+    id?: string;
+    jobManagerTask?: JobManagerTaskOutput;
+    jobPreparationTask?: JobPreparationTaskOutput;
+    jobReleaseTask?: JobReleaseTaskOutput;
+    lastModified?: string;
+    maxParallelTasks?: number;
+    metadata?: Array<MetadataItemOutput>;
+    networkConfiguration?: JobNetworkConfigurationOutput;
+    onAllTasksComplete?: "noaction" | "terminatejob";
+    onTaskFailure?: "noaction" | "performexitoptionsjobaction";
+    poolInfo?: PoolInformationOutput;
+    previousState?: "active" | "disabling" | "disabled" | "enabling" | "terminating" | "completed" | "deleting";
+    previousStateTransitionTime?: string;
+    priority?: number;
+    state?: "active" | "disabling" | "disabled" | "enabling" | "terminating" | "completed" | "deleting";
+    stateTransitionTime?: string;
+    stats?: JobStatisticsOutput;
+    url?: string;
+    usesTaskDependencies?: boolean;
+}
+
+// @public
+export interface BatchJobSchedule {
+    creationTime?: Date | string;
+    displayName?: string;
+    eTag?: string;
+    executionInfo?: JobScheduleExecutionInformation;
+    id?: string;
+    jobSpecification?: JobSpecification;
+    lastModified?: Date | string;
+    metadata?: Array<MetadataItem>;
+    previousState?: "active" | "completed" | "disabled" | "terminating" | "deleting";
+    previousStateTransitionTime?: Date | string;
+    schedule?: Schedule;
+    state?: "active" | "completed" | "disabled" | "terminating" | "deleting";
+    stateTransitionTime?: Date | string;
+    stats?: JobScheduleStatistics;
+    url?: string;
+}
+
+// @public
+export interface BatchJobScheduleListResultOutput {
+    "odata.nextLink"?: string;
+    value?: Array<BatchJobScheduleOutput>;
+}
+
+// @public
+export interface BatchJobScheduleOutput {
+    creationTime?: string;
+    displayName?: string;
+    eTag?: string;
+    executionInfo?: JobScheduleExecutionInformationOutput;
+    id?: string;
+    jobSpecification?: JobSpecificationOutput;
+    lastModified?: string;
+    metadata?: Array<MetadataItemOutput>;
+    previousState?: "active" | "completed" | "disabled" | "terminating" | "deleting";
+    previousStateTransitionTime?: string;
+    schedule?: ScheduleOutput;
+    state?: "active" | "completed" | "disabled" | "terminating" | "deleting";
+    stateTransitionTime?: string;
+    stats?: JobScheduleStatisticsOutput;
+    url?: string;
+}
+
+// @public
+export interface BatchJobScheduleUpdate {
+    jobSpecification?: JobSpecification;
+    metadata?: Array<MetadataItem>;
+    schedule?: Schedule;
+}
+
+// @public
+export interface BatchJobTerminateParameters {
+    terminateReason?: string;
+}
+
+// @public
+export interface BatchJobUpdate {
+    allowTaskPreemption?: boolean;
+    constraints?: JobConstraints;
+    maxParallelTasks?: number;
+    metadata?: Array<MetadataItem>;
+    onAllTasksComplete?: "noaction" | "terminatejob";
+    poolInfo?: PoolInformation;
+    priority?: number;
+}
+
+// @public
+export interface BatchPool {
+    allocationState?: "steady" | "resizing" | "stopping";
+    allocationStateTransitionTime?: Date | string;
+    applicationLicenses?: Array<string>;
+    applicationPackageReferences?: Array<ApplicationPackageReference>;
+    autoScaleEvaluationInterval?: string;
+    autoScaleFormula?: string;
+    autoScaleRun?: AutoScaleRun;
+    certificateReferences?: Array<CertificateReference>;
+    cloudServiceConfiguration?: CloudServiceConfiguration;
+    creationTime?: Date | string;
+    currentDedicatedNodes?: number;
+    currentLowPriorityNodes?: number;
+    displayName?: string;
+    enableAutoScale?: boolean;
+    enableInterNodeCommunication?: boolean;
+    eTag?: string;
+    id?: string;
+    identity?: BatchPoolIdentity;
+    lastModified?: Date | string;
+    metadata?: Array<MetadataItem>;
+    mountConfiguration?: Array<MountConfiguration>;
+    networkConfiguration?: NetworkConfiguration;
+    resizeErrors?: Array<ResizeError>;
+    resizeTimeout?: string;
+    startTask?: StartTask;
+    state?: "active" | "deleting";
+    stateTransitionTime?: Date | string;
+    stats?: PoolStatistics;
+    targetDedicatedNodes?: number;
+    targetLowPriorityNodes?: number;
+    taskSchedulingPolicy?: TaskSchedulingPolicy;
+    taskSlotsPerNode?: number;
+    url?: string;
+    userAccounts?: Array<UserAccount>;
+    virtualMachineConfiguration?: VirtualMachineConfiguration;
+    vmSize?: string;
+}
+
+// @public
+export interface BatchPoolEnableAutoScaleParameters {
+    autoScaleEvaluationInterval?: string;
+    autoScaleFormula?: string;
+}
+
+// @public
+export interface BatchPoolEvaluateAutoScaleParameters {
+    autoScaleFormula: string;
+}
+
+// @public
 export interface BatchPoolIdentity {
     type: "UserAssigned" | "None";
     userAssignedIdentities?: Array<UserAssignedIdentity>;
 }
 
-// @public (undocumented)
+// @public
 export interface BatchPoolIdentityOutput {
     type: "UserAssigned" | "None";
     userAssignedIdentities?: Array<UserAssignedIdentityOutput>;
 }
 
+// @public
+export interface BatchPoolListResultOutput {
+    "odata.nextLink"?: string;
+    value?: Array<BatchPoolOutput>;
+}
+
+// @public
+export interface BatchPoolOutput {
+    allocationState?: "steady" | "resizing" | "stopping";
+    allocationStateTransitionTime?: string;
+    applicationLicenses?: Array<string>;
+    applicationPackageReferences?: Array<ApplicationPackageReferenceOutput>;
+    autoScaleEvaluationInterval?: string;
+    autoScaleFormula?: string;
+    autoScaleRun?: AutoScaleRunOutput;
+    certificateReferences?: Array<CertificateReferenceOutput>;
+    cloudServiceConfiguration?: CloudServiceConfigurationOutput;
+    creationTime?: string;
+    currentDedicatedNodes?: number;
+    currentLowPriorityNodes?: number;
+    displayName?: string;
+    enableAutoScale?: boolean;
+    enableInterNodeCommunication?: boolean;
+    eTag?: string;
+    id?: string;
+    identity?: BatchPoolIdentityOutput;
+    lastModified?: string;
+    metadata?: Array<MetadataItemOutput>;
+    mountConfiguration?: Array<MountConfigurationOutput>;
+    networkConfiguration?: NetworkConfigurationOutput;
+    resizeErrors?: Array<ResizeErrorOutput>;
+    resizeTimeout?: string;
+    startTask?: StartTaskOutput;
+    state?: "active" | "deleting";
+    stateTransitionTime?: string;
+    stats?: PoolStatisticsOutput;
+    targetDedicatedNodes?: number;
+    targetLowPriorityNodes?: number;
+    taskSchedulingPolicy?: TaskSchedulingPolicyOutput;
+    taskSlotsPerNode?: number;
+    url?: string;
+    userAccounts?: Array<UserAccountOutput>;
+    virtualMachineConfiguration?: VirtualMachineConfigurationOutput;
+    vmSize?: string;
+}
+
+// @public
+export interface BatchPoolResizeParameters {
+    nodeDeallocationOption?: "requeue" | "terminate" | "taskcompletion" | "retaineddata";
+    resizeTimeout?: string;
+    targetDedicatedNodes?: number;
+    targetLowPriorityNodes?: number;
+}
+
+// @public
+export interface BatchPoolUpdate {
+    applicationPackageReferences?: Array<ApplicationPackageReference>;
+    certificateReferences?: Array<CertificateReference>;
+    metadata?: Array<MetadataItem>;
+    startTask?: StartTask;
+}
+
+// @public
+export interface BatchTask {
+    affinityInfo?: AffinityInformation;
+    applicationPackageReferences?: Array<ApplicationPackageReference>;
+    authenticationTokenSettings?: AuthenticationTokenSettings;
+    commandLine?: string;
+    constraints?: TaskConstraints;
+    containerSettings?: TaskContainerSettings;
+    creationTime?: Date | string;
+    dependsOn?: TaskDependencies;
+    displayName?: string;
+    environmentSettings?: Array<EnvironmentSetting>;
+    eTag?: string;
+    executionInfo?: TaskExecutionInformation;
+    exitConditions?: ExitConditions;
+    id?: string;
+    lastModified?: Date | string;
+    multiInstanceSettings?: MultiInstanceSettings;
+    nodeInfo?: ComputeNodeInformation;
+    outputFiles?: Array<OutputFile>;
+    previousState?: "active" | "preparing" | "running" | "completed";
+    previousStateTransitionTime?: Date | string;
+    requiredSlots?: number;
+    resourceFiles?: Array<ResourceFile>;
+    state?: "active" | "preparing" | "running" | "completed";
+    stateTransitionTime?: Date | string;
+    stats?: TaskStatistics;
+    url?: string;
+    userIdentity?: UserIdentity;
+}
+
+// @public
+export interface BatchTaskCollection {
+    value: Array<BatchTask>;
+}
+
+// @public
+export interface BatchTaskListResultOutput {
+    "odata.nextLink"?: string;
+    value?: Array<BatchTaskOutput>;
+}
+
+// @public
+export interface BatchTaskListSubtasksResultOutput {
+    value?: Array<SubtaskInformationOutput>;
+}
+
+// @public
+export interface BatchTaskOutput {
+    affinityInfo?: AffinityInformationOutput;
+    applicationPackageReferences?: Array<ApplicationPackageReferenceOutput>;
+    authenticationTokenSettings?: AuthenticationTokenSettingsOutput;
+    commandLine?: string;
+    constraints?: TaskConstraintsOutput;
+    containerSettings?: TaskContainerSettingsOutput;
+    creationTime?: string;
+    dependsOn?: TaskDependenciesOutput;
+    displayName?: string;
+    environmentSettings?: Array<EnvironmentSettingOutput>;
+    eTag?: string;
+    executionInfo?: TaskExecutionInformationOutput;
+    exitConditions?: ExitConditionsOutput;
+    id?: string;
+    lastModified?: string;
+    multiInstanceSettings?: MultiInstanceSettingsOutput;
+    nodeInfo?: ComputeNodeInformationOutput;
+    outputFiles?: Array<OutputFileOutput>;
+    previousState?: "active" | "preparing" | "running" | "completed";
+    previousStateTransitionTime?: string;
+    requiredSlots?: number;
+    resourceFiles?: Array<ResourceFileOutput>;
+    state?: "active" | "preparing" | "running" | "completed";
+    stateTransitionTime?: string;
+    stats?: TaskStatisticsOutput;
+    url?: string;
+    userIdentity?: UserIdentityOutput;
+}
+
+// @public
+export interface Certificate {
+    certificateFormat?: "pfx" | "cer";
+    data?: string;
+    deleteCertificateError?: DeleteCertificateError;
+    password?: string;
+    previousState?: "active" | "deleting" | "deletefailed";
+    previousStateTransitionTime?: Date | string;
+    publicData?: string;
+    state?: "active" | "deleting" | "deletefailed";
+    stateTransitionTime?: Date | string;
+    thumbprint?: string;
+    thumbprintAlgorithm?: string;
+    url?: string;
+}
+
 // @public (undocumented)
 export interface CertificateAdd {
-    get(options?: CertificateListParameters): Promise<CertificateList200Response | CertificateListdefaultResponse>;
-    post(options: CertificateAddParameters): Promise<CertificateAdd201Response | CertificateAdddefaultResponse>;
+    get(options?: CertificateListParameters): StreamableMethod<CertificateList200Response | CertificateListDefaultResponse>;
+    post(options: CertificateAddParameters): StreamableMethod<CertificateAdd201Response | CertificateAddDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -453,15 +827,15 @@ export interface CertificateAdd201Response extends HttpResponse {
 
 // @public (undocumented)
 export interface CertificateAddBodyParam {
-    body: CertificateAddParameter;
+    body: Certificate;
 }
 
 // @public
-export interface CertificateAdddefaultResponse extends HttpResponse {
+export interface CertificateAddDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -483,15 +857,6 @@ export interface CertificateAddMediaTypesParam {
 }
 
 // @public (undocumented)
-export interface CertificateAddParameter {
-    certificateFormat?: "pfx" | "cer";
-    data: string;
-    password?: string;
-    thumbprint: string;
-    thumbprintAlgorithm: string;
-}
-
-// @public (undocumented)
 export type CertificateAddParameters = CertificateAddQueryParam & CertificateAddHeaderParam & CertificateAddMediaTypesParam & CertificateAddBodyParam & RequestParameters;
 
 // @public (undocumented)
@@ -507,7 +872,7 @@ export interface CertificateAddQueryParamProperties {
 
 // @public (undocumented)
 export interface CertificateCancelDeletion {
-    post(options?: CertificateCancelDeletionParameters): Promise<CertificateCancelDeletion204Response | CertificateCancelDeletiondefaultResponse>;
+    post(options?: CertificateCancelDeletionParameters): StreamableMethod<CertificateCancelDeletion204Response | CertificateCancelDeletionDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -530,11 +895,11 @@ export interface CertificateCancelDeletion204Response extends HttpResponse {
 }
 
 // @public
-export interface CertificateCancelDeletiondefaultResponse extends HttpResponse {
+export interface CertificateCancelDeletionDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -566,8 +931,8 @@ export interface CertificateCancelDeletionQueryParamProperties {
 
 // @public (undocumented)
 export interface CertificateDelete {
-    delete(options?: CertificateDeleteParameters): Promise<CertificateDelete202Response | CertificateDeletedefaultResponse>;
-    get(options?: CertificateGetParameters): Promise<CertificateGet200Response | CertificateGetdefaultResponse>;
+    delete(options?: CertificateDeleteParameters): StreamableMethod<CertificateDelete202Response | CertificateDeleteDefaultResponse>;
+    get(options?: CertificateGetParameters): StreamableMethod<CertificateGet200Response | CertificateGetDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -589,11 +954,11 @@ export interface CertificateDelete202Response extends HttpResponse {
 }
 
 // @public
-export interface CertificateDeletedefaultResponse extends HttpResponse {
+export interface CertificateDeleteDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -642,11 +1007,11 @@ export interface CertificateGet200Response extends HttpResponse {
 }
 
 // @public
-export interface CertificateGetdefaultResponse extends HttpResponse {
+export interface CertificateGetDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -696,11 +1061,11 @@ export interface CertificateList200Response extends HttpResponse {
 }
 
 // @public
-export interface CertificateListdefaultResponse extends HttpResponse {
+export interface CertificateListDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -733,15 +1098,27 @@ export interface CertificateListQueryParamProperties {
     timeout?: number;
 }
 
-// @public (undocumented)
+// @public
 export interface CertificateListResultOutput {
     "odata.nextLink"?: string;
     value?: Array<CertificateOutput>;
 }
 
-// @public (undocumented)
+// @public
+export interface CertificateOperations {
+    add(options: CertificateAddParameters): StreamableMethod<CertificateAdd201Response | CertificateAddDefaultResponse>;
+    cancelDeletion(thumbprintAlgorithm: string, thumbprint: string, options?: CertificateCancelDeletionParameters): StreamableMethod<CertificateCancelDeletion204Response | CertificateCancelDeletionDefaultResponse>;
+    delete(thumbprintAlgorithm: string, thumbprint: string, options?: CertificateDeleteParameters): StreamableMethod<CertificateDelete202Response | CertificateDeleteDefaultResponse>;
+    get(thumbprintAlgorithm: string, thumbprint: string, options?: CertificateGetParameters): StreamableMethod<CertificateGet200Response | CertificateGetDefaultResponse>;
+    list(options?: CertificateListParameters): StreamableMethod<CertificateList200Response | CertificateListDefaultResponse>;
+}
+
+// @public
 export interface CertificateOutput {
+    certificateFormat?: "pfx" | "cer";
+    data?: string;
     deleteCertificateError?: DeleteCertificateErrorOutput;
+    password?: string;
     previousState?: "active" | "deleting" | "deletefailed";
     previousStateTransitionTime?: string;
     publicData?: string;
@@ -752,7 +1129,7 @@ export interface CertificateOutput {
     url?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface CertificateReference {
     storeLocation?: "currentuser" | "localmachine";
     storeName?: string;
@@ -761,7 +1138,7 @@ export interface CertificateReference {
     visibility?: Array<"starttask" | "task" | "remoteuser">;
 }
 
-// @public (undocumented)
+// @public
 export interface CertificateReferenceOutput {
     storeLocation?: "currentuser" | "localmachine";
     storeName?: string;
@@ -770,7 +1147,7 @@ export interface CertificateReferenceOutput {
     visibility?: Array<"starttask" | "task" | "remoteuser">;
 }
 
-// @public (undocumented)
+// @public
 export interface CifsMountConfiguration {
     mountOptions?: string;
     password: string;
@@ -779,7 +1156,7 @@ export interface CifsMountConfiguration {
     username: string;
 }
 
-// @public (undocumented)
+// @public
 export interface CifsMountConfigurationOutput {
     mountOptions?: string;
     password: string;
@@ -788,13 +1165,13 @@ export interface CifsMountConfigurationOutput {
     username: string;
 }
 
-// @public (undocumented)
+// @public
 export interface CloudServiceConfiguration {
     osFamily: string;
     osVersion?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface CloudServiceConfigurationOutput {
     osFamily: string;
     osVersion?: string;
@@ -802,7 +1179,7 @@ export interface CloudServiceConfigurationOutput {
 
 // @public (undocumented)
 export interface ComputeNodeAddUser {
-    post(options: ComputeNodeAddUserParameters): Promise<ComputeNodeAddUser201Response | ComputeNodeAddUserdefaultResponse>;
+    post(options: ComputeNodeAddUserParameters): StreamableMethod<ComputeNodeAddUser201Response | ComputeNodeAddUserDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -830,11 +1207,11 @@ export interface ComputeNodeAddUserBodyParam {
 }
 
 // @public
-export interface ComputeNodeAddUserdefaultResponse extends HttpResponse {
+export interface ComputeNodeAddUserDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -871,8 +1248,8 @@ export interface ComputeNodeAddUserQueryParamProperties {
 
 // @public (undocumented)
 export interface ComputeNodeDeleteUser {
-    delete(options?: ComputeNodeDeleteUserParameters): Promise<ComputeNodeDeleteUser200Response | ComputeNodeDeleteUserdefaultResponse>;
-    put(options: ComputeNodeUpdateUserParameters): Promise<ComputeNodeUpdateUser200Response | ComputeNodeUpdateUserdefaultResponse>;
+    delete(options?: ComputeNodeDeleteUserParameters): StreamableMethod<ComputeNodeDeleteUser200Response | ComputeNodeDeleteUserDefaultResponse>;
+    put(options: ComputeNodeUpdateUserParameters): StreamableMethod<ComputeNodeUpdateUser200Response | ComputeNodeUpdateUserDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -892,11 +1269,11 @@ export interface ComputeNodeDeleteUser200Response extends HttpResponse {
 }
 
 // @public
-export interface ComputeNodeDeleteUserdefaultResponse extends HttpResponse {
+export interface ComputeNodeDeleteUserDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -928,7 +1305,7 @@ export interface ComputeNodeDeleteUserQueryParamProperties {
 
 // @public (undocumented)
 export interface ComputeNodeDisableScheduling {
-    post(options?: ComputeNodeDisableSchedulingParameters): Promise<ComputeNodeDisableScheduling200Response | ComputeNodeDisableSchedulingdefaultResponse>;
+    post(options?: ComputeNodeDisableSchedulingParameters): StreamableMethod<ComputeNodeDisableScheduling200Response | ComputeNodeDisableSchedulingDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -952,15 +1329,15 @@ export interface ComputeNodeDisableScheduling200Response extends HttpResponse {
 
 // @public (undocumented)
 export interface ComputeNodeDisableSchedulingBodyParam {
-    body?: NodeDisableSchedulingParameter;
+    body?: NodeDisableSchedulingParameters;
 }
 
 // @public
-export interface ComputeNodeDisableSchedulingdefaultResponse extends HttpResponse {
+export interface ComputeNodeDisableSchedulingDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -997,7 +1374,7 @@ export interface ComputeNodeDisableSchedulingQueryParamProperties {
 
 // @public (undocumented)
 export interface ComputeNodeEnableScheduling {
-    post(options?: ComputeNodeEnableSchedulingParameters): Promise<ComputeNodeEnableScheduling200Response | ComputeNodeEnableSchedulingdefaultResponse>;
+    post(options?: ComputeNodeEnableSchedulingParameters): StreamableMethod<ComputeNodeEnableScheduling200Response | ComputeNodeEnableSchedulingDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -1020,11 +1397,11 @@ export interface ComputeNodeEnableScheduling200Response extends HttpResponse {
 }
 
 // @public
-export interface ComputeNodeEnableSchedulingdefaultResponse extends HttpResponse {
+export interface ComputeNodeEnableSchedulingDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -1054,12 +1431,12 @@ export interface ComputeNodeEnableSchedulingQueryParamProperties {
     timeout?: number;
 }
 
-// @public (undocumented)
+// @public
 export interface ComputeNodeEndpointConfigurationOutput {
     inboundEndpoints: Array<InboundEndpointOutput>;
 }
 
-// @public (undocumented)
+// @public
 export interface ComputeNodeErrorOutput {
     code?: string;
     errorDetails?: Array<NameValuePairOutput>;
@@ -1068,7 +1445,7 @@ export interface ComputeNodeErrorOutput {
 
 // @public (undocumented)
 export interface ComputeNodeExtensionGet {
-    get(options?: ComputeNodeExtensionGetParameters): Promise<ComputeNodeExtensionGet200Response | ComputeNodeExtensionGetdefaultResponse>;
+    get(options?: ComputeNodeExtensionGetParameters): StreamableMethod<ComputeNodeExtensionGet200Response | ComputeNodeExtensionGetDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -1090,11 +1467,11 @@ export interface ComputeNodeExtensionGet200Response extends HttpResponse {
 }
 
 // @public
-export interface ComputeNodeExtensionGetdefaultResponse extends HttpResponse {
+export interface ComputeNodeExtensionGetDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -1127,7 +1504,7 @@ export interface ComputeNodeExtensionGetQueryParamProperties {
 
 // @public (undocumented)
 export interface ComputeNodeExtensionList {
-    get(options?: ComputeNodeExtensionListParameters): Promise<ComputeNodeExtensionList200Response | ComputeNodeExtensionListdefaultResponse>;
+    get(options?: ComputeNodeExtensionListParameters): StreamableMethod<ComputeNodeExtensionList200Response | ComputeNodeExtensionListDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -1149,11 +1526,11 @@ export interface ComputeNodeExtensionList200Response extends HttpResponse {
 }
 
 // @public
-export interface ComputeNodeExtensionListdefaultResponse extends HttpResponse {
+export interface ComputeNodeExtensionListDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -1185,9 +1562,15 @@ export interface ComputeNodeExtensionListQueryParamProperties {
     timeout?: number;
 }
 
+// @public
+export interface ComputeNodeExtensionOperations {
+    get(poolId: string, nodeId: string, extensionName: string, options?: ComputeNodeExtensionGetParameters): StreamableMethod<ComputeNodeExtensionGet200Response | ComputeNodeExtensionGetDefaultResponse>;
+    list(poolId: string, nodeId: string, options?: ComputeNodeExtensionListParameters): StreamableMethod<ComputeNodeExtensionList200Response | ComputeNodeExtensionListDefaultResponse>;
+}
+
 // @public (undocumented)
 export interface ComputeNodeGet {
-    get(options?: ComputeNodeGetParameters): Promise<ComputeNodeGet200Response | ComputeNodeGetdefaultResponse>;
+    get(options?: ComputeNodeGetParameters): StreamableMethod<ComputeNodeGet200Response | ComputeNodeGetDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -1209,11 +1592,11 @@ export interface ComputeNodeGet200Response extends HttpResponse {
 }
 
 // @public
-export interface ComputeNodeGetdefaultResponse extends HttpResponse {
+export interface ComputeNodeGetDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -1246,7 +1629,7 @@ export interface ComputeNodeGetQueryParamProperties {
 
 // @public (undocumented)
 export interface ComputeNodeGetRemoteDesktop {
-    get(options?: ComputeNodeGetRemoteDesktopParameters): Promise<ComputeNodeGetRemoteDesktop200Response | ComputeNodeGetRemoteDesktopdefaultResponse>;
+    get(options?: ComputeNodeGetRemoteDesktopParameters): StreamableMethod<ComputeNodeGetRemoteDesktop200Response | ComputeNodeGetRemoteDesktopDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -1267,11 +1650,11 @@ export interface ComputeNodeGetRemoteDesktop200Response extends HttpResponse {
 }
 
 // @public
-export interface ComputeNodeGetRemoteDesktopdefaultResponse extends HttpResponse {
+export interface ComputeNodeGetRemoteDesktopDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -1303,7 +1686,7 @@ export interface ComputeNodeGetRemoteDesktopQueryParamProperties {
 
 // @public (undocumented)
 export interface ComputeNodeGetRemoteLoginSettings {
-    get(options?: ComputeNodeGetRemoteLoginSettingsParameters): Promise<ComputeNodeGetRemoteLoginSettings200Response | ComputeNodeGetRemoteLoginSettingsdefaultResponse>;
+    get(options?: ComputeNodeGetRemoteLoginSettingsParameters): StreamableMethod<ComputeNodeGetRemoteLoginSettings200Response | ComputeNodeGetRemoteLoginSettingsDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -1325,11 +1708,11 @@ export interface ComputeNodeGetRemoteLoginSettings200Response extends HttpRespon
 }
 
 // @public
-export interface ComputeNodeGetRemoteLoginSettingsdefaultResponse extends HttpResponse {
+export interface ComputeNodeGetRemoteLoginSettingsDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -1359,23 +1742,23 @@ export interface ComputeNodeGetRemoteLoginSettingsQueryParamProperties {
     timeout?: number;
 }
 
-// @public (undocumented)
+// @public
 export interface ComputeNodeGetRemoteLoginSettingsResultOutput {
     remoteLoginIPAddress: string;
     remoteLoginPort: number;
 }
 
-// @public (undocumented)
+// @public
 export interface ComputeNodeIdentityReference {
     resourceId?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface ComputeNodeIdentityReferenceOutput {
     resourceId?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface ComputeNodeInformation {
     affinityId?: string;
     nodeId?: string;
@@ -1385,7 +1768,7 @@ export interface ComputeNodeInformation {
     taskRootDirectoryUrl?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface ComputeNodeInformationOutput {
     affinityId?: string;
     nodeId?: string;
@@ -1397,7 +1780,7 @@ export interface ComputeNodeInformationOutput {
 
 // @public (undocumented)
 export interface ComputeNodeList {
-    get(options?: ComputeNodeListParameters): Promise<ComputeNodeList200Response | ComputeNodeListdefaultResponse>;
+    get(options?: ComputeNodeListParameters): StreamableMethod<ComputeNodeList200Response | ComputeNodeListDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -1419,11 +1802,11 @@ export interface ComputeNodeList200Response extends HttpResponse {
 }
 
 // @public
-export interface ComputeNodeListdefaultResponse extends HttpResponse {
+export interface ComputeNodeListDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -1456,13 +1839,29 @@ export interface ComputeNodeListQueryParamProperties {
     timeout?: number;
 }
 
-// @public (undocumented)
+// @public
 export interface ComputeNodeListResultOutput {
     "odata.nextLink"?: string;
     value?: Array<ComputeNodeOutput>;
 }
 
-// @public (undocumented)
+// @public
+export interface ComputeNodeOperations {
+    addUser(poolId: string, nodeId: string, options: ComputeNodeAddUserParameters): StreamableMethod<ComputeNodeAddUser201Response | ComputeNodeAddUserDefaultResponse>;
+    deleteUser(poolId: string, nodeId: string, userName: string, options?: ComputeNodeDeleteUserParameters): StreamableMethod<ComputeNodeDeleteUser200Response | ComputeNodeDeleteUserDefaultResponse>;
+    disableScheduling(poolId: string, nodeId: string, options?: ComputeNodeDisableSchedulingParameters): StreamableMethod<ComputeNodeDisableScheduling200Response | ComputeNodeDisableSchedulingDefaultResponse>;
+    enableScheduling(poolId: string, nodeId: string, options?: ComputeNodeEnableSchedulingParameters): StreamableMethod<ComputeNodeEnableScheduling200Response | ComputeNodeEnableSchedulingDefaultResponse>;
+    get(poolId: string, nodeId: string, options?: ComputeNodeGetParameters): StreamableMethod<ComputeNodeGet200Response | ComputeNodeGetDefaultResponse>;
+    getRemoteDesktop(poolId: string, nodeId: string, options?: ComputeNodeGetRemoteDesktopParameters): StreamableMethod<ComputeNodeGetRemoteDesktop200Response | ComputeNodeGetRemoteDesktopDefaultResponse>;
+    getRemoteLoginSettings(poolId: string, nodeId: string, options?: ComputeNodeGetRemoteLoginSettingsParameters): StreamableMethod<ComputeNodeGetRemoteLoginSettings200Response | ComputeNodeGetRemoteLoginSettingsDefaultResponse>;
+    list(poolId: string, options?: ComputeNodeListParameters): StreamableMethod<ComputeNodeList200Response | ComputeNodeListDefaultResponse>;
+    reboot(poolId: string, nodeId: string, options?: ComputeNodeRebootParameters): StreamableMethod<ComputeNodeReboot202Response | ComputeNodeRebootDefaultResponse>;
+    reimage(poolId: string, nodeId: string, options?: ComputeNodeReimageParameters): StreamableMethod<ComputeNodeReimage202Response | ComputeNodeReimageDefaultResponse>;
+    updateUser(poolId: string, nodeId: string, userName: string, options: ComputeNodeUpdateUserParameters): StreamableMethod<ComputeNodeUpdateUser200Response | ComputeNodeUpdateUserDefaultResponse>;
+    uploadBatchServiceLogs(poolId: string, nodeId: string, options: ComputeNodeUploadBatchServiceLogsParameters): StreamableMethod<ComputeNodeUploadBatchServiceLogs200Response | ComputeNodeUploadBatchServiceLogsDefaultResponse>;
+}
+
+// @public
 export interface ComputeNodeOutput {
     affinityId?: string;
     allocationTime?: string;
@@ -1491,7 +1890,7 @@ export interface ComputeNodeOutput {
 
 // @public (undocumented)
 export interface ComputeNodeReboot {
-    post(options?: ComputeNodeRebootParameters): Promise<ComputeNodeReboot202Response | ComputeNodeRebootdefaultResponse>;
+    post(options?: ComputeNodeRebootParameters): StreamableMethod<ComputeNodeReboot202Response | ComputeNodeRebootDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -1515,15 +1914,15 @@ export interface ComputeNodeReboot202Response extends HttpResponse {
 
 // @public (undocumented)
 export interface ComputeNodeRebootBodyParam {
-    body?: NodeRebootParameter;
+    body?: NodeRebootParameters;
 }
 
 // @public
-export interface ComputeNodeRebootdefaultResponse extends HttpResponse {
+export interface ComputeNodeRebootDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -1560,7 +1959,7 @@ export interface ComputeNodeRebootQueryParamProperties {
 
 // @public (undocumented)
 export interface ComputeNodeReimage {
-    post(options?: ComputeNodeReimageParameters): Promise<ComputeNodeReimage202Response | ComputeNodeReimagedefaultResponse>;
+    post(options?: ComputeNodeReimageParameters): StreamableMethod<ComputeNodeReimage202Response | ComputeNodeReimageDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -1584,15 +1983,15 @@ export interface ComputeNodeReimage202Response extends HttpResponse {
 
 // @public (undocumented)
 export interface ComputeNodeReimageBodyParam {
-    body?: NodeReimageParameter;
+    body?: NodeReimageParameters;
 }
 
 // @public
-export interface ComputeNodeReimagedefaultResponse extends HttpResponse {
+export interface ComputeNodeReimageDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -1648,15 +2047,15 @@ export interface ComputeNodeUpdateUser200Response extends HttpResponse {
 
 // @public (undocumented)
 export interface ComputeNodeUpdateUserBodyParam {
-    body: NodeUpdateUserParameter;
+    body: NodeUpdateUserParameters;
 }
 
 // @public
-export interface ComputeNodeUpdateUserdefaultResponse extends HttpResponse {
+export interface ComputeNodeUpdateUserDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -1693,7 +2092,7 @@ export interface ComputeNodeUpdateUserQueryParamProperties {
 
 // @public (undocumented)
 export interface ComputeNodeUploadBatchServiceLogs {
-    post(options: ComputeNodeUploadBatchServiceLogsParameters): Promise<ComputeNodeUploadBatchServiceLogs200Response | ComputeNodeUploadBatchServiceLogsdefaultResponse>;
+    post(options: ComputeNodeUploadBatchServiceLogsParameters): StreamableMethod<ComputeNodeUploadBatchServiceLogs200Response | ComputeNodeUploadBatchServiceLogsDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -1718,11 +2117,11 @@ export interface ComputeNodeUploadBatchServiceLogsBodyParam {
 }
 
 // @public
-export interface ComputeNodeUploadBatchServiceLogsdefaultResponse extends HttpResponse {
+export interface ComputeNodeUploadBatchServiceLogsDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -1757,7 +2156,7 @@ export interface ComputeNodeUploadBatchServiceLogsQueryParamProperties {
     timeout?: number;
 }
 
-// @public (undocumented)
+// @public
 export interface ComputeNodeUser {
     expiryTime?: Date | string;
     isAdmin?: boolean;
@@ -1766,21 +2165,21 @@ export interface ComputeNodeUser {
     sshPublicKey?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface ContainerConfiguration {
     containerImageNames?: Array<string>;
     containerRegistries?: Array<ContainerRegistry>;
     type: "dockerCompatible";
 }
 
-// @public (undocumented)
+// @public
 export interface ContainerConfigurationOutput {
     containerImageNames?: Array<string>;
     containerRegistries?: Array<ContainerRegistryOutput>;
     type: "dockerCompatible";
 }
 
-// @public (undocumented)
+// @public
 export interface ContainerRegistry {
     identityReference?: ComputeNodeIdentityReference;
     password?: string;
@@ -1788,7 +2187,7 @@ export interface ContainerRegistry {
     username?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface ContainerRegistryOutput {
     identityReference?: ComputeNodeIdentityReferenceOutput;
     password?: string;
@@ -1796,11 +2195,11 @@ export interface ContainerRegistryOutput {
     username?: string;
 }
 
-// @public (undocumented)
+// @public
 function createClient(batchUrl: string, credentials: TokenCredential, options?: ClientOptions): BatchGeneratedClient;
 export default createClient;
 
-// @public (undocumented)
+// @public
 export interface DataDisk {
     caching?: "none" | "readonly" | "readwrite";
     diskSizeGB: number;
@@ -1808,7 +2207,7 @@ export interface DataDisk {
     storageAccountType?: "standard_lrs" | "premium_lrs";
 }
 
-// @public (undocumented)
+// @public
 export interface DataDiskOutput {
     caching?: "none" | "readonly" | "readwrite";
     diskSizeGB: number;
@@ -1816,78 +2215,85 @@ export interface DataDiskOutput {
     storageAccountType?: "standard_lrs" | "premium_lrs";
 }
 
-// @public (undocumented)
+// @public
+export interface DeleteCertificateError {
+    code?: string;
+    message?: string;
+    values?: Array<NameValuePair>;
+}
+
+// @public
 export interface DeleteCertificateErrorOutput {
     code?: string;
     message?: string;
     values?: Array<NameValuePairOutput>;
 }
 
-// @public (undocumented)
+// @public
 export interface DiffDiskSettings {
     placement?: "CacheDisk";
 }
 
-// @public (undocumented)
+// @public
 export interface DiffDiskSettingsOutput {
     placement?: "CacheDisk";
 }
 
-// @public (undocumented)
+// @public
 export interface DiskEncryptionConfiguration {
     targets?: Array<"osdisk" | "temporarydisk">;
 }
 
-// @public (undocumented)
+// @public
 export interface DiskEncryptionConfigurationOutput {
     targets?: Array<"osdisk" | "temporarydisk">;
 }
 
-// @public (undocumented)
+// @public
 export interface EnvironmentSetting {
     name: string;
     value?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface EnvironmentSettingOutput {
     name: string;
     value?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface ErrorMessageOutput {
     lang?: string;
     value?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface ExitCodeMapping {
     code: number;
     exitOptions: ExitOptions;
 }
 
-// @public (undocumented)
+// @public
 export interface ExitCodeMappingOutput {
     code: number;
     exitOptions: ExitOptionsOutput;
 }
 
-// @public (undocumented)
+// @public
 export interface ExitCodeRangeMapping {
     end: number;
     exitOptions: ExitOptions;
     start: number;
 }
 
-// @public (undocumented)
+// @public
 export interface ExitCodeRangeMappingOutput {
     end: number;
     exitOptions: ExitOptionsOutput;
     start: number;
 }
 
-// @public (undocumented)
+// @public
 export interface ExitConditions {
     default?: ExitOptions;
     exitCodeRanges?: Array<ExitCodeRangeMapping>;
@@ -1896,7 +2302,7 @@ export interface ExitConditions {
     preProcessingError?: ExitOptions;
 }
 
-// @public (undocumented)
+// @public
 export interface ExitConditionsOutput {
     default?: ExitOptionsOutput;
     exitCodeRanges?: Array<ExitCodeRangeMappingOutput>;
@@ -1905,13 +2311,13 @@ export interface ExitConditionsOutput {
     preProcessingError?: ExitOptionsOutput;
 }
 
-// @public (undocumented)
+// @public
 export interface ExitOptions {
     dependencyAction?: "satisfy" | "block";
     jobAction?: "none" | "disable" | "terminate";
 }
 
-// @public (undocumented)
+// @public
 export interface ExitOptionsOutput {
     dependencyAction?: "satisfy" | "block";
     jobAction?: "none" | "disable" | "terminate";
@@ -1919,9 +2325,9 @@ export interface ExitOptionsOutput {
 
 // @public (undocumented)
 export interface FileDeleteFromComputeNode {
-    delete(options?: FileDeleteFromComputeNodeParameters): Promise<FileDeleteFromComputeNode200Response | FileDeleteFromComputeNodedefaultResponse>;
-    get(options?: FileGetFromComputeNodeParameters): Promise<FileGetFromComputeNode200Response | FileGetFromComputeNodedefaultResponse>;
-    head(options?: FileGetPropertiesFromComputeNodeParameters): Promise<FileGetPropertiesFromComputeNode200Response | FileGetPropertiesFromComputeNodedefaultResponse>;
+    delete(options?: FileDeleteFromComputeNodeParameters): StreamableMethod<FileDeleteFromComputeNode200Response | FileDeleteFromComputeNodeDefaultResponse>;
+    get(options?: FileGetFromComputeNodeParameters): StreamableMethod<FileGetFromComputeNode200Response | FileGetFromComputeNodeDefaultResponse>;
+    head(options?: FileGetPropertiesFromComputeNodeParameters): StreamableMethod<FileGetPropertiesFromComputeNode200Response | FileGetPropertiesFromComputeNodeDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -1941,11 +2347,11 @@ export interface FileDeleteFromComputeNode200Response extends HttpResponse {
 }
 
 // @public
-export interface FileDeleteFromComputeNodedefaultResponse extends HttpResponse {
+export interface FileDeleteFromComputeNodeDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -1978,9 +2384,9 @@ export interface FileDeleteFromComputeNodeQueryParamProperties {
 
 // @public (undocumented)
 export interface FileDeleteFromTask {
-    delete(options?: FileDeleteFromTaskParameters): Promise<FileDeleteFromTask200Response | FileDeleteFromTaskdefaultResponse>;
-    get(options?: FileGetFromTaskParameters): Promise<FileGetFromTask200Response | FileGetFromTaskdefaultResponse>;
-    head(options?: FileGetPropertiesFromTaskParameters): Promise<FileGetPropertiesFromTask200Response | FileGetPropertiesFromTaskdefaultResponse>;
+    delete(options?: FileDeleteFromTaskParameters): StreamableMethod<FileDeleteFromTask200Response | FileDeleteFromTaskDefaultResponse>;
+    get(options?: FileGetFromTaskParameters): StreamableMethod<FileGetFromTask200Response | FileGetFromTaskDefaultResponse>;
+    head(options?: FileGetPropertiesFromTaskParameters): StreamableMethod<FileGetPropertiesFromTask200Response | FileGetPropertiesFromTaskDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -2000,11 +2406,11 @@ export interface FileDeleteFromTask200Response extends HttpResponse {
 }
 
 // @public
-export interface FileDeleteFromTaskdefaultResponse extends HttpResponse {
+export interface FileDeleteFromTaskDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -2059,11 +2465,11 @@ export interface FileGetFromComputeNode200Response extends HttpResponse {
 }
 
 // @public
-export interface FileGetFromComputeNodedefaultResponse extends HttpResponse {
+export interface FileGetFromComputeNodeDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -2120,11 +2526,11 @@ export interface FileGetFromTask200Response extends HttpResponse {
 }
 
 // @public
-export interface FileGetFromTaskdefaultResponse extends HttpResponse {
+export interface FileGetFromTaskDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -2182,11 +2588,11 @@ export interface FileGetPropertiesFromComputeNode200Response extends HttpRespons
 }
 
 // @public
-export interface FileGetPropertiesFromComputeNodedefaultResponse extends HttpResponse {
+export interface FileGetPropertiesFromComputeNodeDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -2243,11 +2649,11 @@ export interface FileGetPropertiesFromTask200Response extends HttpResponse {
 }
 
 // @public
-export interface FileGetPropertiesFromTaskdefaultResponse extends HttpResponse {
+export interface FileGetPropertiesFromTaskDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -2281,7 +2687,7 @@ export interface FileGetPropertiesFromTaskQueryParamProperties {
 
 // @public (undocumented)
 export interface FileListFromComputeNode {
-    get(options?: FileListFromComputeNodeParameters): Promise<FileListFromComputeNode200Response | FileListFromComputeNodedefaultResponse>;
+    get(options?: FileListFromComputeNodeParameters): StreamableMethod<FileListFromComputeNode200Response | FileListFromComputeNodeDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -2303,11 +2709,11 @@ export interface FileListFromComputeNode200Response extends HttpResponse {
 }
 
 // @public
-export interface FileListFromComputeNodedefaultResponse extends HttpResponse {
+export interface FileListFromComputeNodeDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -2342,7 +2748,7 @@ export interface FileListFromComputeNodeQueryParamProperties {
 
 // @public (undocumented)
 export interface FileListFromTask {
-    get(options?: FileListFromTaskParameters): Promise<FileListFromTask200Response | FileListFromTaskdefaultResponse>;
+    get(options?: FileListFromTaskParameters): StreamableMethod<FileListFromTask200Response | FileListFromTaskDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -2364,11 +2770,11 @@ export interface FileListFromTask200Response extends HttpResponse {
 }
 
 // @public
-export interface FileListFromTaskdefaultResponse extends HttpResponse {
+export interface FileListFromTaskDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -2401,7 +2807,19 @@ export interface FileListFromTaskQueryParamProperties {
     timeout?: number;
 }
 
-// @public (undocumented)
+// @public
+export interface FileOperations {
+    deleteFromComputeNode(poolId: string, nodeId: string, filePath: string, options?: FileDeleteFromComputeNodeParameters): StreamableMethod<FileDeleteFromComputeNode200Response | FileDeleteFromComputeNodeDefaultResponse>;
+    deleteFromTask(jobId: string, taskId: string, filePath: string, options?: FileDeleteFromTaskParameters): StreamableMethod<FileDeleteFromTask200Response | FileDeleteFromTaskDefaultResponse>;
+    getFromComputeNode(poolId: string, nodeId: string, filePath: string, options?: FileGetFromComputeNodeParameters): StreamableMethod<FileGetFromComputeNode200Response | FileGetFromComputeNodeDefaultResponse>;
+    getFromTask(jobId: string, taskId: string, filePath: string, options?: FileGetFromTaskParameters): StreamableMethod<FileGetFromTask200Response | FileGetFromTaskDefaultResponse>;
+    getPropertiesFromComputeNode(poolId: string, nodeId: string, filePath: string, options?: FileGetPropertiesFromComputeNodeParameters): StreamableMethod<FileGetPropertiesFromComputeNode200Response | FileGetPropertiesFromComputeNodeDefaultResponse>;
+    getPropertiesFromTask(jobId: string, taskId: string, filePath: string, options?: FileGetPropertiesFromTaskParameters): StreamableMethod<FileGetPropertiesFromTask200Response | FileGetPropertiesFromTaskDefaultResponse>;
+    listFromComputeNode(poolId: string, nodeId: string, options?: FileListFromComputeNodeParameters): StreamableMethod<FileListFromComputeNode200Response | FileListFromComputeNodeDefaultResponse>;
+    listFromTask(jobId: string, taskId: string, options?: FileListFromTaskParameters): StreamableMethod<FileListFromTask200Response | FileListFromTaskDefaultResponse>;
+}
+
+// @public
 export interface FilePropertiesOutput {
     contentLength: number;
     contentType?: string;
@@ -2419,19 +2837,19 @@ export type GetPage<TPage> = (pageLink: string, maxPageSize?: number) => Promise
     nextPageLink?: string;
 }>;
 
-// @public (undocumented)
+// @public
 export interface HttpHeader {
     name: string;
     value?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface HttpHeaderOutput {
     name: string;
     value?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface ImageInformationOutput {
     batchSupportEndOfLife?: string;
     capabilities?: Array<string>;
@@ -2441,7 +2859,7 @@ export interface ImageInformationOutput {
     verificationType: "verified" | "unverified";
 }
 
-// @public (undocumented)
+// @public
 export interface ImageReference {
     exactVersion?: string;
     offer?: string;
@@ -2451,7 +2869,7 @@ export interface ImageReference {
     virtualMachineImageId?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface ImageReferenceOutput {
     exactVersion?: string;
     offer?: string;
@@ -2461,7 +2879,7 @@ export interface ImageReferenceOutput {
     virtualMachineImageId?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface InboundEndpointOutput {
     backendPort: number;
     frontendPort: number;
@@ -2471,7 +2889,7 @@ export interface InboundEndpointOutput {
     publicIPAddress: string;
 }
 
-// @public (undocumented)
+// @public
 export interface InboundNATPool {
     backendPort: number;
     frontendPortRangeEnd: number;
@@ -2481,7 +2899,7 @@ export interface InboundNATPool {
     protocol: "tcp" | "udp";
 }
 
-// @public (undocumented)
+// @public
 export interface InboundNATPoolOutput {
     backendPort: number;
     frontendPortRangeEnd: number;
@@ -2491,7 +2909,7 @@ export interface InboundNATPoolOutput {
     protocol: "tcp" | "udp";
 }
 
-// @public (undocumented)
+// @public
 export interface InstanceViewStatusOutput {
     code?: string;
     displayStatus?: string;
@@ -2501,39 +2919,243 @@ export interface InstanceViewStatusOutput {
 }
 
 // @public (undocumented)
-export interface Job {
-    allowTaskPreemption?: boolean;
-    commonEnvironmentSettings?: Array<EnvironmentSetting>;
-    constraints?: JobConstraints;
-    creationTime?: Date | string;
-    displayName?: string;
-    eTag?: string;
-    executionInfo?: JobExecutionInformation;
-    id?: string;
-    jobManagerTask?: JobManagerTask;
-    jobPreparationTask?: JobPreparationTask;
-    jobReleaseTask?: JobReleaseTask;
-    lastModified?: Date | string;
-    maxParallelTasks?: number;
-    metadata?: Array<MetadataItem>;
-    networkConfiguration?: JobNetworkConfiguration;
-    onAllTasksComplete?: "noaction" | "terminatejob";
-    onTaskFailure?: "noaction" | "performexitoptionsjobaction";
-    poolInfo?: PoolInformation;
-    previousState?: "active" | "disabling" | "disabled" | "enabling" | "terminating" | "completed" | "deleting";
-    previousStateTransitionTime?: Date | string;
-    priority?: number;
-    state?: "active" | "disabling" | "disabled" | "enabling" | "terminating" | "completed" | "deleting";
-    stateTransitionTime?: Date | string;
-    stats?: JobStatistics;
-    url?: string;
-    usesTaskDependencies?: boolean;
-}
+export function isUnexpected(response: ApplicationList200Response | ApplicationListDefaultResponse): response is ApplicationListDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: ApplicationGet200Response | ApplicationGetDefaultResponse): response is ApplicationGetDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: PoolListUsageMetrics200Response | PoolListUsageMetricsDefaultResponse): response is PoolListUsageMetricsDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: PoolGetAllLifetimeStatistics200Response | PoolGetAllLifetimeStatisticsDefaultResponse): response is PoolGetAllLifetimeStatisticsDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: PoolAdd201Response | PoolAddDefaultResponse): response is PoolAddDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: PoolList200Response | PoolListDefaultResponse): response is PoolListDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: PoolDelete202Response | PoolDeleteDefaultResponse): response is PoolDeleteDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: PoolExists200Response | PoolExists404Response | PoolExistsDefaultResponse): response is PoolExistsDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: PoolGet200Response | PoolGetDefaultResponse): response is PoolGetDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: PoolPatch200Response | PoolPatchDefaultResponse): response is PoolPatchDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: PoolDisableAutoScale200Response | PoolDisableAutoScaleDefaultResponse): response is PoolDisableAutoScaleDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: PoolEnableAutoScale200Response | PoolEnableAutoScaleDefaultResponse): response is PoolEnableAutoScaleDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: PoolEvaluateAutoScale200Response | PoolEvaluateAutoScaleDefaultResponse): response is PoolEvaluateAutoScaleDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: PoolResize202Response | PoolResizeDefaultResponse): response is PoolResizeDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: PoolStopResize202Response | PoolStopResizeDefaultResponse): response is PoolStopResizeDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: PoolUpdateProperties204Response | PoolUpdatePropertiesDefaultResponse): response is PoolUpdatePropertiesDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: PoolRemoveNodes202Response | PoolRemoveNodesDefaultResponse): response is PoolRemoveNodesDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: AccountListSupportedImages200Response | AccountListSupportedImagesDefaultResponse): response is AccountListSupportedImagesDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: AccountListPoolNodeCounts200Response | AccountListPoolNodeCountsDefaultResponse): response is AccountListPoolNodeCountsDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: JobGetAllLifetimeStatistics200Response | JobGetAllLifetimeStatisticsDefaultResponse): response is JobGetAllLifetimeStatisticsDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: JobDelete202Response | JobDeleteDefaultResponse): response is JobDeleteDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: JobGet200Response | JobGetDefaultResponse): response is JobGetDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: JobPatch200Response | JobPatchDefaultResponse): response is JobPatchDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: JobUpdate200Response | JobUpdateDefaultResponse): response is JobUpdateDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: JobDisable202Response | JobDisableDefaultResponse): response is JobDisableDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: JobEnable202Response | JobEnableDefaultResponse): response is JobEnableDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: JobTerminate202Response | JobTerminateDefaultResponse): response is JobTerminateDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: JobAdd201Response | JobAddDefaultResponse): response is JobAddDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: JobList200Response | JobListDefaultResponse): response is JobListDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: JobListFromJobSchedule200Response | JobListFromJobScheduleDefaultResponse): response is JobListFromJobScheduleDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: JobListPreparationAndReleaseTaskStatus200Response | JobListPreparationAndReleaseTaskStatusDefaultResponse): response is JobListPreparationAndReleaseTaskStatusDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: JobGetTaskCounts200Response | JobGetTaskCountsDefaultResponse): response is JobGetTaskCountsDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: CertificateAdd201Response | CertificateAddDefaultResponse): response is CertificateAddDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: CertificateList200Response | CertificateListDefaultResponse): response is CertificateListDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: CertificateCancelDeletion204Response | CertificateCancelDeletionDefaultResponse): response is CertificateCancelDeletionDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: CertificateDelete202Response | CertificateDeleteDefaultResponse): response is CertificateDeleteDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: CertificateGet200Response | CertificateGetDefaultResponse): response is CertificateGetDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: FileDeleteFromTask200Response | FileDeleteFromTaskDefaultResponse): response is FileDeleteFromTaskDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: FileGetFromTask200Response | FileGetFromTaskDefaultResponse): response is FileGetFromTaskDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: FileGetPropertiesFromTask200Response | FileGetPropertiesFromTaskDefaultResponse): response is FileGetPropertiesFromTaskDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: FileDeleteFromComputeNode200Response | FileDeleteFromComputeNodeDefaultResponse): response is FileDeleteFromComputeNodeDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: FileGetFromComputeNode200Response | FileGetFromComputeNodeDefaultResponse): response is FileGetFromComputeNodeDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: FileGetPropertiesFromComputeNode200Response | FileGetPropertiesFromComputeNodeDefaultResponse): response is FileGetPropertiesFromComputeNodeDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: FileListFromTask200Response | FileListFromTaskDefaultResponse): response is FileListFromTaskDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: FileListFromComputeNode200Response | FileListFromComputeNodeDefaultResponse): response is FileListFromComputeNodeDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: JobScheduleExists200Response | JobScheduleExists404Response | JobScheduleExistsDefaultResponse): response is JobScheduleExistsDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: JobScheduleDelete202Response | JobScheduleDeleteDefaultResponse): response is JobScheduleDeleteDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: JobScheduleGet200Response | JobScheduleGetDefaultResponse): response is JobScheduleGetDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: JobSchedulePatch200Response | JobSchedulePatchDefaultResponse): response is JobSchedulePatchDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: JobScheduleUpdate200Response | JobScheduleUpdateDefaultResponse): response is JobScheduleUpdateDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: JobScheduleDisable204Response | JobScheduleDisableDefaultResponse): response is JobScheduleDisableDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: JobScheduleEnable204Response | JobScheduleEnableDefaultResponse): response is JobScheduleEnableDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: JobScheduleTerminate202Response | JobScheduleTerminateDefaultResponse): response is JobScheduleTerminateDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: JobScheduleAdd201Response | JobScheduleAddDefaultResponse): response is JobScheduleAddDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: JobScheduleList200Response | JobScheduleListDefaultResponse): response is JobScheduleListDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: TaskAdd201Response | TaskAddDefaultResponse): response is TaskAddDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: TaskList200Response | TaskListDefaultResponse): response is TaskListDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: TaskAddCollection200Response | TaskAddCollectionDefaultResponse): response is TaskAddCollectionDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: TaskDelete200Response | TaskDeleteDefaultResponse): response is TaskDeleteDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: TaskGet200Response | TaskGetDefaultResponse): response is TaskGetDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: TaskUpdate200Response | TaskUpdateDefaultResponse): response is TaskUpdateDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: TaskListSubtasks200Response | TaskListSubtasksDefaultResponse): response is TaskListSubtasksDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: TaskTerminate204Response | TaskTerminateDefaultResponse): response is TaskTerminateDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: TaskReactivate204Response | TaskReactivateDefaultResponse): response is TaskReactivateDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: ComputeNodeAddUser201Response | ComputeNodeAddUserDefaultResponse): response is ComputeNodeAddUserDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: ComputeNodeDeleteUser200Response | ComputeNodeDeleteUserDefaultResponse): response is ComputeNodeDeleteUserDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: ComputeNodeUpdateUser200Response | ComputeNodeUpdateUserDefaultResponse): response is ComputeNodeUpdateUserDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: ComputeNodeGet200Response | ComputeNodeGetDefaultResponse): response is ComputeNodeGetDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: ComputeNodeReboot202Response | ComputeNodeRebootDefaultResponse): response is ComputeNodeRebootDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: ComputeNodeReimage202Response | ComputeNodeReimageDefaultResponse): response is ComputeNodeReimageDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: ComputeNodeDisableScheduling200Response | ComputeNodeDisableSchedulingDefaultResponse): response is ComputeNodeDisableSchedulingDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: ComputeNodeEnableScheduling200Response | ComputeNodeEnableSchedulingDefaultResponse): response is ComputeNodeEnableSchedulingDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: ComputeNodeGetRemoteLoginSettings200Response | ComputeNodeGetRemoteLoginSettingsDefaultResponse): response is ComputeNodeGetRemoteLoginSettingsDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: ComputeNodeGetRemoteDesktop200Response | ComputeNodeGetRemoteDesktopDefaultResponse): response is ComputeNodeGetRemoteDesktopDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: ComputeNodeUploadBatchServiceLogs200Response | ComputeNodeUploadBatchServiceLogsDefaultResponse): response is ComputeNodeUploadBatchServiceLogsDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: ComputeNodeList200Response | ComputeNodeListDefaultResponse): response is ComputeNodeListDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: ComputeNodeExtensionGet200Response | ComputeNodeExtensionGetDefaultResponse): response is ComputeNodeExtensionGetDefaultResponse;
+
+// @public (undocumented)
+export function isUnexpected(response: ComputeNodeExtensionList200Response | ComputeNodeExtensionListDefaultResponse): response is ComputeNodeExtensionListDefaultResponse;
 
 // @public (undocumented)
 export interface JobAdd {
-    get(options?: JobListParameters): Promise<JobList200Response | JobListdefaultResponse>;
-    post(options: JobAddParameters): Promise<JobAdd201Response | JobAdddefaultResponse>;
+    get(options?: JobListParameters): StreamableMethod<JobList200Response | JobListDefaultResponse>;
+    post(options: JobAddParameters): StreamableMethod<JobAdd201Response | JobAddDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -2557,15 +3179,15 @@ export interface JobAdd201Response extends HttpResponse {
 
 // @public (undocumented)
 export interface JobAddBodyParam {
-    body: Job;
+    body: BatchJob;
 }
 
 // @public
-export interface JobAdddefaultResponse extends HttpResponse {
+export interface JobAddDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -2600,13 +3222,13 @@ export interface JobAddQueryParamProperties {
     timeout?: number;
 }
 
-// @public (undocumented)
+// @public
 export interface JobConstraints {
     maxTaskRetryCount?: number;
     maxWallClockTime?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface JobConstraintsOutput {
     maxTaskRetryCount?: number;
     maxWallClockTime?: string;
@@ -2614,10 +3236,10 @@ export interface JobConstraintsOutput {
 
 // @public (undocumented)
 export interface JobDelete {
-    delete(options?: JobDeleteParameters): Promise<JobDelete202Response | JobDeletedefaultResponse>;
-    get(options?: JobGetParameters): Promise<JobGet200Response | JobGetdefaultResponse>;
-    patch(options: JobPatchParameters): Promise<JobPatch200Response | JobPatchdefaultResponse>;
-    put(options: JobUpdateParameters): Promise<JobUpdate200Response | JobUpdatedefaultResponse>;
+    delete(options?: JobDeleteParameters): StreamableMethod<JobDelete202Response | JobDeleteDefaultResponse>;
+    get(options?: JobGetParameters): StreamableMethod<JobGet200Response | JobGetDefaultResponse>;
+    patch(options: JobPatchParameters): StreamableMethod<JobPatch200Response | JobPatchDefaultResponse>;
+    put(options: JobUpdateParameters): StreamableMethod<JobUpdate200Response | JobUpdateDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -2637,11 +3259,11 @@ export interface JobDelete202Response extends HttpResponse {
 }
 
 // @public
-export interface JobDeletedefaultResponse extends HttpResponse {
+export interface JobDeleteDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -2677,7 +3299,7 @@ export interface JobDeleteQueryParamProperties {
 
 // @public (undocumented)
 export interface JobDisable {
-    post(options: JobDisableParameters): Promise<JobDisable202Response | JobDisabledefaultResponse>;
+    post(options: JobDisableParameters): StreamableMethod<JobDisable202Response | JobDisableDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -2701,15 +3323,15 @@ export interface JobDisable202Response extends HttpResponse {
 
 // @public (undocumented)
 export interface JobDisableBodyParam {
-    body: JobDisableParameter;
+    body: BatchJobDisableParameters;
 }
 
 // @public
-export interface JobDisabledefaultResponse extends HttpResponse {
+export interface JobDisableDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -2735,11 +3357,6 @@ export interface JobDisableMediaTypesParam {
 }
 
 // @public (undocumented)
-export interface JobDisableParameter {
-    disableTasks: "requeue" | "terminate" | "wait";
-}
-
-// @public (undocumented)
 export type JobDisableParameters = JobDisableQueryParam & JobDisableHeaderParam & JobDisableMediaTypesParam & JobDisableBodyParam & RequestParameters;
 
 // @public (undocumented)
@@ -2755,7 +3372,7 @@ export interface JobDisableQueryParamProperties {
 
 // @public (undocumented)
 export interface JobEnable {
-    post(options?: JobEnableParameters): Promise<JobEnable202Response | JobEnabledefaultResponse>;
+    post(options?: JobEnableParameters): StreamableMethod<JobEnable202Response | JobEnableDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -2778,11 +3395,11 @@ export interface JobEnable202Response extends HttpResponse {
 }
 
 // @public
-export interface JobEnabledefaultResponse extends HttpResponse {
+export interface JobEnableDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -2816,7 +3433,7 @@ export interface JobEnableQueryParamProperties {
     timeout?: number;
 }
 
-// @public (undocumented)
+// @public
 export interface JobExecutionInformation {
     endTime?: Date | string;
     poolId?: string;
@@ -2825,7 +3442,7 @@ export interface JobExecutionInformation {
     terminateReason?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface JobExecutionInformationOutput {
     endTime?: string;
     poolId?: string;
@@ -2845,7 +3462,7 @@ export interface JobGet200Headers {
 // @public
 export interface JobGet200Response extends HttpResponse {
     // (undocumented)
-    body: JobOutput;
+    body: BatchJobOutput;
     // (undocumented)
     headers: RawHttpHeaders & JobGet200Headers;
     // (undocumented)
@@ -2854,7 +3471,7 @@ export interface JobGet200Response extends HttpResponse {
 
 // @public (undocumented)
 export interface JobGetAllLifetimeStatistics {
-    get(options?: JobGetAllLifetimeStatisticsParameters): Promise<JobGetAllLifetimeStatistics200Response | JobGetAllLifetimeStatisticsdefaultResponse>;
+    get(options?: JobGetAllLifetimeStatisticsParameters): StreamableMethod<JobGetAllLifetimeStatistics200Response | JobGetAllLifetimeStatisticsDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -2876,11 +3493,11 @@ export interface JobGetAllLifetimeStatistics200Response extends HttpResponse {
 }
 
 // @public
-export interface JobGetAllLifetimeStatisticsdefaultResponse extends HttpResponse {
+export interface JobGetAllLifetimeStatisticsDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -2911,11 +3528,11 @@ export interface JobGetAllLifetimeStatisticsQueryParamProperties {
 }
 
 // @public
-export interface JobGetdefaultResponse extends HttpResponse {
+export interface JobGetDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -2953,7 +3570,7 @@ export interface JobGetQueryParamProperties {
 
 // @public (undocumented)
 export interface JobGetTaskCounts {
-    get(options?: JobGetTaskCountsParameters): Promise<JobGetTaskCounts200Response | JobGetTaskCountsdefaultResponse>;
+    get(options?: JobGetTaskCountsParameters): StreamableMethod<JobGetTaskCounts200Response | JobGetTaskCountsDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -2973,11 +3590,11 @@ export interface JobGetTaskCounts200Response extends HttpResponse {
 }
 
 // @public
-export interface JobGetTaskCountsdefaultResponse extends HttpResponse {
+export interface JobGetTaskCountsDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -3018,7 +3635,7 @@ export interface JobList200Headers {
 // @public
 export interface JobList200Response extends HttpResponse {
     // (undocumented)
-    body: JobListResultOutput;
+    body: BatchJobListResultOutput;
     // (undocumented)
     headers: RawHttpHeaders & JobList200Headers;
     // (undocumented)
@@ -3026,16 +3643,16 @@ export interface JobList200Response extends HttpResponse {
 }
 
 // @public
-export interface JobListdefaultResponse extends HttpResponse {
+export interface JobListDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
 export interface JobListFromJobSchedule {
-    get(options?: JobListFromJobScheduleParameters): Promise<JobListFromJobSchedule200Response | JobListFromJobScheduledefaultResponse>;
+    get(options?: JobListFromJobScheduleParameters): StreamableMethod<JobListFromJobSchedule200Response | JobListFromJobScheduleDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -3049,7 +3666,7 @@ export interface JobListFromJobSchedule200Headers {
 // @public
 export interface JobListFromJobSchedule200Response extends HttpResponse {
     // (undocumented)
-    body: JobListResultOutput;
+    body: BatchJobListResultOutput;
     // (undocumented)
     headers: RawHttpHeaders & JobListFromJobSchedule200Headers;
     // (undocumented)
@@ -3057,11 +3674,11 @@ export interface JobListFromJobSchedule200Response extends HttpResponse {
 }
 
 // @public
-export interface JobListFromJobScheduledefaultResponse extends HttpResponse {
+export interface JobListFromJobScheduleDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -3113,7 +3730,7 @@ export type JobListParameters = JobListQueryParam & JobListHeaderParam & Request
 
 // @public (undocumented)
 export interface JobListPreparationAndReleaseTaskStatus {
-    get(options?: JobListPreparationAndReleaseTaskStatusParameters): Promise<JobListPreparationAndReleaseTaskStatus200Response | JobListPreparationAndReleaseTaskStatusdefaultResponse>;
+    get(options?: JobListPreparationAndReleaseTaskStatusParameters): StreamableMethod<JobListPreparationAndReleaseTaskStatus200Response | JobListPreparationAndReleaseTaskStatusDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -3127,7 +3744,7 @@ export interface JobListPreparationAndReleaseTaskStatus200Headers {
 // @public
 export interface JobListPreparationAndReleaseTaskStatus200Response extends HttpResponse {
     // (undocumented)
-    body: JobListPreparationAndReleaseTaskStatusResultOutput;
+    body: BatchJobListPreparationAndReleaseTaskStatusResultOutput;
     // (undocumented)
     headers: RawHttpHeaders & JobListPreparationAndReleaseTaskStatus200Headers;
     // (undocumented)
@@ -3135,11 +3752,11 @@ export interface JobListPreparationAndReleaseTaskStatus200Response extends HttpR
 }
 
 // @public
-export interface JobListPreparationAndReleaseTaskStatusdefaultResponse extends HttpResponse {
+export interface JobListPreparationAndReleaseTaskStatusDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -3173,12 +3790,6 @@ export interface JobListPreparationAndReleaseTaskStatusQueryParamProperties {
 }
 
 // @public (undocumented)
-export interface JobListPreparationAndReleaseTaskStatusResultOutput {
-    "odata.nextLink"?: string;
-    value?: Array<JobPreparationAndReleaseTaskExecutionInformationOutput>;
-}
-
-// @public (undocumented)
 export interface JobListQueryParam {
     // (undocumented)
     queryParameters?: JobListQueryParamProperties;
@@ -3193,13 +3804,7 @@ export interface JobListQueryParamProperties {
     timeout?: number;
 }
 
-// @public (undocumented)
-export interface JobListResultOutput {
-    "odata.nextLink"?: string;
-    value?: Array<JobOutput>;
-}
-
-// @public (undocumented)
+// @public
 export interface JobManagerTask {
     allowLowPriorityNode?: boolean;
     applicationPackageReferences?: Array<ApplicationPackageReference>;
@@ -3218,7 +3823,7 @@ export interface JobManagerTask {
     userIdentity?: UserIdentity;
 }
 
-// @public (undocumented)
+// @public
 export interface JobManagerTaskOutput {
     allowLowPriorityNode?: boolean;
     applicationPackageReferences?: Array<ApplicationPackageReferenceOutput>;
@@ -3237,44 +3842,31 @@ export interface JobManagerTaskOutput {
     userIdentity?: UserIdentityOutput;
 }
 
-// @public (undocumented)
+// @public
 export interface JobNetworkConfiguration {
     subnetId: string;
 }
 
-// @public (undocumented)
+// @public
 export interface JobNetworkConfigurationOutput {
     subnetId: string;
 }
 
-// @public (undocumented)
-export interface JobOutput {
-    allowTaskPreemption?: boolean;
-    commonEnvironmentSettings?: Array<EnvironmentSettingOutput>;
-    constraints?: JobConstraintsOutput;
-    creationTime?: string;
-    displayName?: string;
-    eTag?: string;
-    executionInfo?: JobExecutionInformationOutput;
-    id?: string;
-    jobManagerTask?: JobManagerTaskOutput;
-    jobPreparationTask?: JobPreparationTaskOutput;
-    jobReleaseTask?: JobReleaseTaskOutput;
-    lastModified?: string;
-    maxParallelTasks?: number;
-    metadata?: Array<MetadataItemOutput>;
-    networkConfiguration?: JobNetworkConfigurationOutput;
-    onAllTasksComplete?: "noaction" | "terminatejob";
-    onTaskFailure?: "noaction" | "performexitoptionsjobaction";
-    poolInfo?: PoolInformationOutput;
-    previousState?: "active" | "disabling" | "disabled" | "enabling" | "terminating" | "completed" | "deleting";
-    previousStateTransitionTime?: string;
-    priority?: number;
-    state?: "active" | "disabling" | "disabled" | "enabling" | "terminating" | "completed" | "deleting";
-    stateTransitionTime?: string;
-    stats?: JobStatisticsOutput;
-    url?: string;
-    usesTaskDependencies?: boolean;
+// @public
+export interface JobOperations {
+    add(options: JobAddParameters): StreamableMethod<JobAdd201Response | JobAddDefaultResponse>;
+    delete(jobId: string, options?: JobDeleteParameters): StreamableMethod<JobDelete202Response | JobDeleteDefaultResponse>;
+    disable(jobId: string, options: JobDisableParameters): StreamableMethod<JobDisable202Response | JobDisableDefaultResponse>;
+    enable(jobId: string, options?: JobEnableParameters): StreamableMethod<JobEnable202Response | JobEnableDefaultResponse>;
+    get(jobId: string, options?: JobGetParameters): StreamableMethod<JobGet200Response | JobGetDefaultResponse>;
+    getAllLifetimeStatistics(options?: JobGetAllLifetimeStatisticsParameters): StreamableMethod<JobGetAllLifetimeStatistics200Response | JobGetAllLifetimeStatisticsDefaultResponse>;
+    getTaskCounts(jobId: string, options?: JobGetTaskCountsParameters): StreamableMethod<JobGetTaskCounts200Response | JobGetTaskCountsDefaultResponse>;
+    list(options?: JobListParameters): StreamableMethod<JobList200Response | JobListDefaultResponse>;
+    listFromJobSchedule(jobScheduleId: string, options?: JobListFromJobScheduleParameters): StreamableMethod<JobListFromJobSchedule200Response | JobListFromJobScheduleDefaultResponse>;
+    listPreparationAndReleaseTaskStatus(jobId: string, options?: JobListPreparationAndReleaseTaskStatusParameters): StreamableMethod<JobListPreparationAndReleaseTaskStatus200Response | JobListPreparationAndReleaseTaskStatusDefaultResponse>;
+    patch(jobId: string, options: JobPatchParameters): StreamableMethod<JobPatch200Response | JobPatchDefaultResponse>;
+    terminate(jobId: string, options?: JobTerminateParameters): StreamableMethod<JobTerminate202Response | JobTerminateDefaultResponse>;
+    update(jobId: string, options: JobUpdateParameters): StreamableMethod<JobUpdate200Response | JobUpdateDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -3298,15 +3890,15 @@ export interface JobPatch200Response extends HttpResponse {
 
 // @public (undocumented)
 export interface JobPatchBodyParam {
-    body: JobUpdate;
+    body: BatchJobUpdate;
 }
 
 // @public
-export interface JobPatchdefaultResponse extends HttpResponse {
+export interface JobPatchDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -3345,7 +3937,7 @@ export interface JobPatchQueryParamProperties {
     timeout?: number;
 }
 
-// @public (undocumented)
+// @public
 export interface JobPreparationAndReleaseTaskExecutionInformationOutput {
     jobPreparationTaskExecutionInfo?: JobPreparationTaskExecutionInformationOutput;
     jobReleaseTaskExecutionInfo?: JobReleaseTaskExecutionInformationOutput;
@@ -3354,7 +3946,7 @@ export interface JobPreparationAndReleaseTaskExecutionInformationOutput {
     poolId?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface JobPreparationTask {
     commandLine: string;
     constraints?: TaskConstraints;
@@ -3367,7 +3959,7 @@ export interface JobPreparationTask {
     waitForSuccess?: boolean;
 }
 
-// @public (undocumented)
+// @public
 export interface JobPreparationTaskExecutionInformationOutput {
     containerInfo?: TaskContainerExecutionInformationOutput;
     endTime?: string;
@@ -3382,7 +3974,7 @@ export interface JobPreparationTaskExecutionInformationOutput {
     taskRootDirectoryUrl?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface JobPreparationTaskOutput {
     commandLine: string;
     constraints?: TaskConstraintsOutput;
@@ -3395,7 +3987,7 @@ export interface JobPreparationTaskOutput {
     waitForSuccess?: boolean;
 }
 
-// @public (undocumented)
+// @public
 export interface JobReleaseTask {
     commandLine: string;
     containerSettings?: TaskContainerSettings;
@@ -3407,7 +3999,7 @@ export interface JobReleaseTask {
     userIdentity?: UserIdentity;
 }
 
-// @public (undocumented)
+// @public
 export interface JobReleaseTaskExecutionInformationOutput {
     containerInfo?: TaskContainerExecutionInformationOutput;
     endTime?: string;
@@ -3420,7 +4012,7 @@ export interface JobReleaseTaskExecutionInformationOutput {
     taskRootDirectoryUrl?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface JobReleaseTaskOutput {
     commandLine: string;
     containerSettings?: TaskContainerSettingsOutput;
@@ -3433,28 +4025,9 @@ export interface JobReleaseTaskOutput {
 }
 
 // @public (undocumented)
-export interface JobSchedule {
-    creationTime?: Date | string;
-    displayName?: string;
-    eTag?: string;
-    executionInfo?: JobScheduleExecutionInformation;
-    id?: string;
-    jobSpecification?: JobSpecification;
-    lastModified?: Date | string;
-    metadata?: Array<MetadataItem>;
-    previousState?: "active" | "completed" | "disabled" | "terminating" | "deleting";
-    previousStateTransitionTime?: Date | string;
-    schedule?: Schedule;
-    state?: "active" | "completed" | "disabled" | "terminating" | "deleting";
-    stateTransitionTime?: Date | string;
-    stats?: JobScheduleStatistics;
-    url?: string;
-}
-
-// @public (undocumented)
 export interface JobScheduleAdd {
-    get(options?: JobScheduleListParameters): Promise<JobScheduleList200Response | JobScheduleListdefaultResponse>;
-    post(options: JobScheduleAddParameters): Promise<JobScheduleAdd201Response | JobScheduleAdddefaultResponse>;
+    get(options?: JobScheduleListParameters): StreamableMethod<JobScheduleList200Response | JobScheduleListDefaultResponse>;
+    post(options: JobScheduleAddParameters): StreamableMethod<JobScheduleAdd201Response | JobScheduleAddDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -3478,15 +4051,15 @@ export interface JobScheduleAdd201Response extends HttpResponse {
 
 // @public (undocumented)
 export interface JobScheduleAddBodyParam {
-    body: JobSchedule;
+    body: BatchJobSchedule;
 }
 
 // @public
-export interface JobScheduleAdddefaultResponse extends HttpResponse {
+export interface JobScheduleAddDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -3538,11 +4111,11 @@ export interface JobScheduleDelete202Response extends HttpResponse {
 }
 
 // @public
-export interface JobScheduleDeletedefaultResponse extends HttpResponse {
+export interface JobScheduleDeleteDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -3578,7 +4151,7 @@ export interface JobScheduleDeleteQueryParamProperties {
 
 // @public (undocumented)
 export interface JobScheduleDisable {
-    post(options?: JobScheduleDisableParameters): Promise<JobScheduleDisable204Response | JobScheduleDisabledefaultResponse>;
+    post(options?: JobScheduleDisableParameters): StreamableMethod<JobScheduleDisable204Response | JobScheduleDisableDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -3601,11 +4174,11 @@ export interface JobScheduleDisable204Response extends HttpResponse {
 }
 
 // @public
-export interface JobScheduleDisabledefaultResponse extends HttpResponse {
+export interface JobScheduleDisableDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -3641,7 +4214,7 @@ export interface JobScheduleDisableQueryParamProperties {
 
 // @public (undocumented)
 export interface JobScheduleEnable {
-    post(options?: JobScheduleEnableParameters): Promise<JobScheduleEnable204Response | JobScheduleEnabledefaultResponse>;
+    post(options?: JobScheduleEnableParameters): StreamableMethod<JobScheduleEnable204Response | JobScheduleEnableDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -3664,11 +4237,11 @@ export interface JobScheduleEnable204Response extends HttpResponse {
 }
 
 // @public
-export interface JobScheduleEnabledefaultResponse extends HttpResponse {
+export interface JobScheduleEnableDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -3702,14 +4275,14 @@ export interface JobScheduleEnableQueryParamProperties {
     timeout?: number;
 }
 
-// @public (undocumented)
+// @public
 export interface JobScheduleExecutionInformation {
     endTime?: Date | string;
     nextRunTime?: Date | string;
     recentJob?: RecentJob;
 }
 
-// @public (undocumented)
+// @public
 export interface JobScheduleExecutionInformationOutput {
     endTime?: string;
     nextRunTime?: string;
@@ -3718,11 +4291,11 @@ export interface JobScheduleExecutionInformationOutput {
 
 // @public (undocumented)
 export interface JobScheduleExists {
-    delete(options?: JobScheduleDeleteParameters): Promise<JobScheduleDelete202Response | JobScheduleDeletedefaultResponse>;
-    get(options?: JobScheduleGetParameters): Promise<JobScheduleGet200Response | JobScheduleGetdefaultResponse>;
-    head(options?: JobScheduleExistsParameters): Promise<JobScheduleExists200Response | JobScheduleExists404Response | JobScheduleExistsdefaultResponse>;
-    patch(options: JobSchedulePatchParameters): Promise<JobSchedulePatch200Response | JobSchedulePatchdefaultResponse>;
-    put(options: JobScheduleUpdateParameters): Promise<JobScheduleUpdate200Response | JobScheduleUpdatedefaultResponse>;
+    delete(options?: JobScheduleDeleteParameters): StreamableMethod<JobScheduleDelete202Response | JobScheduleDeleteDefaultResponse>;
+    get(options?: JobScheduleGetParameters): StreamableMethod<JobScheduleGet200Response | JobScheduleGetDefaultResponse>;
+    head(options?: JobScheduleExistsParameters): StreamableMethod<JobScheduleExists200Response | JobScheduleExists404Response | JobScheduleExistsDefaultResponse>;
+    patch(options: JobSchedulePatchParameters): StreamableMethod<JobSchedulePatch200Response | JobSchedulePatchDefaultResponse>;
+    put(options: JobScheduleUpdateParameters): StreamableMethod<JobScheduleUpdate200Response | JobScheduleUpdateDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -3752,11 +4325,11 @@ export interface JobScheduleExists404Response extends HttpResponse {
 }
 
 // @public
-export interface JobScheduleExistsdefaultResponse extends HttpResponse {
+export interface JobScheduleExistsDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -3801,7 +4374,7 @@ export interface JobScheduleGet200Headers {
 // @public
 export interface JobScheduleGet200Response extends HttpResponse {
     // (undocumented)
-    body: JobScheduleOutput;
+    body: BatchJobScheduleOutput;
     // (undocumented)
     headers: RawHttpHeaders & JobScheduleGet200Headers;
     // (undocumented)
@@ -3809,11 +4382,11 @@ export interface JobScheduleGet200Response extends HttpResponse {
 }
 
 // @public
-export interface JobScheduleGetdefaultResponse extends HttpResponse {
+export interface JobScheduleGetDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -3860,7 +4433,7 @@ export interface JobScheduleList200Headers {
 // @public
 export interface JobScheduleList200Response extends HttpResponse {
     // (undocumented)
-    body: JobScheduleListResultOutput;
+    body: BatchJobScheduleListResultOutput;
     // (undocumented)
     headers: RawHttpHeaders & JobScheduleList200Headers;
     // (undocumented)
@@ -3868,11 +4441,11 @@ export interface JobScheduleList200Response extends HttpResponse {
 }
 
 // @public
-export interface JobScheduleListdefaultResponse extends HttpResponse {
+export interface JobScheduleListDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -3906,29 +4479,18 @@ export interface JobScheduleListQueryParamProperties {
     timeout?: number;
 }
 
-// @public (undocumented)
-export interface JobScheduleListResultOutput {
-    "odata.nextLink"?: string;
-    value?: Array<JobScheduleOutput>;
-}
-
-// @public (undocumented)
-export interface JobScheduleOutput {
-    creationTime?: string;
-    displayName?: string;
-    eTag?: string;
-    executionInfo?: JobScheduleExecutionInformationOutput;
-    id?: string;
-    jobSpecification?: JobSpecificationOutput;
-    lastModified?: string;
-    metadata?: Array<MetadataItemOutput>;
-    previousState?: "active" | "completed" | "disabled" | "terminating" | "deleting";
-    previousStateTransitionTime?: string;
-    schedule?: ScheduleOutput;
-    state?: "active" | "completed" | "disabled" | "terminating" | "deleting";
-    stateTransitionTime?: string;
-    stats?: JobScheduleStatisticsOutput;
-    url?: string;
+// @public
+export interface JobScheduleOperations {
+    add(options: JobScheduleAddParameters): StreamableMethod<JobScheduleAdd201Response | JobScheduleAddDefaultResponse>;
+    delete(jobScheduleId: string, options?: JobScheduleDeleteParameters): StreamableMethod<JobScheduleDelete202Response | JobScheduleDeleteDefaultResponse>;
+    disable(jobScheduleId: string, options?: JobScheduleDisableParameters): StreamableMethod<JobScheduleDisable204Response | JobScheduleDisableDefaultResponse>;
+    enable(jobScheduleId: string, options?: JobScheduleEnableParameters): StreamableMethod<JobScheduleEnable204Response | JobScheduleEnableDefaultResponse>;
+    exists(jobScheduleId: string, options?: JobScheduleExistsParameters): StreamableMethod<JobScheduleExists200Response | JobScheduleExists404Response | JobScheduleExistsDefaultResponse>;
+    get(jobScheduleId: string, options?: JobScheduleGetParameters): StreamableMethod<JobScheduleGet200Response | JobScheduleGetDefaultResponse>;
+    list(options?: JobScheduleListParameters): StreamableMethod<JobScheduleList200Response | JobScheduleListDefaultResponse>;
+    patch(jobScheduleId: string, options: JobSchedulePatchParameters): StreamableMethod<JobSchedulePatch200Response | JobSchedulePatchDefaultResponse>;
+    terminate(jobScheduleId: string, options?: JobScheduleTerminateParameters): StreamableMethod<JobScheduleTerminate202Response | JobScheduleTerminateDefaultResponse>;
+    update(jobScheduleId: string, options: JobScheduleUpdateParameters): StreamableMethod<JobScheduleUpdate200Response | JobScheduleUpdateDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -3952,15 +4514,15 @@ export interface JobSchedulePatch200Response extends HttpResponse {
 
 // @public (undocumented)
 export interface JobSchedulePatchBodyParam {
-    body: JobScheduleUpdate;
+    body: BatchJobScheduleUpdate;
 }
 
 // @public
-export interface JobSchedulePatchdefaultResponse extends HttpResponse {
+export interface JobSchedulePatchDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -3999,7 +4561,7 @@ export interface JobSchedulePatchQueryParamProperties {
     timeout?: number;
 }
 
-// @public (undocumented)
+// @public
 export interface JobScheduleStatistics {
     kernelCPUTime: string;
     lastUpdateTime: Date | string;
@@ -4017,7 +4579,7 @@ export interface JobScheduleStatistics {
     writeIOps: number;
 }
 
-// @public (undocumented)
+// @public
 export interface JobScheduleStatisticsOutput {
     kernelCPUTime: string;
     lastUpdateTime: string;
@@ -4037,7 +4599,7 @@ export interface JobScheduleStatisticsOutput {
 
 // @public (undocumented)
 export interface JobScheduleTerminate {
-    post(options?: JobScheduleTerminateParameters): Promise<JobScheduleTerminate202Response | JobScheduleTerminatedefaultResponse>;
+    post(options?: JobScheduleTerminateParameters): StreamableMethod<JobScheduleTerminate202Response | JobScheduleTerminateDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -4060,11 +4622,11 @@ export interface JobScheduleTerminate202Response extends HttpResponse {
 }
 
 // @public
-export interface JobScheduleTerminatedefaultResponse extends HttpResponse {
+export interface JobScheduleTerminateDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -4099,13 +4661,6 @@ export interface JobScheduleTerminateQueryParamProperties {
 }
 
 // @public (undocumented)
-export interface JobScheduleUpdate {
-    jobSpecification?: JobSpecification;
-    metadata?: Array<MetadataItem>;
-    schedule?: Schedule;
-}
-
-// @public (undocumented)
 export interface JobScheduleUpdate200Headers {
     "client-request-id"?: string;
     "last-modified"?: string;
@@ -4126,15 +4681,15 @@ export interface JobScheduleUpdate200Response extends HttpResponse {
 
 // @public (undocumented)
 export interface JobScheduleUpdateBodyParam {
-    body: JobSchedule;
+    body: BatchJobSchedule;
 }
 
 // @public
-export interface JobScheduleUpdatedefaultResponse extends HttpResponse {
+export interface JobScheduleUpdateDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -4173,7 +4728,7 @@ export interface JobScheduleUpdateQueryParamProperties {
     timeout?: number;
 }
 
-// @public (undocumented)
+// @public
 export interface JobSchedulingError {
     category: "usererror" | "servererror";
     code?: string;
@@ -4181,7 +4736,7 @@ export interface JobSchedulingError {
     message?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface JobSchedulingErrorOutput {
     category: "usererror" | "servererror";
     code?: string;
@@ -4189,7 +4744,7 @@ export interface JobSchedulingErrorOutput {
     message?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface JobSpecification {
     allowTaskPreemption?: boolean;
     commonEnvironmentSettings?: Array<EnvironmentSetting>;
@@ -4208,7 +4763,7 @@ export interface JobSpecification {
     usesTaskDependencies?: boolean;
 }
 
-// @public (undocumented)
+// @public
 export interface JobSpecificationOutput {
     allowTaskPreemption?: boolean;
     commonEnvironmentSettings?: Array<EnvironmentSettingOutput>;
@@ -4227,7 +4782,7 @@ export interface JobSpecificationOutput {
     usesTaskDependencies?: boolean;
 }
 
-// @public (undocumented)
+// @public
 export interface JobStatistics {
     kernelCPUTime: string;
     lastUpdateTime: Date | string;
@@ -4245,7 +4800,7 @@ export interface JobStatistics {
     writeIOps: number;
 }
 
-// @public (undocumented)
+// @public
 export interface JobStatisticsOutput {
     kernelCPUTime: string;
     lastUpdateTime: string;
@@ -4265,7 +4820,7 @@ export interface JobStatisticsOutput {
 
 // @public (undocumented)
 export interface JobTerminate {
-    post(options?: JobTerminateParameters): Promise<JobTerminate202Response | JobTerminatedefaultResponse>;
+    post(options?: JobTerminateParameters): StreamableMethod<JobTerminate202Response | JobTerminateDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -4289,15 +4844,15 @@ export interface JobTerminate202Response extends HttpResponse {
 
 // @public (undocumented)
 export interface JobTerminateBodyParam {
-    body?: JobTerminateParameter;
+    body?: BatchJobTerminateParameters;
 }
 
 // @public
-export interface JobTerminatedefaultResponse extends HttpResponse {
+export interface JobTerminateDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -4323,11 +4878,6 @@ export interface JobTerminateMediaTypesParam {
 }
 
 // @public (undocumented)
-export interface JobTerminateParameter {
-    terminateReason?: string;
-}
-
-// @public (undocumented)
 export type JobTerminateParameters = JobTerminateQueryParam & JobTerminateHeaderParam & JobTerminateMediaTypesParam & JobTerminateBodyParam & RequestParameters;
 
 // @public (undocumented)
@@ -4339,17 +4889,6 @@ export interface JobTerminateQueryParam {
 // @public (undocumented)
 export interface JobTerminateQueryParamProperties {
     timeout?: number;
-}
-
-// @public (undocumented)
-export interface JobUpdate {
-    allowTaskPreemption?: boolean;
-    constraints?: JobConstraints;
-    maxParallelTasks?: number;
-    metadata?: Array<MetadataItem>;
-    onAllTasksComplete?: "noaction" | "terminatejob";
-    poolInfo?: PoolInformation;
-    priority?: number;
 }
 
 // @public (undocumented)
@@ -4373,15 +4912,15 @@ export interface JobUpdate200Response extends HttpResponse {
 
 // @public (undocumented)
 export interface JobUpdateBodyParam {
-    body: Job;
+    body: BatchJob;
 }
 
 // @public
-export interface JobUpdatedefaultResponse extends HttpResponse {
+export interface JobUpdateDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -4420,33 +4959,33 @@ export interface JobUpdateQueryParamProperties {
     timeout?: number;
 }
 
-// @public (undocumented)
+// @public
 export interface LinuxUserConfiguration {
     gid?: number;
     sshPrivateKey?: string;
     uid?: number;
 }
 
-// @public (undocumented)
+// @public
 export interface LinuxUserConfigurationOutput {
     gid?: number;
     sshPrivateKey?: string;
     uid?: number;
 }
 
-// @public (undocumented)
+// @public
 export interface MetadataItem {
     name: string;
     value: string;
 }
 
-// @public (undocumented)
+// @public
 export interface MetadataItemOutput {
     name: string;
     value: string;
 }
 
-// @public (undocumented)
+// @public
 export interface MountConfiguration {
     azureBlobFileSystemConfiguration?: AzureBlobFileSystemConfiguration;
     azureFileShareConfiguration?: AzureFileShareConfiguration;
@@ -4454,7 +4993,7 @@ export interface MountConfiguration {
     nfsMountConfiguration?: NFSMountConfiguration;
 }
 
-// @public (undocumented)
+// @public
 export interface MountConfigurationOutput {
     azureBlobFileSystemConfiguration?: AzureBlobFileSystemConfigurationOutput;
     azureFileShareConfiguration?: AzureFileShareConfigurationOutput;
@@ -4462,33 +5001,33 @@ export interface MountConfigurationOutput {
     nfsMountConfiguration?: NFSMountConfigurationOutput;
 }
 
-// @public (undocumented)
+// @public
 export interface MultiInstanceSettings {
     commonResourceFiles?: Array<ResourceFile>;
     coordinationCommandLine: string;
     numberOfInstances?: number;
 }
 
-// @public (undocumented)
+// @public
 export interface MultiInstanceSettingsOutput {
     commonResourceFiles?: Array<ResourceFileOutput>;
     coordinationCommandLine: string;
     numberOfInstances?: number;
 }
 
-// @public (undocumented)
+// @public
 export interface NameValuePair {
     name?: string;
     value?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface NameValuePairOutput {
     name?: string;
     value?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface NetworkConfiguration {
     dynamicVNetAssignmentScope?: "none" | "job";
     endpointConfiguration?: PoolEndpointConfiguration;
@@ -4496,7 +5035,7 @@ export interface NetworkConfiguration {
     subnetId?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface NetworkConfigurationOutput {
     dynamicVNetAssignmentScope?: "none" | "job";
     endpointConfiguration?: PoolEndpointConfigurationOutput;
@@ -4504,7 +5043,7 @@ export interface NetworkConfigurationOutput {
     subnetId?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface NetworkSecurityGroupRule {
     access: "allow" | "deny";
     priority: number;
@@ -4512,7 +5051,7 @@ export interface NetworkSecurityGroupRule {
     sourcePortRanges?: Array<string>;
 }
 
-// @public (undocumented)
+// @public
 export interface NetworkSecurityGroupRuleOutput {
     access: "allow" | "deny";
     priority: number;
@@ -4520,27 +5059,27 @@ export interface NetworkSecurityGroupRuleOutput {
     sourcePortRanges?: Array<string>;
 }
 
-// @public (undocumented)
+// @public
 export interface NFSMountConfiguration {
     mountOptions?: string;
     relativeMountPath: string;
     source: string;
 }
 
-// @public (undocumented)
+// @public
 export interface NFSMountConfigurationOutput {
     mountOptions?: string;
     relativeMountPath: string;
     source: string;
 }
 
-// @public (undocumented)
+// @public
 export interface NodeAgentInformationOutput {
     lastUpdateTime: string;
     version: string;
 }
 
-// @public (undocumented)
+// @public
 export interface NodeCountsOutput {
     creating: number;
     idle: number;
@@ -4558,18 +5097,18 @@ export interface NodeCountsOutput {
     waitingForStartTask: number;
 }
 
-// @public (undocumented)
-export interface NodeDisableSchedulingParameter {
+// @public
+export interface NodeDisableSchedulingParameters {
     nodeDisableSchedulingOption?: "requeue" | "terminate" | "taskcompletion";
 }
 
-// @public (undocumented)
+// @public
 export interface NodeFileListResultOutput {
     "odata.nextLink"?: string;
     value?: Array<NodeFileOutput>;
 }
 
-// @public (undocumented)
+// @public
 export interface NodeFileOutput {
     isDirectory?: boolean;
     name?: string;
@@ -4577,71 +5116,71 @@ export interface NodeFileOutput {
     url?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface NodePlacementConfiguration {
     policy?: "regional" | "zonal";
 }
 
-// @public (undocumented)
+// @public
 export interface NodePlacementConfigurationOutput {
     policy?: "regional" | "zonal";
 }
 
-// @public (undocumented)
-export interface NodeRebootParameter {
+// @public
+export interface NodeRebootParameters {
     nodeRebootOption?: "requeue" | "terminate" | "taskcompletion" | "retaineddata";
 }
 
-// @public (undocumented)
-export interface NodeReimageParameter {
+// @public
+export interface NodeReimageParameters {
     nodeReimageOption?: "requeue" | "terminate" | "taskcompletion" | "retaineddata";
 }
 
-// @public (undocumented)
-export interface NodeRemoveParameter {
+// @public
+export interface NodeRemoveParameters {
     nodeDeallocationOption?: "requeue" | "terminate" | "taskcompletion" | "retaineddata";
     nodeList: Array<string>;
     resizeTimeout?: string;
 }
 
-// @public (undocumented)
-export interface NodeUpdateUserParameter {
+// @public
+export interface NodeUpdateUserParameters {
     expiryTime?: Date | string;
     password?: string;
     sshPublicKey?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface NodeVMExtensionListOutput {
     "odata.nextLink"?: string;
     value?: Array<NodeVMExtensionOutput>;
 }
 
-// @public (undocumented)
+// @public
 export interface NodeVMExtensionOutput {
     instanceView?: VMExtensionInstanceViewOutput;
     provisioningState?: string;
     vmExtension?: VMExtensionOutput;
 }
 
-// @public (undocumented)
+// @public
 export interface OSDisk {
     ephemeralOSDiskSettings?: DiffDiskSettings;
 }
 
-// @public (undocumented)
+// @public
 export interface OSDiskOutput {
     ephemeralOSDiskSettings?: DiffDiskSettingsOutput;
 }
 
-// @public (undocumented)
+// @public
 export interface OutputFile {
     destination: OutputFileDestination;
     filePattern: string;
     uploadOptions: OutputFileUploadOptions;
 }
 
-// @public (undocumented)
+// @public
 export interface OutputFileBlobContainerDestination {
     containerUrl: string;
     identityReference?: ComputeNodeIdentityReference;
@@ -4649,7 +5188,7 @@ export interface OutputFileBlobContainerDestination {
     uploadHeaders?: Array<HttpHeader>;
 }
 
-// @public (undocumented)
+// @public
 export interface OutputFileBlobContainerDestinationOutput {
     containerUrl: string;
     identityReference?: ComputeNodeIdentityReferenceOutput;
@@ -4657,29 +5196,29 @@ export interface OutputFileBlobContainerDestinationOutput {
     uploadHeaders?: Array<HttpHeaderOutput>;
 }
 
-// @public (undocumented)
+// @public
 export interface OutputFileDestination {
     container?: OutputFileBlobContainerDestination;
 }
 
-// @public (undocumented)
+// @public
 export interface OutputFileDestinationOutput {
     container?: OutputFileBlobContainerDestinationOutput;
 }
 
-// @public (undocumented)
+// @public
 export interface OutputFileOutput {
     destination: OutputFileDestinationOutput;
     filePattern: string;
     uploadOptions: OutputFileUploadOptionsOutput;
 }
 
-// @public (undocumented)
+// @public
 export interface OutputFileUploadOptions {
     uploadCondition: "tasksuccess" | "taskfailure" | "taskcompletion";
 }
 
-// @public (undocumented)
+// @public
 export interface OutputFileUploadOptionsOutput {
     uploadCondition: "tasksuccess" | "taskfailure" | "taskcompletion";
 }
@@ -4700,49 +5239,9 @@ export interface PagingOptions<TResponse> {
 }
 
 // @public (undocumented)
-export interface Pool {
-    allocationState?: "steady" | "resizing" | "stopping";
-    allocationStateTransitionTime?: Date | string;
-    applicationLicenses?: Array<string>;
-    applicationPackageReferences?: Array<ApplicationPackageReference>;
-    autoScaleEvaluationInterval?: string;
-    autoScaleFormula?: string;
-    autoScaleRun?: AutoScaleRun;
-    certificateReferences?: Array<CertificateReference>;
-    cloudServiceConfiguration?: CloudServiceConfiguration;
-    creationTime?: Date | string;
-    currentDedicatedNodes?: number;
-    currentLowPriorityNodes?: number;
-    displayName?: string;
-    enableAutoScale?: boolean;
-    enableInterNodeCommunication?: boolean;
-    eTag?: string;
-    id?: string;
-    identity?: BatchPoolIdentity;
-    lastModified?: Date | string;
-    metadata?: Array<MetadataItem>;
-    mountConfiguration?: Array<MountConfiguration>;
-    networkConfiguration?: NetworkConfiguration;
-    resizeErrors?: Array<ResizeError>;
-    resizeTimeout?: string;
-    startTask?: StartTask;
-    state?: "active" | "deleting";
-    stateTransitionTime?: Date | string;
-    stats?: PoolStatistics;
-    targetDedicatedNodes?: number;
-    targetLowPriorityNodes?: number;
-    taskSchedulingPolicy?: TaskSchedulingPolicy;
-    taskSlotsPerNode?: number;
-    url?: string;
-    userAccounts?: Array<UserAccount>;
-    virtualMachineConfiguration?: VirtualMachineConfiguration;
-    vmSize?: string;
-}
-
-// @public (undocumented)
 export interface PoolAdd {
-    get(options?: PoolListParameters): Promise<PoolList200Response | PoolListdefaultResponse>;
-    post(options: PoolAddParameters): Promise<PoolAdd201Response | PoolAdddefaultResponse>;
+    get(options?: PoolListParameters): StreamableMethod<PoolList200Response | PoolListDefaultResponse>;
+    post(options: PoolAddParameters): StreamableMethod<PoolAdd201Response | PoolAddDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -4766,15 +5265,15 @@ export interface PoolAdd201Response extends HttpResponse {
 
 // @public (undocumented)
 export interface PoolAddBodyParam {
-    body: Pool;
+    body: BatchPool;
 }
 
 // @public
-export interface PoolAdddefaultResponse extends HttpResponse {
+export interface PoolAddDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -4811,10 +5310,10 @@ export interface PoolAddQueryParamProperties {
 
 // @public (undocumented)
 export interface PoolDelete {
-    delete(options?: PoolDeleteParameters): Promise<PoolDelete202Response | PoolDeletedefaultResponse>;
-    get(options?: PoolGetParameters): Promise<PoolGet200Response | PoolGetdefaultResponse>;
-    head(options?: PoolExistsParameters): Promise<PoolExists200Response | PoolExists404Response | PoolExistsdefaultResponse>;
-    patch(options: PoolPatchParameters): Promise<PoolPatch200Response | PoolPatchdefaultResponse>;
+    delete(options?: PoolDeleteParameters): StreamableMethod<PoolDelete202Response | PoolDeleteDefaultResponse>;
+    get(options?: PoolGetParameters): StreamableMethod<PoolGet200Response | PoolGetDefaultResponse>;
+    head(options?: PoolExistsParameters): StreamableMethod<PoolExists200Response | PoolExists404Response | PoolExistsDefaultResponse>;
+    patch(options: PoolPatchParameters): StreamableMethod<PoolPatch200Response | PoolPatchDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -4834,11 +5333,11 @@ export interface PoolDelete202Response extends HttpResponse {
 }
 
 // @public
-export interface PoolDeletedefaultResponse extends HttpResponse {
+export interface PoolDeleteDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -4874,7 +5373,7 @@ export interface PoolDeleteQueryParamProperties {
 
 // @public (undocumented)
 export interface PoolDisableAutoScale {
-    post(options?: PoolDisableAutoScaleParameters): Promise<PoolDisableAutoScale200Response | PoolDisableAutoScaledefaultResponse>;
+    post(options?: PoolDisableAutoScaleParameters): StreamableMethod<PoolDisableAutoScale200Response | PoolDisableAutoScaleDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -4897,11 +5396,11 @@ export interface PoolDisableAutoScale200Response extends HttpResponse {
 }
 
 // @public
-export interface PoolDisableAutoScaledefaultResponse extends HttpResponse {
+export interface PoolDisableAutoScaleDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -4933,7 +5432,7 @@ export interface PoolDisableAutoScaleQueryParamProperties {
 
 // @public (undocumented)
 export interface PoolEnableAutoScale {
-    post(options: PoolEnableAutoScaleParameters): Promise<PoolEnableAutoScale200Response | PoolEnableAutoScaledefaultResponse>;
+    post(options: PoolEnableAutoScaleParameters): StreamableMethod<PoolEnableAutoScale200Response | PoolEnableAutoScaleDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -4957,15 +5456,15 @@ export interface PoolEnableAutoScale200Response extends HttpResponse {
 
 // @public (undocumented)
 export interface PoolEnableAutoScaleBodyParam {
-    body: PoolEnableAutoScaleParameter;
+    body: BatchPoolEnableAutoScaleParameters;
 }
 
 // @public
-export interface PoolEnableAutoScaledefaultResponse extends HttpResponse {
+export interface PoolEnableAutoScaleDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -4991,12 +5490,6 @@ export interface PoolEnableAutoScaleMediaTypesParam {
 }
 
 // @public (undocumented)
-export interface PoolEnableAutoScaleParameter {
-    autoScaleEvaluationInterval?: string;
-    autoScaleFormula?: string;
-}
-
-// @public (undocumented)
 export type PoolEnableAutoScaleParameters = PoolEnableAutoScaleQueryParam & PoolEnableAutoScaleHeaderParam & PoolEnableAutoScaleMediaTypesParam & PoolEnableAutoScaleBodyParam & RequestParameters;
 
 // @public (undocumented)
@@ -5010,19 +5503,19 @@ export interface PoolEnableAutoScaleQueryParamProperties {
     timeout?: number;
 }
 
-// @public (undocumented)
+// @public
 export interface PoolEndpointConfiguration {
     inboundNATPools: Array<InboundNATPool>;
 }
 
-// @public (undocumented)
+// @public
 export interface PoolEndpointConfigurationOutput {
     inboundNATPools: Array<InboundNATPoolOutput>;
 }
 
 // @public (undocumented)
 export interface PoolEvaluateAutoScale {
-    post(options: PoolEvaluateAutoScaleParameters): Promise<PoolEvaluateAutoScale200Response | PoolEvaluateAutoScaledefaultResponse>;
+    post(options: PoolEvaluateAutoScaleParameters): StreamableMethod<PoolEvaluateAutoScale200Response | PoolEvaluateAutoScaleDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -5046,15 +5539,15 @@ export interface PoolEvaluateAutoScale200Response extends HttpResponse {
 
 // @public (undocumented)
 export interface PoolEvaluateAutoScaleBodyParam {
-    body: PoolEvaluateAutoScaleParameter;
+    body: BatchPoolEvaluateAutoScaleParameters;
 }
 
 // @public
-export interface PoolEvaluateAutoScaledefaultResponse extends HttpResponse {
+export interface PoolEvaluateAutoScaleDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -5073,11 +5566,6 @@ export interface PoolEvaluateAutoScaleHeaders {
 // @public (undocumented)
 export interface PoolEvaluateAutoScaleMediaTypesParam {
     contentType?: "application/json; odata=minimalmetadata";
-}
-
-// @public (undocumented)
-export interface PoolEvaluateAutoScaleParameter {
-    autoScaleFormula: string;
 }
 
 // @public (undocumented)
@@ -5121,11 +5609,11 @@ export interface PoolExists404Response extends HttpResponse {
 }
 
 // @public
-export interface PoolExistsdefaultResponse extends HttpResponse {
+export interface PoolExistsDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -5170,7 +5658,7 @@ export interface PoolGet200Headers {
 // @public
 export interface PoolGet200Response extends HttpResponse {
     // (undocumented)
-    body: PoolOutput;
+    body: BatchPoolOutput;
     // (undocumented)
     headers: RawHttpHeaders & PoolGet200Headers;
     // (undocumented)
@@ -5179,7 +5667,7 @@ export interface PoolGet200Response extends HttpResponse {
 
 // @public (undocumented)
 export interface PoolGetAllLifetimeStatistics {
-    get(options?: PoolGetAllLifetimeStatisticsParameters): Promise<PoolGetAllLifetimeStatistics200Response | PoolGetAllLifetimeStatisticsdefaultResponse>;
+    get(options?: PoolGetAllLifetimeStatisticsParameters): StreamableMethod<PoolGetAllLifetimeStatistics200Response | PoolGetAllLifetimeStatisticsDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -5201,11 +5689,11 @@ export interface PoolGetAllLifetimeStatistics200Response extends HttpResponse {
 }
 
 // @public
-export interface PoolGetAllLifetimeStatisticsdefaultResponse extends HttpResponse {
+export interface PoolGetAllLifetimeStatisticsDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -5236,11 +5724,11 @@ export interface PoolGetAllLifetimeStatisticsQueryParamProperties {
 }
 
 // @public
-export interface PoolGetdefaultResponse extends HttpResponse {
+export interface PoolGetDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -5276,13 +5764,13 @@ export interface PoolGetQueryParamProperties {
     timeout?: number;
 }
 
-// @public (undocumented)
+// @public
 export interface PoolInformation {
     autoPoolSpecification?: AutoPoolSpecification;
     poolId?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface PoolInformationOutput {
     autoPoolSpecification?: AutoPoolSpecificationOutput;
     poolId?: string;
@@ -5299,7 +5787,7 @@ export interface PoolList200Headers {
 // @public
 export interface PoolList200Response extends HttpResponse {
     // (undocumented)
-    body: PoolListResultOutput;
+    body: BatchPoolListResultOutput;
     // (undocumented)
     headers: RawHttpHeaders & PoolList200Headers;
     // (undocumented)
@@ -5307,11 +5795,11 @@ export interface PoolList200Response extends HttpResponse {
 }
 
 // @public
-export interface PoolListdefaultResponse extends HttpResponse {
+export interface PoolListDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -5346,14 +5834,8 @@ export interface PoolListQueryParamProperties {
 }
 
 // @public (undocumented)
-export interface PoolListResultOutput {
-    "odata.nextLink"?: string;
-    value?: Array<PoolOutput>;
-}
-
-// @public (undocumented)
 export interface PoolListUsageMetrics {
-    get(options?: PoolListUsageMetricsParameters): Promise<PoolListUsageMetrics200Response | PoolListUsageMetricsdefaultResponse>;
+    get(options?: PoolListUsageMetricsParameters): StreamableMethod<PoolListUsageMetrics200Response | PoolListUsageMetricsDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -5375,11 +5857,11 @@ export interface PoolListUsageMetrics200Response extends HttpResponse {
 }
 
 // @public
-export interface PoolListUsageMetricsdefaultResponse extends HttpResponse {
+export interface PoolListUsageMetricsDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -5413,63 +5895,42 @@ export interface PoolListUsageMetricsQueryParamProperties {
     timeout?: number;
 }
 
-// @public (undocumented)
+// @public
 export interface PoolListUsageMetricsResultOutput {
     "odata.nextLink"?: string;
     value?: Array<PoolUsageMetricsOutput>;
 }
 
-// @public (undocumented)
+// @public
 export interface PoolNodeCountsListResultOutput {
     "odata.nextLink"?: string;
     value?: Array<PoolNodeCountsOutput>;
 }
 
-// @public (undocumented)
+// @public
 export interface PoolNodeCountsOutput {
     dedicated?: NodeCountsOutput;
     lowPriority?: NodeCountsOutput;
     poolId: string;
 }
 
-// @public (undocumented)
-export interface PoolOutput {
-    allocationState?: "steady" | "resizing" | "stopping";
-    allocationStateTransitionTime?: string;
-    applicationLicenses?: Array<string>;
-    applicationPackageReferences?: Array<ApplicationPackageReferenceOutput>;
-    autoScaleEvaluationInterval?: string;
-    autoScaleFormula?: string;
-    autoScaleRun?: AutoScaleRunOutput;
-    certificateReferences?: Array<CertificateReferenceOutput>;
-    cloudServiceConfiguration?: CloudServiceConfigurationOutput;
-    creationTime?: string;
-    currentDedicatedNodes?: number;
-    currentLowPriorityNodes?: number;
-    displayName?: string;
-    enableAutoScale?: boolean;
-    enableInterNodeCommunication?: boolean;
-    eTag?: string;
-    id?: string;
-    identity?: BatchPoolIdentityOutput;
-    lastModified?: string;
-    metadata?: Array<MetadataItemOutput>;
-    mountConfiguration?: Array<MountConfigurationOutput>;
-    networkConfiguration?: NetworkConfigurationOutput;
-    resizeErrors?: Array<ResizeErrorOutput>;
-    resizeTimeout?: string;
-    startTask?: StartTaskOutput;
-    state?: "active" | "deleting";
-    stateTransitionTime?: string;
-    stats?: PoolStatisticsOutput;
-    targetDedicatedNodes?: number;
-    targetLowPriorityNodes?: number;
-    taskSchedulingPolicy?: TaskSchedulingPolicyOutput;
-    taskSlotsPerNode?: number;
-    url?: string;
-    userAccounts?: Array<UserAccountOutput>;
-    virtualMachineConfiguration?: VirtualMachineConfigurationOutput;
-    vmSize?: string;
+// @public
+export interface PoolOperations {
+    add(options: PoolAddParameters): StreamableMethod<PoolAdd201Response | PoolAddDefaultResponse>;
+    delete(poolId: string, options?: PoolDeleteParameters): StreamableMethod<PoolDelete202Response | PoolDeleteDefaultResponse>;
+    disableAutoScale(poolId: string, options?: PoolDisableAutoScaleParameters): StreamableMethod<PoolDisableAutoScale200Response | PoolDisableAutoScaleDefaultResponse>;
+    enableAutoScale(poolId: string, options: PoolEnableAutoScaleParameters): StreamableMethod<PoolEnableAutoScale200Response | PoolEnableAutoScaleDefaultResponse>;
+    evaluateAutoScale(poolId: string, options: PoolEvaluateAutoScaleParameters): StreamableMethod<PoolEvaluateAutoScale200Response | PoolEvaluateAutoScaleDefaultResponse>;
+    exists(poolId: string, options?: PoolExistsParameters): StreamableMethod<PoolExists200Response | PoolExists404Response | PoolExistsDefaultResponse>;
+    get(poolId: string, options?: PoolGetParameters): StreamableMethod<PoolGet200Response | PoolGetDefaultResponse>;
+    getAllLifetimeStatistics(options?: PoolGetAllLifetimeStatisticsParameters): StreamableMethod<PoolGetAllLifetimeStatistics200Response | PoolGetAllLifetimeStatisticsDefaultResponse>;
+    list(options?: PoolListParameters): StreamableMethod<PoolList200Response | PoolListDefaultResponse>;
+    listUsageMetrics(options?: PoolListUsageMetricsParameters): StreamableMethod<PoolListUsageMetrics200Response | PoolListUsageMetricsDefaultResponse>;
+    patch(poolId: string, options: PoolPatchParameters): StreamableMethod<PoolPatch200Response | PoolPatchDefaultResponse>;
+    removeNodes(poolId: string, options: PoolRemoveNodesParameters): StreamableMethod<PoolRemoveNodes202Response | PoolRemoveNodesDefaultResponse>;
+    resize(poolId: string, options: PoolResizeParameters): StreamableMethod<PoolResize202Response | PoolResizeDefaultResponse>;
+    stopResize(poolId: string, options?: PoolStopResizeParameters): StreamableMethod<PoolStopResize202Response | PoolStopResizeDefaultResponse>;
+    updateProperties(poolId: string, options: PoolUpdatePropertiesParameters): StreamableMethod<PoolUpdateProperties204Response | PoolUpdatePropertiesDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -5493,15 +5954,15 @@ export interface PoolPatch200Response extends HttpResponse {
 
 // @public (undocumented)
 export interface PoolPatchBodyParam {
-    body: PoolUpdate;
+    body: BatchPoolUpdate;
 }
 
 // @public
-export interface PoolPatchdefaultResponse extends HttpResponse {
+export interface PoolPatchDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -5542,7 +6003,7 @@ export interface PoolPatchQueryParamProperties {
 
 // @public (undocumented)
 export interface PoolRemoveNodes {
-    post(options: PoolRemoveNodesParameters): Promise<PoolRemoveNodes202Response | PoolRemoveNodesdefaultResponse>;
+    post(options: PoolRemoveNodesParameters): StreamableMethod<PoolRemoveNodes202Response | PoolRemoveNodesDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -5566,15 +6027,15 @@ export interface PoolRemoveNodes202Response extends HttpResponse {
 
 // @public (undocumented)
 export interface PoolRemoveNodesBodyParam {
-    body: NodeRemoveParameter;
+    body: NodeRemoveParameters;
 }
 
 // @public
-export interface PoolRemoveNodesdefaultResponse extends HttpResponse {
+export interface PoolRemoveNodesDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -5615,7 +6076,7 @@ export interface PoolRemoveNodesQueryParamProperties {
 
 // @public (undocumented)
 export interface PoolResize {
-    post(options: PoolResizeParameters): Promise<PoolResize202Response | PoolResizedefaultResponse>;
+    post(options: PoolResizeParameters): StreamableMethod<PoolResize202Response | PoolResizeDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -5639,15 +6100,15 @@ export interface PoolResize202Response extends HttpResponse {
 
 // @public (undocumented)
 export interface PoolResizeBodyParam {
-    body: PoolResizeParameter;
+    body: BatchPoolResizeParameters;
 }
 
 // @public
-export interface PoolResizedefaultResponse extends HttpResponse {
+export interface PoolResizeDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -5673,14 +6134,6 @@ export interface PoolResizeMediaTypesParam {
 }
 
 // @public (undocumented)
-export interface PoolResizeParameter {
-    nodeDeallocationOption?: "requeue" | "terminate" | "taskcompletion" | "retaineddata";
-    resizeTimeout?: string;
-    targetDedicatedNodes?: number;
-    targetLowPriorityNodes?: number;
-}
-
-// @public (undocumented)
 export type PoolResizeParameters = PoolResizeQueryParam & PoolResizeHeaderParam & PoolResizeMediaTypesParam & PoolResizeBodyParam & RequestParameters;
 
 // @public (undocumented)
@@ -5694,7 +6147,7 @@ export interface PoolResizeQueryParamProperties {
     timeout?: number;
 }
 
-// @public (undocumented)
+// @public
 export interface PoolSpecification {
     applicationLicenses?: Array<string>;
     applicationPackageReferences?: Array<ApplicationPackageReference>;
@@ -5719,7 +6172,7 @@ export interface PoolSpecification {
     vmSize: string;
 }
 
-// @public (undocumented)
+// @public
 export interface PoolSpecificationOutput {
     applicationLicenses?: Array<string>;
     applicationPackageReferences?: Array<ApplicationPackageReferenceOutput>;
@@ -5744,7 +6197,7 @@ export interface PoolSpecificationOutput {
     vmSize: string;
 }
 
-// @public (undocumented)
+// @public
 export interface PoolStatistics {
     lastUpdateTime: Date | string;
     resourceStats?: ResourceStatistics;
@@ -5753,7 +6206,7 @@ export interface PoolStatistics {
     usageStats?: UsageStatistics;
 }
 
-// @public (undocumented)
+// @public
 export interface PoolStatisticsOutput {
     lastUpdateTime: string;
     resourceStats?: ResourceStatisticsOutput;
@@ -5764,7 +6217,7 @@ export interface PoolStatisticsOutput {
 
 // @public (undocumented)
 export interface PoolStopResize {
-    post(options?: PoolStopResizeParameters): Promise<PoolStopResize202Response | PoolStopResizedefaultResponse>;
+    post(options?: PoolStopResizeParameters): StreamableMethod<PoolStopResize202Response | PoolStopResizeDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -5787,11 +6240,11 @@ export interface PoolStopResize202Response extends HttpResponse {
 }
 
 // @public
-export interface PoolStopResizedefaultResponse extends HttpResponse {
+export interface PoolStopResizeDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -5826,16 +6279,8 @@ export interface PoolStopResizeQueryParamProperties {
 }
 
 // @public (undocumented)
-export interface PoolUpdate {
-    applicationPackageReferences?: Array<ApplicationPackageReference>;
-    certificateReferences?: Array<CertificateReference>;
-    metadata?: Array<MetadataItem>;
-    startTask?: StartTask;
-}
-
-// @public (undocumented)
 export interface PoolUpdateProperties {
-    post(options: PoolUpdatePropertiesParameters): Promise<PoolUpdateProperties204Response | PoolUpdatePropertiesdefaultResponse>;
+    post(options: PoolUpdatePropertiesParameters): StreamableMethod<PoolUpdateProperties204Response | PoolUpdatePropertiesDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -5859,15 +6304,15 @@ export interface PoolUpdateProperties204Response extends HttpResponse {
 
 // @public (undocumented)
 export interface PoolUpdatePropertiesBodyParam {
-    body: Pool;
+    body: BatchPool;
 }
 
 // @public
-export interface PoolUpdatePropertiesdefaultResponse extends HttpResponse {
+export interface PoolUpdatePropertiesDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -5902,7 +6347,7 @@ export interface PoolUpdatePropertiesQueryParamProperties {
     timeout?: number;
 }
 
-// @public (undocumented)
+// @public
 export interface PoolUsageMetricsOutput {
     endTime: string;
     poolId: string;
@@ -5911,45 +6356,45 @@ export interface PoolUsageMetricsOutput {
     vmSize: string;
 }
 
-// @public (undocumented)
+// @public
 export interface PublicIPAddressConfiguration {
     ipAddressIds?: Array<string>;
     provision?: "batchmanaged" | "usermanaged" | "nopublicipaddresses";
 }
 
-// @public (undocumented)
+// @public
 export interface PublicIPAddressConfigurationOutput {
     ipAddressIds?: Array<string>;
     provision?: "batchmanaged" | "usermanaged" | "nopublicipaddresses";
 }
 
-// @public (undocumented)
+// @public
 export interface RecentJob {
     id?: string;
     url?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface RecentJobOutput {
     id?: string;
     url?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface ResizeError {
     code?: string;
     message?: string;
     values?: Array<NameValuePair>;
 }
 
-// @public (undocumented)
+// @public
 export interface ResizeErrorOutput {
     code?: string;
     message?: string;
     values?: Array<NameValuePairOutput>;
 }
 
-// @public (undocumented)
+// @public
 export interface ResourceFile {
     autoStorageContainerName?: string;
     blobPrefix?: string;
@@ -5960,7 +6405,7 @@ export interface ResourceFile {
     storageContainerUrl?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface ResourceFileOutput {
     autoStorageContainerName?: string;
     blobPrefix?: string;
@@ -5971,7 +6416,7 @@ export interface ResourceFileOutput {
     storageContainerUrl?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface ResourceStatistics {
     avgCPUPercentage: number;
     avgDiskGiB: number;
@@ -5988,7 +6433,7 @@ export interface ResourceStatistics {
     startTime: Date | string;
 }
 
-// @public (undocumented)
+// @public
 export interface ResourceStatisticsOutput {
     avgCPUPercentage: number;
     avgDiskGiB: number;
@@ -6064,7 +6509,7 @@ export interface Routes {
     (path: "/pools/{poolId}/nodes/{nodeId}/extensions", poolId: string, nodeId: string): ComputeNodeExtensionList;
 }
 
-// @public (undocumented)
+// @public
 export interface Schedule {
     doNotRunAfter?: Date | string;
     doNotRunUntil?: Date | string;
@@ -6072,7 +6517,7 @@ export interface Schedule {
     startWindow?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface ScheduleOutput {
     doNotRunAfter?: string;
     doNotRunUntil?: string;
@@ -6080,7 +6525,7 @@ export interface ScheduleOutput {
     startWindow?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface StartTask {
     commandLine: string;
     containerSettings?: TaskContainerSettings;
@@ -6091,7 +6536,7 @@ export interface StartTask {
     waitForSuccess?: boolean;
 }
 
-// @public (undocumented)
+// @public
 export interface StartTaskInformationOutput {
     containerInfo?: TaskContainerExecutionInformationOutput;
     endTime?: string;
@@ -6104,7 +6549,7 @@ export interface StartTaskInformationOutput {
     state: "running" | "completed";
 }
 
-// @public (undocumented)
+// @public
 export interface StartTaskOutput {
     commandLine: string;
     containerSettings?: TaskContainerSettingsOutput;
@@ -6115,7 +6560,7 @@ export interface StartTaskOutput {
     waitForSuccess?: boolean;
 }
 
-// @public (undocumented)
+// @public
 export interface SubtaskInformationOutput {
     containerInfo?: TaskContainerExecutionInformationOutput;
     endTime?: string;
@@ -6132,40 +6577,9 @@ export interface SubtaskInformationOutput {
 }
 
 // @public (undocumented)
-export interface Task {
-    affinityInfo?: AffinityInformation;
-    applicationPackageReferences?: Array<ApplicationPackageReference>;
-    authenticationTokenSettings?: AuthenticationTokenSettings;
-    commandLine?: string;
-    constraints?: TaskConstraints;
-    containerSettings?: TaskContainerSettings;
-    creationTime?: Date | string;
-    dependsOn?: TaskDependencies;
-    displayName?: string;
-    environmentSettings?: Array<EnvironmentSetting>;
-    eTag?: string;
-    executionInfo?: TaskExecutionInformation;
-    exitConditions?: ExitConditions;
-    id?: string;
-    lastModified?: Date | string;
-    multiInstanceSettings?: MultiInstanceSettings;
-    nodeInfo?: ComputeNodeInformation;
-    outputFiles?: Array<OutputFile>;
-    previousState?: "active" | "preparing" | "running" | "completed";
-    previousStateTransitionTime?: Date | string;
-    requiredSlots?: number;
-    resourceFiles?: Array<ResourceFile>;
-    state?: "active" | "preparing" | "running" | "completed";
-    stateTransitionTime?: Date | string;
-    stats?: TaskStatistics;
-    url?: string;
-    userIdentity?: UserIdentity;
-}
-
-// @public (undocumented)
 export interface TaskAdd {
-    get(options?: TaskListParameters): Promise<TaskList200Response | TaskListdefaultResponse>;
-    post(options: TaskAddParameters): Promise<TaskAdd201Response | TaskAdddefaultResponse>;
+    get(options?: TaskListParameters): StreamableMethod<TaskList200Response | TaskListDefaultResponse>;
+    post(options: TaskAddParameters): StreamableMethod<TaskAdd201Response | TaskAddDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -6189,12 +6603,12 @@ export interface TaskAdd201Response extends HttpResponse {
 
 // @public (undocumented)
 export interface TaskAddBodyParam {
-    body: Task;
+    body: BatchTask;
 }
 
 // @public (undocumented)
 export interface TaskAddCollection {
-    post(options: TaskAddCollectionParameters): Promise<TaskAddCollection200Response | TaskAddCollectiondefaultResponse>;
+    post(options: TaskAddCollectionParameters): StreamableMethod<TaskAddCollection200Response | TaskAddCollectionDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -6215,15 +6629,15 @@ export interface TaskAddCollection200Response extends HttpResponse {
 
 // @public (undocumented)
 export interface TaskAddCollectionBodyParam {
-    body: TaskAddCollectionParameter;
+    body: BatchTaskCollection;
 }
 
 // @public
-export interface TaskAddCollectiondefaultResponse extends HttpResponse {
+export interface TaskAddCollectionDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -6245,11 +6659,6 @@ export interface TaskAddCollectionMediaTypesParam {
 }
 
 // @public (undocumented)
-export interface TaskAddCollectionParameter {
-    value: Array<Task>;
-}
-
-// @public (undocumented)
 export type TaskAddCollectionParameters = TaskAddCollectionQueryParam & TaskAddCollectionHeaderParam & TaskAddCollectionMediaTypesParam & TaskAddCollectionBodyParam & RequestParameters;
 
 // @public (undocumented)
@@ -6263,17 +6672,17 @@ export interface TaskAddCollectionQueryParamProperties {
     timeout?: number;
 }
 
-// @public (undocumented)
+// @public
 export interface TaskAddCollectionResultOutput {
     value?: Array<TaskAddResultOutput>;
 }
 
 // @public
-export interface TaskAdddefaultResponse extends HttpResponse {
+export interface TaskAddDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -6308,7 +6717,7 @@ export interface TaskAddQueryParamProperties {
     timeout?: number;
 }
 
-// @public (undocumented)
+// @public
 export interface TaskAddResultOutput {
     error?: BatchErrorOutput;
     eTag?: string;
@@ -6318,35 +6727,35 @@ export interface TaskAddResultOutput {
     taskId: string;
 }
 
-// @public (undocumented)
+// @public
 export interface TaskConstraints {
     maxTaskRetryCount?: number;
     maxWallClockTime?: string;
     retentionTime?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface TaskConstraintsOutput {
     maxTaskRetryCount?: number;
     maxWallClockTime?: string;
     retentionTime?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface TaskContainerExecutionInformation {
     containerId?: string;
     error?: string;
     state?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface TaskContainerExecutionInformationOutput {
     containerId?: string;
     error?: string;
     state?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface TaskContainerSettings {
     containerRunOptions?: string;
     imageName: string;
@@ -6354,7 +6763,7 @@ export interface TaskContainerSettings {
     workingDirectory?: "taskWorkingDirectory" | "containerImageDefault";
 }
 
-// @public (undocumented)
+// @public
 export interface TaskContainerSettingsOutput {
     containerRunOptions?: string;
     imageName: string;
@@ -6362,7 +6771,7 @@ export interface TaskContainerSettingsOutput {
     workingDirectory?: "taskWorkingDirectory" | "containerImageDefault";
 }
 
-// @public (undocumented)
+// @public
 export interface TaskCountsOutput {
     active: number;
     completed: number;
@@ -6371,7 +6780,7 @@ export interface TaskCountsOutput {
     succeeded: number;
 }
 
-// @public (undocumented)
+// @public
 export interface TaskCountsResultOutput {
     taskCounts: TaskCountsOutput;
     taskSlotCounts: TaskSlotCountsOutput;
@@ -6379,9 +6788,9 @@ export interface TaskCountsResultOutput {
 
 // @public (undocumented)
 export interface TaskDelete {
-    delete(options?: TaskDeleteParameters): Promise<TaskDelete200Response | TaskDeletedefaultResponse>;
-    get(options?: TaskGetParameters): Promise<TaskGet200Response | TaskGetdefaultResponse>;
-    put(options: TaskUpdateParameters): Promise<TaskUpdate200Response | TaskUpdatedefaultResponse>;
+    delete(options?: TaskDeleteParameters): StreamableMethod<TaskDelete200Response | TaskDeleteDefaultResponse>;
+    get(options?: TaskGetParameters): StreamableMethod<TaskGet200Response | TaskGetDefaultResponse>;
+    put(options: TaskUpdateParameters): StreamableMethod<TaskUpdate200Response | TaskUpdateDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -6401,11 +6810,11 @@ export interface TaskDelete200Response extends HttpResponse {
 }
 
 // @public
-export interface TaskDeletedefaultResponse extends HttpResponse {
+export interface TaskDeleteDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -6439,19 +6848,19 @@ export interface TaskDeleteQueryParamProperties {
     timeout?: number;
 }
 
-// @public (undocumented)
+// @public
 export interface TaskDependencies {
     taskIdRanges?: Array<TaskIdRange>;
     taskIds?: Array<string>;
 }
 
-// @public (undocumented)
+// @public
 export interface TaskDependenciesOutput {
     taskIdRanges?: Array<TaskIdRangeOutput>;
     taskIds?: Array<string>;
 }
 
-// @public (undocumented)
+// @public
 export interface TaskExecutionInformation {
     containerInfo?: TaskContainerExecutionInformation;
     endTime?: Date | string;
@@ -6465,7 +6874,7 @@ export interface TaskExecutionInformation {
     startTime?: Date | string;
 }
 
-// @public (undocumented)
+// @public
 export interface TaskExecutionInformationOutput {
     containerInfo?: TaskContainerExecutionInformationOutput;
     endTime?: string;
@@ -6479,7 +6888,7 @@ export interface TaskExecutionInformationOutput {
     startTime?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface TaskFailureInformation {
     category: "usererror" | "servererror";
     code?: string;
@@ -6487,7 +6896,7 @@ export interface TaskFailureInformation {
     message?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface TaskFailureInformationOutput {
     category: "usererror" | "servererror";
     code?: string;
@@ -6507,7 +6916,7 @@ export interface TaskGet200Headers {
 // @public
 export interface TaskGet200Response extends HttpResponse {
     // (undocumented)
-    body: TaskOutput;
+    body: BatchTaskOutput;
     // (undocumented)
     headers: RawHttpHeaders & TaskGet200Headers;
     // (undocumented)
@@ -6515,11 +6924,11 @@ export interface TaskGet200Response extends HttpResponse {
 }
 
 // @public
-export interface TaskGetdefaultResponse extends HttpResponse {
+export interface TaskGetDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -6555,19 +6964,19 @@ export interface TaskGetQueryParamProperties {
     timeout?: number;
 }
 
-// @public (undocumented)
+// @public
 export interface TaskIdRange {
     end: number;
     start: number;
 }
 
-// @public (undocumented)
+// @public
 export interface TaskIdRangeOutput {
     end: number;
     start: number;
 }
 
-// @public (undocumented)
+// @public
 export interface TaskInformationOutput {
     executionInfo?: TaskExecutionInformationOutput;
     jobId?: string;
@@ -6588,7 +6997,7 @@ export interface TaskList200Headers {
 // @public
 export interface TaskList200Response extends HttpResponse {
     // (undocumented)
-    body: TaskListResultOutput;
+    body: BatchTaskListResultOutput;
     // (undocumented)
     headers: RawHttpHeaders & TaskList200Headers;
     // (undocumented)
@@ -6596,11 +7005,11 @@ export interface TaskList200Response extends HttpResponse {
 }
 
 // @public
-export interface TaskListdefaultResponse extends HttpResponse {
+export interface TaskListDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -6635,14 +7044,8 @@ export interface TaskListQueryParamProperties {
 }
 
 // @public (undocumented)
-export interface TaskListResultOutput {
-    "odata.nextLink"?: string;
-    value?: Array<TaskOutput>;
-}
-
-// @public (undocumented)
 export interface TaskListSubtasks {
-    get(options?: TaskListSubtasksParameters): Promise<TaskListSubtasks200Response | TaskListSubtasksdefaultResponse>;
+    get(options?: TaskListSubtasksParameters): StreamableMethod<TaskListSubtasks200Response | TaskListSubtasksDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -6656,7 +7059,7 @@ export interface TaskListSubtasks200Headers {
 // @public
 export interface TaskListSubtasks200Response extends HttpResponse {
     // (undocumented)
-    body: TaskListSubtasksResultOutput;
+    body: BatchTaskListSubtasksResultOutput;
     // (undocumented)
     headers: RawHttpHeaders & TaskListSubtasks200Headers;
     // (undocumented)
@@ -6664,11 +7067,11 @@ export interface TaskListSubtasks200Response extends HttpResponse {
 }
 
 // @public
-export interface TaskListSubtasksdefaultResponse extends HttpResponse {
+export interface TaskListSubtasksDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -6699,45 +7102,22 @@ export interface TaskListSubtasksQueryParamProperties {
     timeout?: number;
 }
 
-// @public (undocumented)
-export interface TaskListSubtasksResultOutput {
-    value?: Array<SubtaskInformationOutput>;
-}
-
-// @public (undocumented)
-export interface TaskOutput {
-    affinityInfo?: AffinityInformationOutput;
-    applicationPackageReferences?: Array<ApplicationPackageReferenceOutput>;
-    authenticationTokenSettings?: AuthenticationTokenSettingsOutput;
-    commandLine?: string;
-    constraints?: TaskConstraintsOutput;
-    containerSettings?: TaskContainerSettingsOutput;
-    creationTime?: string;
-    dependsOn?: TaskDependenciesOutput;
-    displayName?: string;
-    environmentSettings?: Array<EnvironmentSettingOutput>;
-    eTag?: string;
-    executionInfo?: TaskExecutionInformationOutput;
-    exitConditions?: ExitConditionsOutput;
-    id?: string;
-    lastModified?: string;
-    multiInstanceSettings?: MultiInstanceSettingsOutput;
-    nodeInfo?: ComputeNodeInformationOutput;
-    outputFiles?: Array<OutputFileOutput>;
-    previousState?: "active" | "preparing" | "running" | "completed";
-    previousStateTransitionTime?: string;
-    requiredSlots?: number;
-    resourceFiles?: Array<ResourceFileOutput>;
-    state?: "active" | "preparing" | "running" | "completed";
-    stateTransitionTime?: string;
-    stats?: TaskStatisticsOutput;
-    url?: string;
-    userIdentity?: UserIdentityOutput;
+// @public
+export interface TaskOperations {
+    add(jobId: string, options: TaskAddParameters): StreamableMethod<TaskAdd201Response | TaskAddDefaultResponse>;
+    addCollection(jobId: string, options: TaskAddCollectionParameters): StreamableMethod<TaskAddCollection200Response | TaskAddCollectionDefaultResponse>;
+    delete(jobId: string, taskId: string, options?: TaskDeleteParameters): StreamableMethod<TaskDelete200Response | TaskDeleteDefaultResponse>;
+    get(jobId: string, taskId: string, options?: TaskGetParameters): StreamableMethod<TaskGet200Response | TaskGetDefaultResponse>;
+    list(jobId: string, options?: TaskListParameters): StreamableMethod<TaskList200Response | TaskListDefaultResponse>;
+    listSubtasks(jobId: string, taskId: string, options?: TaskListSubtasksParameters): StreamableMethod<TaskListSubtasks200Response | TaskListSubtasksDefaultResponse>;
+    reactivate(jobId: string, taskId: string, options?: TaskReactivateParameters): StreamableMethod<TaskReactivate204Response | TaskReactivateDefaultResponse>;
+    terminate(jobId: string, taskId: string, options?: TaskTerminateParameters): StreamableMethod<TaskTerminate204Response | TaskTerminateDefaultResponse>;
+    update(jobId: string, taskId: string, options: TaskUpdateParameters): StreamableMethod<TaskUpdate200Response | TaskUpdateDefaultResponse>;
 }
 
 // @public (undocumented)
 export interface TaskReactivate {
-    post(options?: TaskReactivateParameters): Promise<TaskReactivate204Response | TaskReactivatedefaultResponse>;
+    post(options?: TaskReactivateParameters): StreamableMethod<TaskReactivate204Response | TaskReactivateDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -6760,11 +7140,11 @@ export interface TaskReactivate204Response extends HttpResponse {
 }
 
 // @public
-export interface TaskReactivatedefaultResponse extends HttpResponse {
+export interface TaskReactivateDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -6798,17 +7178,17 @@ export interface TaskReactivateQueryParamProperties {
     timeout?: number;
 }
 
-// @public (undocumented)
+// @public
 export interface TaskSchedulingPolicy {
     nodeFillType: "spread" | "pack";
 }
 
-// @public (undocumented)
+// @public
 export interface TaskSchedulingPolicyOutput {
     nodeFillType: "spread" | "pack";
 }
 
-// @public (undocumented)
+// @public
 export interface TaskSlotCountsOutput {
     active: number;
     completed: number;
@@ -6817,7 +7197,7 @@ export interface TaskSlotCountsOutput {
     succeeded: number;
 }
 
-// @public (undocumented)
+// @public
 export interface TaskStatistics {
     kernelCPUTime: string;
     lastUpdateTime: Date | string;
@@ -6832,7 +7212,7 @@ export interface TaskStatistics {
     writeIOps: number;
 }
 
-// @public (undocumented)
+// @public
 export interface TaskStatisticsOutput {
     kernelCPUTime: string;
     lastUpdateTime: string;
@@ -6849,7 +7229,7 @@ export interface TaskStatisticsOutput {
 
 // @public (undocumented)
 export interface TaskTerminate {
-    post(options?: TaskTerminateParameters): Promise<TaskTerminate204Response | TaskTerminatedefaultResponse>;
+    post(options?: TaskTerminateParameters): StreamableMethod<TaskTerminate204Response | TaskTerminateDefaultResponse>;
 }
 
 // @public (undocumented)
@@ -6872,11 +7252,11 @@ export interface TaskTerminate204Response extends HttpResponse {
 }
 
 // @public
-export interface TaskTerminatedefaultResponse extends HttpResponse {
+export interface TaskTerminateDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -6931,15 +7311,15 @@ export interface TaskUpdate200Response extends HttpResponse {
 
 // @public (undocumented)
 export interface TaskUpdateBodyParam {
-    body: Task;
+    body: BatchTask;
 }
 
 // @public
-export interface TaskUpdatedefaultResponse extends HttpResponse {
+export interface TaskUpdateDefaultResponse extends HttpResponse {
     // (undocumented)
     body: BatchErrorOutput;
     // (undocumented)
-    status: "500";
+    status: string;
 }
 
 // @public (undocumented)
@@ -6978,7 +7358,7 @@ export interface TaskUpdateQueryParamProperties {
     timeout?: number;
 }
 
-// @public (undocumented)
+// @public
 export interface UploadBatchServiceLogsConfiguration {
     containerUrl: string;
     endTime?: Date | string;
@@ -6986,27 +7366,27 @@ export interface UploadBatchServiceLogsConfiguration {
     startTime: Date | string;
 }
 
-// @public (undocumented)
+// @public
 export interface UploadBatchServiceLogsResultOutput {
     numberOfFilesUploaded: number;
     virtualDirectoryName: string;
 }
 
-// @public (undocumented)
+// @public
 export interface UsageStatistics {
     dedicatedCoreTime: string;
     lastUpdateTime: Date | string;
     startTime: Date | string;
 }
 
-// @public (undocumented)
+// @public
 export interface UsageStatisticsOutput {
     dedicatedCoreTime: string;
     lastUpdateTime: string;
     startTime: string;
 }
 
-// @public (undocumented)
+// @public
 export interface UserAccount {
     elevationLevel?: "nonadmin" | "admin";
     linuxUserConfiguration?: LinuxUserConfiguration;
@@ -7015,7 +7395,7 @@ export interface UserAccount {
     windowsUserConfiguration?: WindowsUserConfiguration;
 }
 
-// @public (undocumented)
+// @public
 export interface UserAccountOutput {
     elevationLevel?: "nonadmin" | "admin";
     linuxUserConfiguration?: LinuxUserConfigurationOutput;
@@ -7024,33 +7404,33 @@ export interface UserAccountOutput {
     windowsUserConfiguration?: WindowsUserConfigurationOutput;
 }
 
-// @public (undocumented)
+// @public
 export interface UserAssignedIdentity {
     clientId?: string;
     principalId?: string;
     resourceId: string;
 }
 
-// @public (undocumented)
+// @public
 export interface UserAssignedIdentityOutput {
     clientId?: string;
     principalId?: string;
     resourceId: string;
 }
 
-// @public (undocumented)
+// @public
 export interface UserIdentity {
     autoUser?: AutoUserSpecification;
     username?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface UserIdentityOutput {
     autoUser?: AutoUserSpecificationOutput;
     username?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface VirtualMachineConfiguration {
     containerConfiguration?: ContainerConfiguration;
     dataDisks?: Array<DataDisk>;
@@ -7064,7 +7444,7 @@ export interface VirtualMachineConfiguration {
     windowsConfiguration?: WindowsConfiguration;
 }
 
-// @public (undocumented)
+// @public
 export interface VirtualMachineConfigurationOutput {
     containerConfiguration?: ContainerConfigurationOutput;
     dataDisks?: Array<DataDiskOutput>;
@@ -7078,12 +7458,12 @@ export interface VirtualMachineConfigurationOutput {
     windowsConfiguration?: WindowsConfigurationOutput;
 }
 
-// @public (undocumented)
+// @public
 export interface VirtualMachineInfoOutput {
     imageReference?: ImageReferenceOutput;
 }
 
-// @public (undocumented)
+// @public
 export interface VMExtension {
     autoUpgradeMinorVersion?: boolean;
     name: string;
@@ -7095,14 +7475,14 @@ export interface VMExtension {
     typeHandlerVersion?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface VMExtensionInstanceViewOutput {
     name?: string;
     statuses?: Array<InstanceViewStatusOutput>;
     subStatuses?: Array<InstanceViewStatusOutput>;
 }
 
-// @public (undocumented)
+// @public
 export interface VMExtensionOutput {
     autoUpgradeMinorVersion?: boolean;
     name: string;
@@ -7114,22 +7494,22 @@ export interface VMExtensionOutput {
     typeHandlerVersion?: string;
 }
 
-// @public (undocumented)
+// @public
 export interface WindowsConfiguration {
     enableAutomaticUpdates?: boolean;
 }
 
-// @public (undocumented)
+// @public
 export interface WindowsConfigurationOutput {
     enableAutomaticUpdates?: boolean;
 }
 
-// @public (undocumented)
+// @public
 export interface WindowsUserConfiguration {
     loginMode?: "batch" | "interactive";
 }
 
-// @public (undocumented)
+// @public
 export interface WindowsUserConfigurationOutput {
     loginMode?: "batch" | "interactive";
 }

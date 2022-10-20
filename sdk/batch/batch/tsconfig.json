@@ -17,5 +17,8 @@
     "src/**/*.ts",
     "./test/**/*.ts",
     "samples-dev/**/*.ts"
+  ],
+  "exclude": [
+    "src/utilities/utils.ts"
   ]
 }

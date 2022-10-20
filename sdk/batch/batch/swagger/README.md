@@ -12,15 +12,17 @@ generate-metadata: false
 license-header: MICROSOFT_MIT_NO_VERSION
 output-folder: ../
 source-code-folder-path: ./src/generated
-input-file: Track2Swagger.json
+input-file: https://raw.githubusercontent.com/wiboris/azure-rest-api-specs/SwaggerRefactor/specification/batch/data-plane/Microsoft.Batch/stable/2022-12-01/BatchService.json
 add-credentials: true
-credential-scopes: https://batch.core.windows.net//.default
+security: AADToken
+security-scopes: https://batch.core.windows.net//.default
 package-version: 11.0.0-beta.1
 v3: true
 use-extension:
-  "@autorest/typescript": "latest"
+  "@autorest/typescript": "6.0.0-rc.2"
 rest-level-client: true
 rlc-shortcut: true
+hide-clients: true
 ```
 
 ## Customizations for Track 2 Generator

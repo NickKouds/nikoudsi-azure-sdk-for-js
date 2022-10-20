@@ -3,9 +3,8 @@
 
 /// <reference lib="esnext.asynciterable" />
 
-import "./env";
 import { BatchGeneratedClient } from "../../../src/generated/clientDefinitions";
-import createClient from "../../../src/generated/generatedClient";
+import createClient from "../../../src/generated/batchGeneratedClient";
 import {
   Recorder,
   RecorderEnvironmentSetup,
@@ -18,6 +17,7 @@ import { createXhrHttpClient, isNode } from "@azure/test-utils";
 import { ClientOptions } from "@azure-rest/core-client";
 import { ClientSecretCredential } from "@azure/identity";
 import { Context } from "mocha";
+import { BatchServiceClient, BatchSharedKeyCredentials } from "../../../src";
 
 const replaceableVariables: { [k: string]: string } = {
   BATCH_ENDPOINT: "batch-url",
@@ -25,6 +25,8 @@ const replaceableVariables: { [k: string]: string } = {
   AZURE_CLIENT_SECRET: "client-secret",
   AZURE_TENANT_ID: "tenant-id",
 };
+
+export const useRLCShortcut = env.USE_RLC_SHORTCUT;
 
 export const environmentSetup: RecorderEnvironmentSetup = {
   replaceableVariables,
@@ -43,7 +45,7 @@ export const environmentSetup: RecorderEnvironmentSetup = {
   queryParametersToSkip: [],
 };
 
-export function generateClient(options?: ClientOptions): BatchGeneratedClient {
+export function generateClient(options?: ClientOptions): BatchServiceClient {
   const httpClient = isNode || isLiveMode() ? undefined : createXhrHttpClient();
   const credential = new ClientSecretCredential(
     env.AZURE_TENANT_ID,
@@ -52,7 +54,14 @@ export function generateClient(options?: ClientOptions): BatchGeneratedClient {
     { httpClient }
   );
 
-  return createClient(env.AZURE_BATCH_ENDPOINT, credential, { ...options });
+  return new BatchServiceClient(credential, env.AZURE_BATCH_ENDPOINT, { ...options });
+  //return createClient(env.AZURE_BATCH_ENDPOINT, credential, { ...options });
+}
+
+export function generateSharedKeyClient(options?: ClientOptions): BatchServiceClient {
+  const batchSharedKeyCred = new BatchSharedKeyCredentials(env.AZURE_BATCH_ACCOUNT, env.AZURE_BATCH_ACCESS_KEY);
+
+  return new BatchServiceClient(batchSharedKeyCred, env.AZURE_BATCH_ENDPOINT);
 }
 
 /**
