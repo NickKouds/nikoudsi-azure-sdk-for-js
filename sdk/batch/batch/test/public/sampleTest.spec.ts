@@ -54,7 +54,7 @@ describe("Batch Test", () => {
 
   beforeEach(async function () {
     recorder = createRecorder(this);
-    batchClient = generateSharedKeyClient();
+    batchClient = generateClient();
   });
 
   afterEach(async function () {

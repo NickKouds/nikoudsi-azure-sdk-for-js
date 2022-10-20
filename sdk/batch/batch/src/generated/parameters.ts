@@ -4,31 +4,35 @@
 import { RawHttpHeadersInput } from "@azure/core-rest-pipeline";
 import { RequestParameters } from "@azure-rest/core-client";
 import {
-  Pool,
-  PoolUpdate,
-  PoolEnableAutoScaleParameter,
-  PoolEvaluateAutoScaleParameter,
-  PoolResizeParameter,
-  NodeRemoveParameter,
-  JobUpdate,
-  Job,
-  JobDisableParameter,
-  JobTerminateParameter,
-  CertificateAddParameter,
-  JobScheduleUpdate,
-  JobSchedule,
-  Task,
-  TaskAddCollectionParameter,
+  BatchPool,
+  BatchPoolUpdate,
+  BatchPoolEnableAutoScaleParameters,
+  BatchPoolEvaluateAutoScaleParameters,
+  BatchPoolResizeParameters,
+  NodeRemoveParameters,
+  BatchJobUpdate,
+  BatchJob,
+  BatchJobDisableParameters,
+  BatchJobTerminateParameters,
+  Certificate,
+  BatchJobScheduleUpdate,
+  BatchJobSchedule,
+  BatchTask,
+  BatchTaskCollection,
   ComputeNodeUser,
-  NodeUpdateUserParameter,
-  NodeRebootParameter,
-  NodeReimageParameter,
-  NodeDisableSchedulingParameter,
+  NodeUpdateUserParameters,
+  NodeRebootParameters,
+  NodeReimageParameters,
+  NodeDisableSchedulingParameters,
   UploadBatchServiceLogsConfiguration
 } from "./models";
 
 export interface ApplicationListHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -56,7 +60,11 @@ export type ApplicationListParameters = ApplicationListQueryParam &
   RequestParameters;
 
 export interface ApplicationGetHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -82,7 +90,11 @@ export type ApplicationGetParameters = ApplicationGetQueryParam &
   RequestParameters;
 
 export interface PoolListUsageMetricsHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -116,7 +128,11 @@ export type PoolListUsageMetricsParameters = PoolListUsageMetricsQueryParam &
   RequestParameters;
 
 export interface PoolGetAllLifetimeStatisticsHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -142,7 +158,11 @@ export type PoolGetAllLifetimeStatisticsParameters = PoolGetAllLifetimeStatistic
   RequestParameters;
 
 export interface PoolAddHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -152,7 +172,7 @@ export interface PoolAddHeaders {
 
 export interface PoolAddBodyParam {
   /** The Pool to be added. */
-  body: Pool;
+  body: BatchPool;
 }
 
 export interface PoolAddQueryParamProperties {
@@ -180,7 +200,11 @@ export type PoolAddParameters = PoolAddQueryParam &
   RequestParameters;
 
 export interface PoolListHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -214,7 +238,11 @@ export type PoolListParameters = PoolListQueryParam &
   RequestParameters;
 
 export interface PoolDeleteHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -248,7 +276,11 @@ export type PoolDeleteParameters = PoolDeleteQueryParam &
   RequestParameters;
 
 export interface PoolExistsHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -282,7 +314,11 @@ export type PoolExistsParameters = PoolExistsQueryParam &
   RequestParameters;
 
 export interface PoolGetHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -320,7 +356,11 @@ export type PoolGetParameters = PoolGetQueryParam &
   RequestParameters;
 
 export interface PoolPatchHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -338,7 +378,7 @@ export interface PoolPatchHeaders {
 
 export interface PoolPatchBodyParam {
   /** The parameters for the request. */
-  body: PoolUpdate;
+  body: BatchPoolUpdate;
 }
 
 export interface PoolPatchQueryParamProperties {
@@ -366,7 +406,11 @@ export type PoolPatchParameters = PoolPatchQueryParam &
   RequestParameters;
 
 export interface PoolDisableAutoScaleHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -392,7 +436,11 @@ export type PoolDisableAutoScaleParameters = PoolDisableAutoScaleQueryParam &
   RequestParameters;
 
 export interface PoolEnableAutoScaleHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -410,7 +458,7 @@ export interface PoolEnableAutoScaleHeaders {
 
 export interface PoolEnableAutoScaleBodyParam {
   /** The parameters for the request. */
-  body: PoolEnableAutoScaleParameter;
+  body: BatchPoolEnableAutoScaleParameters;
 }
 
 export interface PoolEnableAutoScaleQueryParamProperties {
@@ -438,7 +486,11 @@ export type PoolEnableAutoScaleParameters = PoolEnableAutoScaleQueryParam &
   RequestParameters;
 
 export interface PoolEvaluateAutoScaleHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -448,7 +500,7 @@ export interface PoolEvaluateAutoScaleHeaders {
 
 export interface PoolEvaluateAutoScaleBodyParam {
   /** The parameters for the request. */
-  body: PoolEvaluateAutoScaleParameter;
+  body: BatchPoolEvaluateAutoScaleParameters;
 }
 
 export interface PoolEvaluateAutoScaleQueryParamProperties {
@@ -476,7 +528,11 @@ export type PoolEvaluateAutoScaleParameters = PoolEvaluateAutoScaleQueryParam &
   RequestParameters;
 
 export interface PoolResizeHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -494,7 +550,7 @@ export interface PoolResizeHeaders {
 
 export interface PoolResizeBodyParam {
   /** The parameters for the request. */
-  body: PoolResizeParameter;
+  body: BatchPoolResizeParameters;
 }
 
 export interface PoolResizeQueryParamProperties {
@@ -522,7 +578,11 @@ export type PoolResizeParameters = PoolResizeQueryParam &
   RequestParameters;
 
 export interface PoolStopResizeHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -556,7 +616,11 @@ export type PoolStopResizeParameters = PoolStopResizeQueryParam &
   RequestParameters;
 
 export interface PoolUpdatePropertiesHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -566,7 +630,7 @@ export interface PoolUpdatePropertiesHeaders {
 
 export interface PoolUpdatePropertiesBodyParam {
   /** The parameters for the request. */
-  body: Pool;
+  body: BatchPool;
 }
 
 export interface PoolUpdatePropertiesQueryParamProperties {
@@ -594,7 +658,11 @@ export type PoolUpdatePropertiesParameters = PoolUpdatePropertiesQueryParam &
   RequestParameters;
 
 export interface PoolRemoveNodesHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -612,7 +680,7 @@ export interface PoolRemoveNodesHeaders {
 
 export interface PoolRemoveNodesBodyParam {
   /** The parameters for the request. */
-  body: NodeRemoveParameter;
+  body: NodeRemoveParameters;
 }
 
 export interface PoolRemoveNodesQueryParamProperties {
@@ -640,7 +708,11 @@ export type PoolRemoveNodesParameters = PoolRemoveNodesQueryParam &
   RequestParameters;
 
 export interface AccountListSupportedImagesHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -670,7 +742,11 @@ export type AccountListSupportedImagesParameters = AccountListSupportedImagesQue
   RequestParameters;
 
 export interface AccountListPoolNodeCountsHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -700,7 +776,11 @@ export type AccountListPoolNodeCountsParameters = AccountListPoolNodeCountsQuery
   RequestParameters;
 
 export interface JobGetAllLifetimeStatisticsHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -726,7 +806,11 @@ export type JobGetAllLifetimeStatisticsParameters = JobGetAllLifetimeStatisticsQ
   RequestParameters;
 
 export interface JobDeleteHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -760,7 +844,11 @@ export type JobDeleteParameters = JobDeleteQueryParam &
   RequestParameters;
 
 export interface JobGetHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -798,7 +886,11 @@ export type JobGetParameters = JobGetQueryParam &
   RequestParameters;
 
 export interface JobPatchHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -816,7 +908,7 @@ export interface JobPatchHeaders {
 
 export interface JobPatchBodyParam {
   /** The parameters for the request. */
-  body: JobUpdate;
+  body: BatchJobUpdate;
 }
 
 export interface JobPatchQueryParamProperties {
@@ -844,7 +936,11 @@ export type JobPatchParameters = JobPatchQueryParam &
   RequestParameters;
 
 export interface JobUpdateHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -862,7 +958,7 @@ export interface JobUpdateHeaders {
 
 export interface JobUpdateBodyParam {
   /** The parameters for the request. */
-  body: Job;
+  body: BatchJob;
 }
 
 export interface JobUpdateQueryParamProperties {
@@ -890,7 +986,11 @@ export type JobUpdateParameters = JobUpdateQueryParam &
   RequestParameters;
 
 export interface JobDisableHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -908,7 +1008,7 @@ export interface JobDisableHeaders {
 
 export interface JobDisableBodyParam {
   /** The parameters for the request. */
-  body: JobDisableParameter;
+  body: BatchJobDisableParameters;
 }
 
 export interface JobDisableQueryParamProperties {
@@ -936,7 +1036,11 @@ export type JobDisableParameters = JobDisableQueryParam &
   RequestParameters;
 
 export interface JobEnableHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -970,7 +1074,11 @@ export type JobEnableParameters = JobEnableQueryParam &
   RequestParameters;
 
 export interface JobTerminateHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -988,7 +1096,7 @@ export interface JobTerminateHeaders {
 
 export interface JobTerminateBodyParam {
   /** The parameters for the request. */
-  body?: JobTerminateParameter;
+  body?: BatchJobTerminateParameters;
 }
 
 export interface JobTerminateQueryParamProperties {
@@ -1016,7 +1124,11 @@ export type JobTerminateParameters = JobTerminateQueryParam &
   RequestParameters;
 
 export interface JobAddHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -1026,7 +1138,7 @@ export interface JobAddHeaders {
 
 export interface JobAddBodyParam {
   /** The Job to be added. */
-  body: Job;
+  body: BatchJob;
 }
 
 export interface JobAddQueryParamProperties {
@@ -1054,7 +1166,11 @@ export type JobAddParameters = JobAddQueryParam &
   RequestParameters;
 
 export interface JobListHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -1088,7 +1204,11 @@ export type JobListParameters = JobListQueryParam &
   RequestParameters;
 
 export interface JobListFromJobScheduleHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -1122,7 +1242,11 @@ export type JobListFromJobScheduleParameters = JobListFromJobScheduleQueryParam 
   RequestParameters;
 
 export interface JobListPreparationAndReleaseTaskStatusHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -1154,7 +1278,11 @@ export type JobListPreparationAndReleaseTaskStatusParameters = JobListPreparatio
   RequestParameters;
 
 export interface JobGetTaskCountsHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -1180,7 +1308,11 @@ export type JobGetTaskCountsParameters = JobGetTaskCountsQueryParam &
   RequestParameters;
 
 export interface CertificateAddHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -1190,7 +1322,7 @@ export interface CertificateAddHeaders {
 
 export interface CertificateAddBodyParam {
   /** The Certificate to be added. */
-  body: CertificateAddParameter;
+  body: Certificate;
 }
 
 export interface CertificateAddQueryParamProperties {
@@ -1218,7 +1350,11 @@ export type CertificateAddParameters = CertificateAddQueryParam &
   RequestParameters;
 
 export interface CertificateListHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -1250,7 +1386,11 @@ export type CertificateListParameters = CertificateListQueryParam &
   RequestParameters;
 
 export interface CertificateCancelDeletionHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -1276,7 +1416,11 @@ export type CertificateCancelDeletionParameters = CertificateCancelDeletionQuery
   RequestParameters;
 
 export interface CertificateDeleteHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -1302,7 +1446,11 @@ export type CertificateDeleteParameters = CertificateDeleteQueryParam &
   RequestParameters;
 
 export interface CertificateGetHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -1330,7 +1478,11 @@ export type CertificateGetParameters = CertificateGetQueryParam &
   RequestParameters;
 
 export interface FileDeleteFromTaskHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -1358,7 +1510,11 @@ export type FileDeleteFromTaskParameters = FileDeleteFromTaskQueryParam &
   RequestParameters;
 
 export interface FileGetFromTaskHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -1390,7 +1546,11 @@ export type FileGetFromTaskParameters = FileGetFromTaskQueryParam &
   RequestParameters;
 
 export interface FileGetPropertiesFromTaskHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -1420,7 +1580,11 @@ export type FileGetPropertiesFromTaskParameters = FileGetPropertiesFromTaskQuery
   RequestParameters;
 
 export interface FileDeleteFromComputeNodeHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -1448,7 +1612,11 @@ export type FileDeleteFromComputeNodeParameters = FileDeleteFromComputeNodeQuery
   RequestParameters;
 
 export interface FileGetFromComputeNodeHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -1480,7 +1648,11 @@ export type FileGetFromComputeNodeParameters = FileGetFromComputeNodeQueryParam 
   RequestParameters;
 
 export interface FileGetPropertiesFromComputeNodeHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -1510,7 +1682,11 @@ export type FileGetPropertiesFromComputeNodeParameters = FileGetPropertiesFromCo
   RequestParameters;
 
 export interface FileListFromTaskHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -1542,7 +1718,11 @@ export type FileListFromTaskParameters = FileListFromTaskQueryParam &
   RequestParameters;
 
 export interface FileListFromComputeNodeHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -1574,7 +1754,11 @@ export type FileListFromComputeNodeParameters = FileListFromComputeNodeQueryPara
   RequestParameters;
 
 export interface JobScheduleExistsHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -1608,7 +1792,11 @@ export type JobScheduleExistsParameters = JobScheduleExistsQueryParam &
   RequestParameters;
 
 export interface JobScheduleDeleteHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -1642,7 +1830,11 @@ export type JobScheduleDeleteParameters = JobScheduleDeleteQueryParam &
   RequestParameters;
 
 export interface JobScheduleGetHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -1680,7 +1872,11 @@ export type JobScheduleGetParameters = JobScheduleGetQueryParam &
   RequestParameters;
 
 export interface JobSchedulePatchHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -1698,7 +1894,7 @@ export interface JobSchedulePatchHeaders {
 
 export interface JobSchedulePatchBodyParam {
   /** The parameters for the request. */
-  body: JobScheduleUpdate;
+  body: BatchJobScheduleUpdate;
 }
 
 export interface JobSchedulePatchQueryParamProperties {
@@ -1726,7 +1922,11 @@ export type JobSchedulePatchParameters = JobSchedulePatchQueryParam &
   RequestParameters;
 
 export interface JobScheduleUpdateHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -1744,7 +1944,7 @@ export interface JobScheduleUpdateHeaders {
 
 export interface JobScheduleUpdateBodyParam {
   /** The parameters for the request. */
-  body: JobSchedule;
+  body: BatchJobSchedule;
 }
 
 export interface JobScheduleUpdateQueryParamProperties {
@@ -1772,7 +1972,11 @@ export type JobScheduleUpdateParameters = JobScheduleUpdateQueryParam &
   RequestParameters;
 
 export interface JobScheduleDisableHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -1806,7 +2010,11 @@ export type JobScheduleDisableParameters = JobScheduleDisableQueryParam &
   RequestParameters;
 
 export interface JobScheduleEnableHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -1840,7 +2048,11 @@ export type JobScheduleEnableParameters = JobScheduleEnableQueryParam &
   RequestParameters;
 
 export interface JobScheduleTerminateHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -1874,7 +2086,11 @@ export type JobScheduleTerminateParameters = JobScheduleTerminateQueryParam &
   RequestParameters;
 
 export interface JobScheduleAddHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -1884,7 +2100,7 @@ export interface JobScheduleAddHeaders {
 
 export interface JobScheduleAddBodyParam {
   /** The Job Schedule to be added. */
-  body: JobSchedule;
+  body: BatchJobSchedule;
 }
 
 export interface JobScheduleAddQueryParamProperties {
@@ -1912,7 +2128,11 @@ export type JobScheduleAddParameters = JobScheduleAddQueryParam &
   RequestParameters;
 
 export interface JobScheduleListHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -1946,7 +2166,11 @@ export type JobScheduleListParameters = JobScheduleListQueryParam &
   RequestParameters;
 
 export interface TaskAddHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -1956,7 +2180,7 @@ export interface TaskAddHeaders {
 
 export interface TaskAddBodyParam {
   /** The Task to be added. */
-  body: Task;
+  body: BatchTask;
 }
 
 export interface TaskAddQueryParamProperties {
@@ -1984,7 +2208,11 @@ export type TaskAddParameters = TaskAddQueryParam &
   RequestParameters;
 
 export interface TaskListHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -2018,7 +2246,11 @@ export type TaskListParameters = TaskListQueryParam &
   RequestParameters;
 
 export interface TaskAddCollectionHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -2028,7 +2260,7 @@ export interface TaskAddCollectionHeaders {
 
 export interface TaskAddCollectionBodyParam {
   /** The Tasks to be added. */
-  body: TaskAddCollectionParameter;
+  body: BatchTaskCollection;
 }
 
 export interface TaskAddCollectionQueryParamProperties {
@@ -2056,7 +2288,11 @@ export type TaskAddCollectionParameters = TaskAddCollectionQueryParam &
   RequestParameters;
 
 export interface TaskDeleteHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -2090,7 +2326,11 @@ export type TaskDeleteParameters = TaskDeleteQueryParam &
   RequestParameters;
 
 export interface TaskGetHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -2128,7 +2368,11 @@ export type TaskGetParameters = TaskGetQueryParam &
   RequestParameters;
 
 export interface TaskUpdateHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -2146,7 +2390,7 @@ export interface TaskUpdateHeaders {
 
 export interface TaskUpdateBodyParam {
   /** The parameters for the request. */
-  body: Task;
+  body: BatchTask;
 }
 
 export interface TaskUpdateQueryParamProperties {
@@ -2174,7 +2418,11 @@ export type TaskUpdateParameters = TaskUpdateQueryParam &
   RequestParameters;
 
 export interface TaskListSubtasksHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -2202,7 +2450,11 @@ export type TaskListSubtasksParameters = TaskListSubtasksQueryParam &
   RequestParameters;
 
 export interface TaskTerminateHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -2236,7 +2488,11 @@ export type TaskTerminateParameters = TaskTerminateQueryParam &
   RequestParameters;
 
 export interface TaskReactivateHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -2270,7 +2526,11 @@ export type TaskReactivateParameters = TaskReactivateQueryParam &
   RequestParameters;
 
 export interface ComputeNodeAddUserHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -2308,7 +2568,11 @@ export type ComputeNodeAddUserParameters = ComputeNodeAddUserQueryParam &
   RequestParameters;
 
 export interface ComputeNodeDeleteUserHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -2334,7 +2598,11 @@ export type ComputeNodeDeleteUserParameters = ComputeNodeDeleteUserQueryParam &
   RequestParameters;
 
 export interface ComputeNodeUpdateUserHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -2344,7 +2612,7 @@ export interface ComputeNodeUpdateUserHeaders {
 
 export interface ComputeNodeUpdateUserBodyParam {
   /** The parameters for the request. */
-  body: NodeUpdateUserParameter;
+  body: NodeUpdateUserParameters;
 }
 
 export interface ComputeNodeUpdateUserQueryParamProperties {
@@ -2372,7 +2640,11 @@ export type ComputeNodeUpdateUserParameters = ComputeNodeUpdateUserQueryParam &
   RequestParameters;
 
 export interface ComputeNodeGetHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -2400,7 +2672,11 @@ export type ComputeNodeGetParameters = ComputeNodeGetQueryParam &
   RequestParameters;
 
 export interface ComputeNodeRebootHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -2410,7 +2686,7 @@ export interface ComputeNodeRebootHeaders {
 
 export interface ComputeNodeRebootBodyParam {
   /** The parameters for the request. */
-  body?: NodeRebootParameter;
+  body?: NodeRebootParameters;
 }
 
 export interface ComputeNodeRebootQueryParamProperties {
@@ -2438,7 +2714,11 @@ export type ComputeNodeRebootParameters = ComputeNodeRebootQueryParam &
   RequestParameters;
 
 export interface ComputeNodeReimageHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -2448,7 +2728,7 @@ export interface ComputeNodeReimageHeaders {
 
 export interface ComputeNodeReimageBodyParam {
   /** The parameters for the request. */
-  body?: NodeReimageParameter;
+  body?: NodeReimageParameters;
 }
 
 export interface ComputeNodeReimageQueryParamProperties {
@@ -2476,7 +2756,11 @@ export type ComputeNodeReimageParameters = ComputeNodeReimageQueryParam &
   RequestParameters;
 
 export interface ComputeNodeDisableSchedulingHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -2486,7 +2770,7 @@ export interface ComputeNodeDisableSchedulingHeaders {
 
 export interface ComputeNodeDisableSchedulingBodyParam {
   /** The parameters for the request. */
-  body?: NodeDisableSchedulingParameter;
+  body?: NodeDisableSchedulingParameters;
 }
 
 export interface ComputeNodeDisableSchedulingQueryParamProperties {
@@ -2514,7 +2798,11 @@ export type ComputeNodeDisableSchedulingParameters = ComputeNodeDisableSchedulin
   RequestParameters;
 
 export interface ComputeNodeEnableSchedulingHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -2540,7 +2828,11 @@ export type ComputeNodeEnableSchedulingParameters = ComputeNodeEnableSchedulingQ
   RequestParameters;
 
 export interface ComputeNodeGetRemoteLoginSettingsHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -2566,7 +2858,11 @@ export type ComputeNodeGetRemoteLoginSettingsParameters = ComputeNodeGetRemoteLo
   RequestParameters;
 
 export interface ComputeNodeGetRemoteDesktopHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -2592,7 +2888,11 @@ export type ComputeNodeGetRemoteDesktopParameters = ComputeNodeGetRemoteDesktopQ
   RequestParameters;
 
 export interface ComputeNodeUploadBatchServiceLogsHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -2630,7 +2930,11 @@ export type ComputeNodeUploadBatchServiceLogsParameters = ComputeNodeUploadBatch
   RequestParameters;
 
 export interface ComputeNodeListHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -2662,7 +2966,11 @@ export type ComputeNodeListParameters = ComputeNodeListQueryParam &
   RequestParameters;
 
 export interface ComputeNodeExtensionGetHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
@@ -2690,7 +2998,11 @@ export type ComputeNodeExtensionGetParameters = ComputeNodeExtensionGetQueryPara
   RequestParameters;
 
 export interface ComputeNodeExtensionListHeaders {
-  /** The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0. */
+  /**
+   * The caller-generated request identity, in the form of a GUID with no decoration such as curly braces, e.g. 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0.
+   *
+   * Value may contain a UUID
+   */
   "client-request-id"?: string;
   /** Whether the server should return the client-request-id in the response. */
   "return-client-request-id"?: boolean;
