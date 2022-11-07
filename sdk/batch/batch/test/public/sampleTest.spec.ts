@@ -54,7 +54,7 @@ describe("Batch Test", () => {
 
   beforeEach(async function () {
     recorder = createRecorder(this);
-    batchClient = generateClient();
+    batchClient = generateSharedKeyClient();
   });
 
   afterEach(async function () {
@@ -96,7 +96,6 @@ describe("Batch Test", () => {
         else {
           result = await batchClient.path("/pools").post(callParams);
         }
-        console.log(result);
         assert.include(["200", "201"], result.status);
 
         await wait(20000);

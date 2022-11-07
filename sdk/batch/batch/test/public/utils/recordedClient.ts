@@ -61,7 +61,7 @@ export function generateClient(options?: ClientOptions): BatchServiceClient {
 export function generateSharedKeyClient(options?: ClientOptions): BatchServiceClient {
   const batchSharedKeyCred = new BatchSharedKeyCredentials(env.AZURE_BATCH_ACCOUNT, env.AZURE_BATCH_ACCESS_KEY);
 
-  return new BatchServiceClient(batchSharedKeyCred, env.AZURE_BATCH_ENDPOINT);
+  return new BatchServiceClient(batchSharedKeyCred, env.AZURE_BATCH_ENDPOINT, { ...options });
 }
 
 /**

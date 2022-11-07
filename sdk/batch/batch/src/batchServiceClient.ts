@@ -5,7 +5,6 @@
  */
 
 import { isTokenCredential, TokenCredential } from "@azure/core-auth";
-import { bearerTokenAuthenticationPolicy } from "@azure/core-rest-pipeline";
 import { ClientOptions } from "@azure-rest/core-client";
 import { BatchClientCredential } from "./credentials/batchClientCredential";
 import { createBatchClientCredentialPolicy, createContentTypeAppendPolicy } from "./pipelinePolicies/policies"
@@ -63,21 +62,17 @@ export class BatchServiceClient {
 
     this.batchUrl = batchUrl;
 
-
-    // const authPolicy = isTokenCredential(credentials)
-    //   ? bearerTokenAuthenticationPolicy({ credential: credentials, scopes: "https://batch.core.windows.net//.default" })
-    //   : createBatchClientCredentialPolicy("batchClientCredentialPolicy", credentials);
-
+    const appendContentTypePolicyName = "AppendContentTypePolicy";
     if (isTokenCredential(credential)) {
       this.client = createClient(batchUrl, credential, options);
     }
     else {
       this.client = createClient(batchUrl, undefined as any, options);
       const authPolicy = createBatchClientCredentialPolicy("batchClientCredentialPolicy", credential);
-      this.client.pipeline.addPolicy(authPolicy);
+      this.client.pipeline.addPolicy(authPolicy, { afterPolicies: [appendContentTypePolicyName] });     //We can only sign the request once the correct content type is set
     }
 
-    this.client.pipeline.addPolicy(createContentTypeAppendPolicy("AppendContentType"));
+    this.client.pipeline.addPolicy(createContentTypeAppendPolicy(appendContentTypePolicyName));
 
     this.application = this.client.application;
     this.account = this.client.account;
