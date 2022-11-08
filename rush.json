@@ -1,7 +1,7 @@
 /**
  * This is the main configuration file for Rush.
  * For full documentation, please see https://rushjs.io
- */ {
+ */{
   "$schema": "https://developer.microsoft.com/json-schemas/rush/v5/rush.schema.json",
   /**
    * (Required) This specifies the version of the Rush engine to be used in this repo.
@@ -1904,11 +1904,6 @@
     {
       "packageName": "@azure-rest/load-testing",
       "projectFolder": "sdk/loadtestservice/load-testing-rest",
-      "versionPolicyName": "client"
-    },
-    {
-      "packageName": "@azure/batch",
-      "projectFolder": "sdk/batch/batch",
       "versionPolicyName": "client"
     }
   ]

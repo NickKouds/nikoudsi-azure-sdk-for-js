@@ -1,4 +1,9 @@
-/// <reference lib="esnext.asynciterable" />
-export * from "./generated/models";
-export * from "./batchServiceClient";
-export { BatchSharedKeyCredentials } from "./credentials/batchSharedKeyCredentials";
+/*
+ * Copyright (c) Microsoft Corporation.
+ * Licensed under the MIT License.
+ */
+
+export * from "./batchServiceClient"
+export * from "./operations";
+export * from "./models";
+export * from "./batchSharedKeyCredentials"
