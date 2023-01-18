@@ -16,7 +16,7 @@ input-file: https://raw.githubusercontent.com/wiboris/azure-rest-api-specs/Swagg
 add-credentials: true
 security: AADToken
 security-scopes: https://batch.core.windows.net//.default
-package-version: 11.0.0-beta.1
+package-version: 1.0.0-beta.1
 v3: true
 use-extension:
   "@autorest/typescript": "6.0.0-rc.2"
