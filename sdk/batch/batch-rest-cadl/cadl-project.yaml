@@ -1,12 +1,13 @@
-emitters:
+emit:
+  - "@azure-tools/cadl-typescript"
+options:
   "@azure-tools/cadl-typescript":
     azureSdkForJs: true
-    generateMetadata: false
-    generateTest: true
     title: BatchGeneratedClient
+    generateMetadata: true
+    generateTest: true
+    "emitter-output-dir": "{output-dir}"
     packageDetails:
       name: "@azure-rest/batch-cadl"
-      description: "Batch Generated Client"
+      description: "Batch Service"
       version: "1.0.0-beta.1"
-    # addCredentials: true
-    # credentialScopes: https://batch.core.windows.net//.default
